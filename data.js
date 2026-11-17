@@ -1,0 +1,6 @@
+// Private saved data is loaded from the existing persistent update endpoint.
+export let checked='2026-11-16';
+export const programs=[],reports=[],officialSources=[],datasets=[];
+export const reportSources={},guidance={},importAudit={};
+export const runtimeStatus={lastUpdated:null,message:'Loading the saved saved snapshot.'};
+export async function loadSnapshot(){try{const response=await fetch('snapshot.json',{cache:'no-cache'});if(!response.ok)throw Error('Snapshot unavailable');const s=await response.json();if(s.schemaVersion!==1||!Array.isArray(s.reports)||!Array.isArray(s.programs))throw Error('Invalid snapshot');for(const [target,values] of [[reports,s.reports],[programs,s.programs],[officialSources,s.officialSources],[datasets,s.datasets||[]]]){target.length=0;for(const value of values)target.push(value);}for(const target of [reportSources,guidance,importAudit])for(const k of Object.keys(target))delete target[k];Object.assign(reportSources,s.reportSources);Object.assign(guidance,s.guidance);Object.assign(importAudit,s.importAudit||{});checked=s.checked;Object.assign(runtimeStatus,s.runtimeStatus);return true;}catch{runtimeStatus.message='Saved source data is currently unavailable. Refresh data to retry; no live admission conclusions can be drawn.';return false;}}
