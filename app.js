@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa7';
-import {initEntering} from './entering.js?v=oa7';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa7';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa7';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa7';
+import {layoutDots} from './plot.js?v=oa8';
+import {initEntering} from './entering.js?v=oa8';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa8';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa8';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa8';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -314,9 +314,9 @@ $('#copy-view')?.addEventListener('click',()=>copyText(urlFor(filters,null),'Lin
 for(const id of ['avg-lo','avg-hi'])$('#'+id).addEventListener('input',()=>{let a=+$('#avg-lo').value,b=+$('#avg-hi').value;if(a>b){if(id==='avg-lo')a=b;else b=a;}setRange(a,b);});
 $('#avg-presets').addEventListener('click',e=>{const b=e.target.closest('[data-avg]');if(!b)return;const [x,y]=b.dataset.avg.split('-').map(Number);setRange(x,y);});
 window.addEventListener('hashchange',()=>setView(location.hash.slice(1)));initEntering();all();setView(location.hash.slice(1)||'explorer');
-(async()=>{const url=readUrl();banner('hidden');const ok=await loadSnapshot();if(url.filters)filters={...baseFilters(),...url.filters};all();if(!ok)return;
+(async()=>{const url=readUrl(),sp=new URLSearchParams(location.search);banner('hidden');const ok=await loadSnapshot();if(url.filters)filters={...baseFilters(),...url.filters};all();if(!ok)return;
  const cy=String(archiveInfo.currentYear||2027),needAll=prefGet()==='always'||(url.filters&&url.filters.year!==cy)||(url.receipt&&!rmap.has(url.receipt));
  if(needAll){const was=filters.year;await requestArchive({quiet:true});if(!url.filters&&prefGet()==='always'){filters.year='All';sync();render();}else if(url.filters){filters={...baseFilters(),...url.filters};sync();picker();render();}}else banner('prompt');
  if(url.receipt&&rmap.has(url.receipt)){setView('explorer');evidence(url.receipt);}
- const sp=new URLSearchParams(location.search);if(sp.get('cp')){const id=sp.get('cp');if(!pmap.has(id)||!(progReports().get(id)||[]).some(r=>r.year===CUR())){if(!loadState.archiveLoaded)await requestArchive({quiet:true});if(cmp.scope==='cur')cmp.scope='recent';}if(!cmp.programs.includes(id))cmp.programs.unshift(id);saveCmp();setView('compare');}
+ if(sp.get('cp')){const id=sp.get('cp');if(!pmap.has(id)||!(progReports().get(id)||[]).some(r=>r.year===CUR())){if(!loadState.archiveLoaded)await requestArchive({quiet:true});if(cmp.scope==='cur')cmp.scope='recent';}if(!cmp.programs.includes(id))cmp.programs.unshift(id);saveCmp();setView('compare');}
  if(sp.get('share')){const id=sp.get('share');if(!loadState.archiveLoaded)await requestArchive({quiet:true});setView('explorer');shareProgram(id);}})();
