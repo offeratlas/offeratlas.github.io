@@ -219,3 +219,9 @@
   .filter-title{flex-wrap:wrap;gap:8px}
   .filter-actions{flex-wrap:wrap;gap:8px 12px}
 }
+@media(max-width:760px){
+  .timing-chart{display:grid!important;grid-template-columns:repeat(13,minmax(0,1fr));gap:1px!important;overflow:visible!important;min-height:130px}
+  .month-bar{min-width:0!important;padding:6px 0!important;gap:5px}
+  .month-bar .bar-count,.month-bar .bar-name{font-size:10px!important}
+  .month-bar .bar-fill{min-width:0!important;width:70%}
+}
