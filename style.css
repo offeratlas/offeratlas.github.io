@@ -96,4 +96,10 @@
   #evidence-dialog h2{font-size:22px}
   .rx-facts{grid-template-columns:1fr 1fr}
   .rx-source dl{grid-template-columns:1fr}
+  .rx-timeline{flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:2px}
+  .rx-step{flex-direction:row;justify-content:space-between;align-items:baseline;gap:10px}
+  .rx-gap{min-width:0;height:auto;justify-content:flex-start;padding:0 0 0 2px}
+  .rx-gap::before{display:none}
+  .rx-gap span{background:none;padding:0;font-size:12px}
+  .rx-gap span::before{content:"↓ "}
 }
