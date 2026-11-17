@@ -248,7 +248,11 @@ def load_rows(path=None):
 def main():
     global TODAY
     args = sys.argv[1:]
-    TODAY = dt.datetime.now(dt.timezone(dt.timedelta(hours=-5))).date().isoformat()  # Eastern (standard) time
+    try:
+        from zoneinfo import ZoneInfo
+        TODAY = dt.datetime.now(ZoneInfo('America/Toronto')).date().isoformat()
+    except Exception:   # no time-zone data installed: fall back to Eastern standard time
+        TODAY = dt.datetime.now(dt.timezone(dt.timedelta(hours=-5))).date().isoformat()
     global SNAPSHOT
     csv_path = next((a.split('=', 1)[1] for a in args if a.startswith('--csv=')), None)
     SNAPSHOT = Path(next((a.split('=', 1)[1] for a in args if a.startswith('--snapshot=')), SNAPSHOT))

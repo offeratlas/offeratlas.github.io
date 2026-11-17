@@ -2,7 +2,11 @@ name: Daily data update
 
 on:
   schedule:
-    - cron: "0 11 * * *"   # every day at 11:00 UTC (6 AM Eastern)
+    # 8 AM Toronto time. GitHub schedules only use UTC, so this runs at both
+    # possible UTC hours (12:00 during EDT, 13:00 during EST) and the first
+    # step skips whichever one isn't 8 AM for the current season.
+    - cron: "0 12 * * *"
+    - cron: "0 13 * * *"
   workflow_dispatch: {}      # lets you run it by hand from the Actions tab
 
 permissions:
@@ -17,16 +21,34 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - name: Only run at 8 AM Toronto time
+        id: gate
+        env:
+          EVENT: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          if [ "$(TZ=America/Toronto date +%Z)" = "EDT" ]; then want="0 12 * * *"; else want="0 13 * * *"; fi
+          if [ "$EVENT" = "schedule" ] && [ "$SCHEDULE" != "$want" ]; then
+            echo "This is the other season's slot; skipping."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.gate.outputs.run == 'true'
 
       - uses: actions/setup-python@v5
+        if: steps.gate.outputs.run == 'true'
         with:
           python-version: "3.12"
 
       - name: Pull new spreadsheet entries
+        if: steps.gate.outputs.run == 'true'
         run: python tools/update_data.py
 
       - name: Publish if anything changed
+        if: steps.gate.outputs.run == 'true'
         run: |
           if git diff --quiet; then
             echo "No changes today."
@@ -35,5 +57,5 @@ jobs:
           git config user.name "Offer Atlas"
           git config user.email "site@offeratlas.invalid"
           git add snapshot.json
-          git commit -m "Daily data update $(date -u +%Y-%m-%d)"
+          git commit -m "Daily data update $(TZ=America/Toronto date +%Y-%m-%d)"
           git push
