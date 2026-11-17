@@ -66,7 +66,7 @@ function receiptCompare(r){
   return `<section class="rx-section"><div class="rx-head"><h3>Compared with others</h3>${toggle}</div><div class="rx-strip" style="height:${h}px">${html}</div><div class="rx-axis"><span>${lo}%</span><span>${Math.round((lo+hi)/2)}%</span><span>${hi}%</span></div><p class="rx-note">${line} <span class="rx-hint">Select a dot to open that receipt.</span></p></section>`;
 }
 function receiptNote(title,text){
-  const t=String(text||'').trim();if(!t)return '';
+  const t=String(text||'').trim();if(!t||/^(none|n\/?a|nope|no|-+|\.|nothing|null)\.?$/i.test(t))return '';
   const long=t.length>220;
   return `<div class="rx-note-card${long?' clamp':''}"><span class="rx-label">${esc(title)}</span><p>${esc(t)}</p>${long?'<button class="rx-more" data-more>Show more</button>':''}</div>`;
 }
