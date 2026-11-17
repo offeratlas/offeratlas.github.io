@@ -50,7 +50,8 @@ function receiptTimeline(r,s,d){
   return `<ol class="rx-timeline" aria-label="Application timeline">${out}</ol>`;
 }
 function receiptCompare(r){
-  const pool=reports.filter(x=>x.program===r.program&&x.average!==null&&x.average!==undefined&&(receiptScope==='all'||x.year===r.year));
+  const key=x=>String(x.submittedProgram||'').trim().toLowerCase(),same=r.isSourceCollection?x=>x.university===r.university&&key(x)===key(r):x=>x.program===r.program;
+  const pool=reports.filter(x=>same(x)&&x.average!==null&&x.average!==undefined&&(receiptScope==='all'||x.year===r.year));
   const scopeLabel=receiptScope==='all'?'all years':'Fall '+r.year;
   const toggle=`<div class="rx-scope" role="group" aria-label="Comparison range"><button data-scope="year" aria-pressed="${receiptScope==='year'}">Fall ${r.year}</button><button data-scope="all" aria-pressed="${receiptScope==='all'}">All years</button></div>`;
   if(pool.length<2)return `<section class="rx-section"><div class="rx-head"><h3>Compared with others</h3>${toggle}</div><p class="rx-empty">Not enough reports with a numeric average for this program in ${scopeLabel} to compare yet.</p></section>`;
@@ -60,7 +61,7 @@ function receiptCompare(r){
   const stack=Math.min(maxStack,10),h=24+stack*11;
   const html=dots.map(({x,pos,k})=>`<button class="rx-dot ${esc(x.outcome)}${x.id===r.id?' me':''}" style="left:${(pos*100).toFixed(2)}%;bottom:${8+Math.min(k,stack-1)*11}px" data-receipt="${esc(x.id)}" title="${esc(x.averageLabel)}${x.average!==null&&!String(x.averageLabel).includes('%')?'%':''} · ${esc(x.outcome)} · Fall ${x.year}" aria-label="${esc(x.averageLabel)} percent, ${esc(x.outcome)}, Fall ${x.year}${x.id===r.id?' (this report)':''}"></button>`).join('');
   const offers=pool.filter(x=>x.outcome==='Offer').map(x=>x.average).sort((a,b)=>a-b);
-  let line=`${fmt(pool.length)} reports with a numeric average for this program (${scopeLabel}).`;
+  let line=`${fmt(pool.length)} reports with a numeric average for this ${r.isSourceCollection?'submitted program name':'program'} (${scopeLabel}).`;
   if(offers.length>=3){const mid=offers.length%2?offers[(offers.length-1)/2]:(offers[offers.length/2-1]+offers[offers.length/2])/2;line+=` Median reported offer: <strong>${rxPct(mid)}</strong>.`;
     if(r.average!==null&&r.average!==undefined){const below=offers.filter(v=>v<r.average).length;line+=` This average is higher than <strong>${Math.round(below/offers.length*100)}%</strong> of ${fmt(offers.length)} reported offers.`;}}
   return `<section class="rx-section"><div class="rx-head"><h3>Compared with others</h3>${toggle}</div><div class="rx-strip" style="height:${h}px">${html}</div><div class="rx-axis"><span>${lo}%</span><span>${Math.round((lo+hi)/2)}%</span><span>${hi}%</span></div><p class="rx-note">${line} <span class="rx-hint">Select a dot to open that receipt.</span></p></section>`;
@@ -94,7 +95,7 @@ function evidence(id,b){
     <div class="dialog-eyebrow"><span class="badge">SELF-REPORTED</span><span>Fall ${r.year} · ${esc(r.sourceType)}</span></div>${nav}
   </header>
   <div class="rx-hero">
-    <div class="rx-title"><h2 id="evidence-title">${esc(r.programName)}</h2><p>${esc(r.university)}</p></div>
+    <div class="rx-title"><h2 id="evidence-title">${esc(r.isSourceCollection?(r.submittedProgram||s.rawProgram||r.programName):r.programName)}</h2><p>${esc(r.university)}${r.isSourceCollection?' · <span class="rx-muted">not assigned to a single official program</span>':''}</p></div>
     <div class="rx-score ${esc(r.outcome)}"><span class="rx-avg">${avg}</span>${badge(r)}</div>
   </div>
   ${receiptTimeline(r,s,d)}
