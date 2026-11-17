@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=78b85fb05456';
-import {initEntering} from './entering.js?v=78b85fb05456';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit} from './data.js?v=78b85fb05456';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=78b85fb05456';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=78b85fb05456';
+import {layoutDots} from './plot.js?v=rx1';
+import {initEntering} from './entering.js?v=rx1';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit} from './data.js?v=rx1';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=rx1';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=rx1';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -30,7 +30,95 @@ function catalog(){const q=$('#catalog-query').value.trim().toLowerCase(),counts
 
 function sources(){const sheet=reports.filter(r=>r.sourceType==='Spreadsheet');$('#dataset-summary').textContent=`${fmt(sheet.length)} spreadsheet outcome records from ${fmt(new Set(sheet.map(r=>r.source)).size)} source rows, plus ${reports.length-sheet.length} curated Reddit outcomes. These are not distinct applicants.`;$('#spreadsheet-coverage').innerHTML=`<table><thead><tr><th>Source / entry year</th><th>Outcomes</th><th>Flagged</th></tr></thead><tbody>${datasets.map(d=>`<tr><td>${link(d.url,d.year+' · '+d.sheetName)}<small>${esc(d.title)}</small></td><td>${fmt(d.includedOutcomes)}</td><td>${fmt(d.flaggedOutcomes||0)}</td></tr>`).join('')}</tbody></table>`;$('#official-sources').innerHTML=officialSources.map(s=>`<article class="source-item">${link(s.url,s.title)}<p>${esc(s.note)}</p><span class="source-meta">${esc(s.checked?'Checked '+s.checked:'Date not recorded')}</span></article>`).join('');$('#report-sources').innerHTML=Object.entries(reportSources).filter(([k,s])=>s.kind!=='Spreadsheet').map(([k,s])=>`<article class="source-item">${link(s.url,s.title)}<p>${esc(s.evidence)}</p><details><summary>Interpretation & limits</summary><p>${esc(s.note)}</p><p>${esc(s.access)}</p></details></article>`).join('');$('#waterloo-guidance').innerHTML=Object.entries(guidance).map(([k,v])=>`<div class="waterloo-item"><strong>${esc(k.replace(/([A-Z])/g,' $1'))} · Waterloo Mathematics</strong><p>${esc(v)}</p></div>`).join('');$('#refresh-status').textContent=runtimeStatus.message;$('#audit-summary').innerHTML=`<p><strong>${fmt(importAudit.sourceRowsScanned||0)}</strong> submitted rows inspected · <strong>${fmt(importAudit.officialMatchedPrograms||0)}</strong> program labels with catalog matches.</p><p>${Object.entries(importAudit.excluded||{}).map(([k,n])=>esc(k)+': '+fmt(n)).join(' · ')}</p><p>Catalog access limitations: ${esc((importAudit.incompleteCatalogAccess||[]).join(", ")||"None recorded")}. Unassigned labels remain searchable as source records and never create program names.</p><p>Original Canadian program labels are preserved; all retained data is included in comparisons. Historical source-row flags remain intact.</p>`;}
 function freshness(){const t=runtimeStatus.lastUpdated?new Intl.DateTimeFormat('en-CA',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Toronto'}).format(new Date(runtimeStatus.lastUpdated))+' Toronto time':'bundled research snapshot';$('#freshness-text').textContent='Last saved update: '+t+'. Self-reports are not a representative admissions database.';$('#coverage-summary').textContent=`${fmt(reports.length)} source outcomes · ${fmt(new Set(reports.map(r=>r.university)).size)} Canadian institution / campus groups. All years are included by default. Select Fall 2027 for the current cycle.`;}
-function evidence(id,b){const r=rmap.get(id);if(!r)return;const p=pmap.get(r.program),s=reportSources[r.source];trigger=b||document.activeElement;$('#evidence-content').innerHTML=`<div class="dialog-eyebrow"><span class="badge">SELF-REPORTED</span><span>Fall ${r.year} · ${r.sourceType}</span></div><h2 id="evidence-title">${esc(r.programName)}</h2><p>${esc(r.university)}</p><div class="evidence-summary"><span class="evidence-average">${esc(r.averageLabel)}${r.average!==null?'%':''}</span>${badge(r)}</div><dl><dt>Decision date</dt><dd>${esc(decision(r))}</dd><dt>Sheet submission / post</dt><dd>${esc(s.submissionTimestamp||date(s.reportDate))}</dd><dt>Submitted program</dt><dd>${esc(s.rawProgram||p.name)}</dd><dt>Submitted decision</dt><dd>${esc(s.rawOutcome||r.outcome)}</dd>${Object.entries(s.applicationDetails||{}).map(([k,v])=>`<dt>${esc(({applicantGroup:'Applicant group (source)',applicationDate:'Application submitted',citizenship:'Citizenship (source)',province:'Province / state / territory',residenceCountry:'Country of residence',ouacCode:'OUAC / program code',supplementalApplication:'Supplemental application',grade11Average:'Grade 11 final average',grade12MidtermAverage:'Grade 12 midterm average',grade12PredictedAverage:'Grade 12 predicted average',grade12FinalAverage:'Grade 12 final average',scholarship:'Scholarship / aid'})[k]||k)}</dt><dd>${esc(v)}</dd>`).join('')}<dt>Home university</dt><dd>${esc(r.homeInstitution)}</dd><dt>Study option</dt><dd>${esc(r.studyMode)}</dd><dt>Program check</dt><dd>${esc(p.verification==='Official catalog match'?'Official program name confirmed':'Source report; no single official program assigned')}</dd><dt>Review flags</dt><dd>${esc((r.reviewFlags||[]).join('; ')||'None recorded')}</dd></dl>${s.applicantComments?`<h3>Applicant comments</h3><blockquote class="applicant-context">${esc(s.applicantComments)}</blockquote>`:r.sourceType==='Spreadsheet'?`<p class="fine">${s.contextChecked?'No applicant comment supplied in the source row.':'Applicant comments not yet available for this source.'}</p>`:''}${s.supplementalContext?`<h3>Additional applicant context</h3><p class="applicant-context">${esc(s.supplementalContext)}</p>`:''}${r.sourceType==='Reddit'?`<h3>Reddit snapshot</h3><p class="applicant-context">${esc(s.snapshot||s.evidence)}</p>`:''}<h3>What the source supports</h3><p>${esc(s.evidence)}</p><p class="evidence-caveat">${esc(s.note)}</p><p class="fine">${esc(s.access)}. Catalog matching confirms program existence, not this applicant’s outcome. Possible cross-source overlap remains.</p>${link(s.url,'Open source row / post','evidence-source')}<p>${link(p.url,'Official institution / program')}</p>`;if(!$('#evidence-dialog').open)$('#evidence-dialog').showModal();$('#close-dialog').focus();}
+const RECEIPT_LABELS={applicantGroup:'Applicant group',citizenship:'Citizenship',province:'Province / state',residenceCountry:'Country of residence',ouacCode:'OUAC code',grade11Average:'Grade 11 final',grade12MidtermAverage:'Grade 12 midterm',grade12PredictedAverage:'Grade 12 predicted',grade12FinalAverage:'Grade 12 final',scholarship:'Scholarship / aid'};
+const rxDate=t=>{const m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(String(t||'').trim());return m?new Date(Date.UTC(+m[3],m[1]-1,+m[2])):null;};
+const rxIso=t=>t?new Date(t+'T00:00:00Z'):null;
+const rxShort=d=>new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}).format(d);
+const rxPct=v=>v===null||v===undefined?'':(Math.round(v*100)/100)+'%';
+let receiptId=null,receiptScope='year';
+function receiptOrder(){try{return sortedRows(lastRows,filters.sort).map(x=>x.id);}catch{return [];}}
+function receiptTimeline(r,s,d){
+  const steps=[['Applied',rxDate(d.applicationDate)],['Decision',rxIso(r.decisionDate)],['Reported',rxDate(s.submissionTimestamp)||rxIso(s.reportDate)]];
+  const shown=steps.filter(x=>x[1]);
+  if(!shown.length)return '';
+  let out='',prev=null;
+  for(const [label,when] of steps){
+    if(!when){if(label==='Decision')out+=`<li class="rx-step muted"><span>Decision</span><strong>${esc(decision(r))}</strong></li>`;continue;}
+    if(prev){const gap=Math.round((when-prev)/864e5);out+=`<li class="rx-gap" aria-hidden="true"><span>${gap>=0?gap+(gap===1?' day':' days'):'date order unclear'}</span></li>`;}
+    out+=`<li class="rx-step"><span>${label}</span><strong>${rxShort(when)}</strong></li>`;prev=when;
+  }
+  return `<ol class="rx-timeline" aria-label="Application timeline">${out}</ol>`;
+}
+function receiptCompare(r){
+  const pool=reports.filter(x=>x.program===r.program&&x.average!==null&&x.average!==undefined&&(receiptScope==='all'||x.year===r.year));
+  const scopeLabel=receiptScope==='all'?'all years':'Fall '+r.year;
+  const toggle=`<div class="rx-scope" role="group" aria-label="Comparison range"><button data-scope="year" aria-pressed="${receiptScope==='year'}">Fall ${r.year}</button><button data-scope="all" aria-pressed="${receiptScope==='all'}">All years</button></div>`;
+  if(pool.length<2)return `<section class="rx-section"><div class="rx-head"><h3>Compared with others</h3>${toggle}</div><p class="rx-empty">Not enough reports with a numeric average for this program in ${scopeLabel} to compare yet.</p></section>`;
+  const vals=pool.map(x=>x.average),lo=Math.max(0,Math.floor(Math.min(...vals)/5)*5),hi=Math.min(100,Math.max(lo+5,Math.ceil(Math.max(...vals)/5)*5)),span=hi-lo||1;
+  const cols=new Map();let maxStack=1;
+  const dots=pool.slice().sort((a,b)=>a.average-b.average).map(x=>{const pos=(x.average-lo)/span,col=Math.round(pos*70),k=cols.get(col)||0;cols.set(col,k+1);maxStack=Math.max(maxStack,k+1);return {x,pos,k};});
+  const stack=Math.min(maxStack,10),h=24+stack*11;
+  const html=dots.map(({x,pos,k})=>`<button class="rx-dot ${esc(x.outcome)}${x.id===r.id?' me':''}" style="left:${(pos*100).toFixed(2)}%;bottom:${8+Math.min(k,stack-1)*11}px" data-receipt="${esc(x.id)}" title="${esc(x.averageLabel)}${x.average!==null&&!String(x.averageLabel).includes('%')?'%':''} · ${esc(x.outcome)} · Fall ${x.year}" aria-label="${esc(x.averageLabel)} percent, ${esc(x.outcome)}, Fall ${x.year}${x.id===r.id?' (this report)':''}"></button>`).join('');
+  const offers=pool.filter(x=>x.outcome==='Offer').map(x=>x.average).sort((a,b)=>a-b);
+  let line=`${fmt(pool.length)} reports with a numeric average for this program (${scopeLabel}).`;
+  if(offers.length>=3){const mid=offers.length%2?offers[(offers.length-1)/2]:(offers[offers.length/2-1]+offers[offers.length/2])/2;line+=` Median reported offer: <strong>${rxPct(mid)}</strong>.`;
+    if(r.average!==null&&r.average!==undefined){const below=offers.filter(v=>v<r.average).length;line+=` This average is higher than <strong>${Math.round(below/offers.length*100)}%</strong> of ${fmt(offers.length)} reported offers.`;}}
+  return `<section class="rx-section"><div class="rx-head"><h3>Compared with others</h3>${toggle}</div><div class="rx-strip" style="height:${h}px">${html}</div><div class="rx-axis"><span>${lo}%</span><span>${Math.round((lo+hi)/2)}%</span><span>${hi}%</span></div><p class="rx-note">${line} <span class="rx-hint">Select a dot to open that receipt.</span></p></section>`;
+}
+function receiptNote(title,text){
+  const t=String(text||'').trim();if(!t)return '';
+  const long=t.length>220;
+  return `<div class="rx-note-card${long?' clamp':''}"><span class="rx-label">${esc(title)}</span><p>${esc(t)}</p>${long?'<button class="rx-more" data-more>Show more</button>':''}</div>`;
+}
+function evidence(id,b){
+  const r=rmap.get(id);if(!r)return;
+  const dlg=$('#evidence-dialog'),wasOpen=dlg.open;
+  if(!wasOpen)trigger=b||document.activeElement;
+  receiptId=id;
+  const p=pmap.get(r.program)||{},s=reportSources[r.source]||{},d=s.applicationDetails||{};
+  const order=receiptOrder(),idx=order.indexOf(id);
+  const nav=idx>=0&&order.length>1?`<div class="rx-nav"><button data-nav="-1" aria-label="Previous receipt" ${idx===0?'disabled':''}>‹</button><span>${fmt(idx+1)} of ${fmt(order.length)}</span><button data-nav="1" aria-label="Next receipt" ${idx===order.length-1?'disabled':''}>›</button></div>`:'';
+  const avg=r.average!==null&&r.average!==undefined?esc(r.averageLabel)+(String(r.averageLabel).includes('%')?'':'%'):esc(r.averageLabel||'Unstated');
+  const facts=[],unstated=[];
+  for(const [k,v] of Object.entries(d)){if(k==='applicationDate'||k==='supplementalApplication')continue;const label=RECEIPT_LABELS[k]||k;String(v).trim()?facts.push([label,v]):unstated.push(label);}
+  for(const [label,v] of [['Study option',r.studyMode],['Home university',r.homeInstitution],['Curriculum',r.curriculum]])(!v||v==='Unstated')?unstated.push(label.toLowerCase()):facts.push([label,v]);
+  const factHtml=facts.map(([k,v])=>`<div class="rx-fact${String(v).length>28?' wide':''}"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`).join('');
+  const verified=p.verification==='Official catalog match'&&r.programVerified!==false;
+  const flags=r.reviewFlags||[];
+  const pills=`<span class="rx-pill ${verified?'ok':'warn'}">${verified?'✓ Official program name confirmed':'⚑ Program name not matched to an official catalog'}</span>`+(flags.filter(f=>!/official catalog/i.test(f)).map(f=>`<span class="rx-pill warn">⚑ ${esc(f)}</span>`).join('')||`<span class="rx-pill ok">✓ No other review flags</span>`);
+  const supp=String(s.supplementalContext||'').replace(/^Supplemental application:\s*/i,'');
+  const notes=receiptNote('Applicant comments',s.applicantComments)+receiptNote('Supplemental application',d.supplementalApplication)+receiptNote('Supplemental highlights',supp)+(r.sourceType==='Reddit'?receiptNote('Reddit snapshot',s.snapshot||s.evidence):'');
+  const raw=[['Submitted program',s.rawProgram||p.name],['Submitted decision',s.rawOutcome||r.outcome],['Submitted average',s.rawAverage],['Sheet submission / post',s.submissionTimestamp||date(s.reportDate)]].filter(x=>x[1]&&String(x[1]).trim());
+  $('#evidence-content').innerHTML=`
+  <header class="rx-top">
+    <div class="dialog-eyebrow"><span class="badge">SELF-REPORTED</span><span>Fall ${r.year} · ${esc(r.sourceType)}</span></div>${nav}
+  </header>
+  <div class="rx-hero">
+    <div class="rx-title"><h2 id="evidence-title">${esc(r.programName)}</h2><p>${esc(r.university)}</p></div>
+    <div class="rx-score ${esc(r.outcome)}"><span class="rx-avg">${avg}</span>${badge(r)}</div>
+  </div>
+  ${receiptTimeline(r,s,d)}
+  ${factHtml?`<div class="rx-facts">${factHtml}</div>`:''}
+  ${unstated.length?`<p class="rx-unstated">Not stated: ${esc(unstated.join(', '))}</p>`:''}
+  <div class="rx-pills">${pills}</div>
+  ${notes?`<section class="rx-section"><h3>In their words</h3><div class="rx-notes">${notes}</div></section>`:r.sourceType==='Spreadsheet'?`<p class="rx-unstated">${s.contextChecked?'No applicant comment supplied in the source row.':'Applicant comments not yet available for this source.'}</p>`:''}
+  ${receiptCompare(r)}
+  <div class="rx-actions">${s.url?link(s.url,'Open source row / post','evidence-source'):''}${p.url?link(p.url,'Program page','rx-secondary'):''}</div>
+  <details class="rx-source"><summary>About this source</summary>
+    ${raw.length?`<dl>${raw.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`:''}
+    <p>${esc(s.evidence)}</p><p class="evidence-caveat">${esc(s.note)}</p>
+    <p class="fine">${esc(s.access)}. Catalog matching confirms program existence, not this applicant’s outcome. Possible cross-source overlap remains.</p>
+  </details>`;
+  if(!wasOpen){dlg.showModal();$('#close-dialog').focus();}
+}
+function receiptGo(step){const order=receiptOrder(),i=order.indexOf(receiptId),next=order[i+step];if(i>=0&&next){evidence(next);$(`#evidence-content [data-nav="${step}"]`)?.focus();}}
+$('#evidence-content').addEventListener('click',e=>{
+  const nav=e.target.closest('[data-nav]');if(nav){receiptGo(Number(nav.dataset.nav));return;}
+  const dot=e.target.closest('[data-receipt]');if(dot){const id=dot.dataset.receipt;if(id!==receiptId){evidence(id);$('#evidence-content').scrollIntoView?.();$('#evidence-dialog').scrollTop=0;}return;}
+  const sc=e.target.closest('[data-scope]');if(sc){receiptScope=sc.dataset.scope;evidence(receiptId);$(`#evidence-content [data-scope="${receiptScope}"]`)?.focus();return;}
+  const more=e.target.closest('[data-more]');if(more){const card=more.closest('.rx-note-card');const open=card.classList.toggle('open');more.textContent=open?'Show less':'Show more';}
+});
+$('#evidence-dialog').addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;if(e.key==='ArrowRight'){e.preventDefault();receiptGo(1);}else if(e.key==='ArrowLeft'){e.preventDefault();receiptGo(-1);}});
 function reset(){filters=defaultFilters();$('#program-search').value='';sync();picker();render();}
 function notify(t){clearTimeout(toastTimer);$('#toast').textContent=t;$('#toast').hidden=false;toastTimer=setTimeout(()=>$('#toast').hidden=true,4000);}
 for(const k of ['university','year','sourceType','studyMode','month','outcome','curriculum','sort','applicantGroup','province','citizenship','residenceCountry'])$('#'+k).addEventListener('change',e=>{filters[k]=e.target.value;if(k==='university'){filters.programs=[];picker();}render();});
