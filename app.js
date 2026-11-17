@@ -318,5 +318,5 @@ window.addEventListener('hashchange',()=>setView(location.hash.slice(1)));initEn
  const cy=String(archiveInfo.currentYear||2027),needAll=prefGet()==='always'||(url.filters&&url.filters.year!==cy)||(url.receipt&&!rmap.has(url.receipt));
  if(needAll){const was=filters.year;await requestArchive({quiet:true});if(!url.filters&&prefGet()==='always'){filters.year='All';sync();render();}else if(url.filters){filters={...baseFilters(),...url.filters};sync();picker();render();}}else banner('prompt');
  if(url.receipt&&rmap.has(url.receipt)){setView('explorer');evidence(url.receipt);}
- const sp=new URLSearchParams(location.search);if(sp.get('cp')){if(!cmp.programs.includes(sp.get('cp')))cmp.programs.unshift(sp.get('cp'));saveCmp();setView('compare');}
+ const sp=new URLSearchParams(location.search);if(sp.get('cp')){const id=sp.get('cp');if(!pmap.has(id)||!(progReports().get(id)||[]).some(r=>r.year===CUR())){if(!loadState.archiveLoaded)await requestArchive({quiet:true});if(cmp.scope==='cur')cmp.scope='recent';}if(!cmp.programs.includes(id))cmp.programs.unshift(id);saveCmp();setView('compare');}
  if(sp.get('share')){const id=sp.get('share');if(!loadState.archiveLoaded)await requestArchive({quiet:true});setView('explorer');shareProgram(id);}})();
