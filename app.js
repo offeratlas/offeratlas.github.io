@@ -129,7 +129,7 @@ $('#evidence-content').addEventListener('click',e=>{
   if(e.target.closest('[data-copy-receipt]')){copyText(urlFor(filters,receiptId),'Link to this receipt copied');return;}
   const more=e.target.closest('[data-more]');if(more){const card=more.closest('.rx-note-card');const open=card.classList.toggle('open');more.textContent=open?'Show less':'Show more';}
 });
-$('#evidence-dialog').addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea'))return;if(e.key==='ArrowRight'){e.preventDefault();receiptGo(1);}else if(e.key==='ArrowLeft'){e.preventDefault();receiptGo(-1);}});
+$('#evidence-dialog').addEventListener('keydown',e=>{if(e.target?.matches?.('input,select,textarea'))return;if(e.key==='ArrowRight'){e.preventDefault();receiptGo(1);}else if(e.key==='ArrowLeft'){e.preventDefault();receiptGo(-1);}});
 function reset(){filters=baseFilters();$('#program-search').value='';sync();picker();render();}
 function notify(t){clearTimeout(toastTimer);$('#toast').textContent=t;$('#toast').hidden=false;toastTimer=setTimeout(()=>$('#toast').hidden=true,4000);}
 for(const k of ['university','year','sourceType','studyMode','month','outcome','curriculum','sort','applicantGroup','province','citizenship','residenceCountry'])$('#'+k).addEventListener('change',e=>{filters[k]=e.target.value;if(k==='university'){filters.programs=[];picker();}render();});
@@ -242,7 +242,7 @@ function compareRender(){const el=$('#cmp-results');if(!el)return;$('#cmp-avg').
   <p class="cmp-sum">${summary}</p>${offers.length>=3?`<p class="cmp-stats">Median reported offer <strong>${med.toFixed(1)}%</strong>${offers.length>=4?` · middle half ${p25.toFixed(1)}–${p75.toFixed(1)}%`:''} · ${fmt(pool.length)} numeric reports</p>`:''}
   <button class="db-link" data-only-program="${esc(id)}" data-explore="true">See these receipts →</button></article>`;}).join('')+`<p class="cmp-disclaimer">Self-reported, unverified data from a non-random group of applicants. This shows where your average sits among what people posted. It is not a prediction or a cutoff, and averages are only one part of admissions.</p>`;}
 function cmpSuggest(){const q=$('#cmp-search').value.trim().toLowerCase(),el=$('#cmp-suggest');if(!q){el.innerHTML='';return;}const idx=progReports();
- const hits=catalogPrograms.filter(p=>!p.isSourceCollection&&idx.has(p.id)&&!cmp.programs.includes(p.id)&&[pname(p),p.university,...(p.aliases||[])].join(' ').toLowerCase().includes(q)).sort((a,b)=>(idx.get(b.id).length)-(idx.get(a.id).length)).slice(0,8);
+ const toks=q.split(/\s+/).filter(Boolean);const hits=catalogPrograms.filter(p=>{if(p.isSourceCollection||!idx.has(p.id)||cmp.programs.includes(p.id))return false;const t=[pname(p),p.university,...(p.aliases||[])].join(' ').toLowerCase();return toks.every(k=>t.includes(k));}).sort((a,b)=>(idx.get(b.id).length)-(idx.get(a.id).length)).slice(0,8);
  el.innerHTML=hits.map(p=>`<button data-cmp-add="${esc(p.id)}"><strong>${esc(pname(p))}</strong><span>${esc(p.university)} · ${fmt(idx.get(p.id).length)} reports</span></button>`).join('')+(ALLY()?(hits.length?'':'<p class="fine">No matching programs.</p>'):`<p class="fine">${hits.length?'Only programs with Fall '+CUR()+' reports are listed.':'No Fall '+CUR()+' reports match yet.'} <button class="db-link" data-archive="load">Load all years</button> to search every program.</p>`);}
 // Offer tracker -----------------------------------------------------------
 let trkLimit=60;
@@ -328,7 +328,7 @@ function waitRender(){const el=$('#wait-result');if(!el)return;$('#wait-date').v
  <p class="cmp-sum">Based on ${fmt(pool.length)} ${scope}. ${heardBy!==null?`By day ${elapsed}, <strong>${heardBy} of ${pool.length}</strong> (${Math.round(heardBy/pool.length*100)}%) had heard back. `:''}<span class="muted">Green = offers, blue = other decisions.</span>${more}</p>
  <p class="cmp-disclaimer">Self-reported dates, often from people who heard early. Programs release decisions in batches, so your wait can be very different. Not a prediction.</p>`;}
 function waitSuggest(){const q=$('#wait-search').value.trim().toLowerCase(),el=$('#wait-suggest');if(!q){el.innerHTML='';return;}const idx=progReports();
- const hits=catalogPrograms.filter(p=>!p.isSourceCollection&&idx.has(p.id)&&[pname(p),p.university,...(p.aliases||[])].join(' ').toLowerCase().includes(q)).sort((a,b)=>idx.get(b.id).length-idx.get(a.id).length).slice(0,6);
+ const toks=q.split(/\s+/).filter(Boolean);const hits=catalogPrograms.filter(p=>{if(p.isSourceCollection||!idx.has(p.id))return false;const t=[pname(p),p.university,...(p.aliases||[])].join(' ').toLowerCase();return toks.every(k=>t.includes(k));}).sort((a,b)=>idx.get(b.id).length-idx.get(a.id).length).slice(0,6);
  el.innerHTML=hits.map(p=>`<button data-wait-pick="${esc(p.id)}"><strong>${esc(pname(p))}</strong><span>${esc(p.university)} · ${fmt(idx.get(p.id).length)} reports</span></button>`).join('')||`<p class="fine">No matching programs${ALLY()?'':` with Fall ${CUR()} reports. <button class="db-link" data-archive="load">Load all years</button>`}.</p>`;}
 // ---- Global search (Ctrl+K) ------------------------------------------------
 let pageMap=null;const loadMap=()=>pageMap?Promise.resolve(pageMap):fetch('programs/map.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{programs:{},schools:{}}).catch(()=>({programs:{},schools:{}})).then(m=>pageMap=m);
@@ -384,7 +384,7 @@ document.addEventListener('click',e=>{const t=e.target;
  if(t.closest('#search-open')){gsOpen();return;}
  if(t.closest('[data-recap]')){weeklyRecap();return;}
 },true);
-document.addEventListener('keydown',e=>{const typing=e.target.matches('input,textarea,select,[contenteditable]');
+document.addEventListener('keydown',e=>{const typing=!!e.target?.matches?.('input,textarea,select,[contenteditable]');
  if((e.key==='k'||e.key==='K')&&(e.ctrlKey||e.metaKey)){e.preventDefault();gsOpen();return;}
  if(e.key==='/'&&!typing){e.preventDefault();gsOpen();return;}
  if($('#search-dialog').open&&e.target.id==='gs-input'){if(e.key==='ArrowDown'){e.preventDefault();gsSel=Math.min(gsItems.length-1,gsSel+1);gsDraw();}else if(e.key==='ArrowUp'){e.preventDefault();gsSel=Math.max(0,gsSel-1);gsDraw();}else if(e.key==='Enter'){e.preventDefault();gsGo(gsSel);}}});
