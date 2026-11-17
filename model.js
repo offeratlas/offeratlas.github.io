@@ -1,5 +1,5 @@
-import {reports,programs} from './data.js?v=oa6';
-import {matchesStudyMode} from './catalog.js?v=oa6';
+import {reports,programs} from './data.js?v=oa7';
+import {matchesStudyMode} from './catalog.js?v=oa7';
 export const months=['January','February','March','April','May','June','July','August','September','October','November','December','Unknown'];
 export const outcomes=['Offer','Rejected','Deferred','Alternate','Waitlisted','Unstated'];
 export const defaultFilters=()=>({university:'All',programs:[],year:'All',month:'All',outcome:'All',curriculum:'All',sourceType:'All',studyMode:'Both',minimum:0,maximum:100,includeUnquantified:true,query:'',sort:'university',applicantGroup:'All',province:'All',citizenship:'All',residenceCountry:'All'});
