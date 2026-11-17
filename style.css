@@ -225,3 +225,23 @@
   .month-bar .bar-count,.month-bar .bar-name{font-size:10px!important}
   .month-bar .bar-fill{min-width:0!important;width:70%}
 }
+
+/* ---- Disclaimer and creator credit ---- */
+.disclaimer{display:flex;gap:14px;align-items:flex-start;background:#fff6e5;border:1px solid #f0d9a8;border-radius:15px;padding:16px 20px;margin:16px 0 0;color:#5c4210}
+.disclaimer strong{font-size:16px;color:#4a340a}
+.disclaimer p{margin:4px 0 0;font-size:15px;line-height:1.6}
+.disc-icon{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:#e0a526;color:#fff;font-weight:900;display:grid;place-items:center;font-size:16px;margin-top:1px}
+.creator-card{display:flex;gap:16px;align-items:flex-start;background:var(--ink);color:#fff;border-radius:18px;padding:20px 22px;margin:6px 0 20px}
+.creator-badge{flex-shrink:0;width:48px;height:48px;border-radius:14px;background:var(--lime);color:var(--ink);display:grid;place-items:center;font-size:24px}
+.creator-label{font-size:11px;letter-spacing:1.5px;font-weight:750;color:#b8c4d6}
+.creator-card h4{font-size:24px;margin:4px 0 6px;letter-spacing:-.5px}
+.creator-card h4 a{color:var(--lime);text-decoration:none}
+.creator-card h4 a:hover{text-decoration:underline}
+.creator-card p{margin:0;font-size:15px;line-height:1.6;color:#dfe6ef}
+.creator-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.creator-links .pill-button{color:#fff;border-color:#4b6283;text-decoration:none}
+.creator-links .pill-button:hover{border-color:var(--lime)}
+.fresh-credit{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.fresh-credit a{font-weight:700}
+.rx-disclaimer{font-size:13px!important;color:#7a5a17;background:#fff6e5;border-radius:10px;padding:8px 12px;margin:18px 0 0!important;line-height:1.5!important}
+@media(max-width:760px){.disclaimer{padding:14px;gap:10px}.disclaimer p{font-size:14px}.creator-card{flex-direction:column;padding:18px}.creator-card h4{font-size:21px}}

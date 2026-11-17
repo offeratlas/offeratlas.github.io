@@ -5,6 +5,7 @@
 export const MIN_REPORTS = 5;
 const FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSduOQcWoG-Hk8s-pn-TyM8CyDvxe8otqYOklNhDJChptaRRxg/viewform';
 const ISSUES = 'https://github.com/offeratlas/offeratlas.github.io/issues/new';
+const CREATOR = 'Regular-Database9310', CREATOR_URL = 'https://www.reddit.com/user/Regular-Database9310/', CREATOR_POST = 'https://www.reddit.com/r/OntarioGrade12s/s/gqGYqgWozB';
 const CYCLE = ['September', 'October', 'November', 'December', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August'];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const slugify = s => String(s).normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/&/g, ' and ')
@@ -38,7 +39,7 @@ const head = ({ title, desc, url, site }) => `<!doctype html><html lang="en"><he
 <meta property="og:type" content="website"><meta property="og:site_name" content="Offer Atlas"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(url)}"><meta property="og:image" content="${site}/og-image.jpg"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#162840"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/programs/page.css"></head><body>`;
 const topbar = `<header class="pg-top"><a class="pg-brand" href="/"><span class="pg-icon" aria-hidden="true">↗</span>OFFER ATLAS</a><nav><a href="/programs/">All programs</a><a href="/">Explorer</a><a class="pg-submit" href="${FORM}" target="_blank" rel="noopener noreferrer">Submit your result ↗</a></nav></header>`;
-const footer = `<footer class="pg-foot"><p><strong>Self-reported, unverified data.</strong> Reports come from public, applicant-submitted spreadsheets and Reddit posts. They are not unique applicants, not a random sample, and medians are not cutoffs. Not affiliated with any university.</p><p><a href="/#sources">Sources &amp; credits</a> · <a href="${FORM}" target="_blank" rel="noopener noreferrer">Submit your result ↗</a> · <a href="${ISSUES}" target="_blank" rel="noopener noreferrer">Report a correction ↗</a></p></footer></body></html>`;
+const footer = `<footer class="pg-foot"><p><strong>Spreadsheets created by <a href="${CREATOR_URL}" target="_blank" rel="noopener noreferrer">u/${CREATOR}</a></strong> on r/OntarioGrade12s (<a href="${CREATOR_POST}" target="_blank" rel="noopener noreferrer">their post ↗</a>). Offer Atlas is a separate project that visualizes their public data.</p><p><strong>Self-reported, unverifiable data.</strong> Reports come from public, applicant-submitted spreadsheets and Reddit posts. They are not unique applicants, not a random sample, and medians are not cutoffs. Not affiliated with any university.</p><p><a href="/#sources">Sources &amp; credits</a> · <a href="${FORM}" target="_blank" rel="noopener noreferrer">Submit your result ↗</a> · <a href="${ISSUES}" target="_blank" rel="noopener noreferrer">Report a correction ↗</a></p></footer></body></html>`;
 
 function programPage({ p, rs, slug, s, site }) {
   const name = p.displayName || p.name, url = `${site}/programs/${slug}/`;
@@ -55,6 +56,7 @@ function programPage({ p, rs, slug, s, site }) {
   return head({ title, desc, url, site }) + topbar + `<main class="pg">
 <p class="pg-crumbs"><a href="/programs/">Programs</a> › <a href="/programs/#${esc(slugify(p.university))}">${esc(p.university)}</a></p>
 <h1>${esc(name)}</h1><p class="pg-sub">${esc(p.university)} · self-reported admission results</p>
+<p class="pg-disclaimer"><strong>Self-reported and unverifiable.</strong> Every result below was submitted anonymously by an applicant and has not been checked. Averages may be rounded, mistyped or false, and posters aren’t a random sample. Use this as rough context, not a cutoff or prediction. Data from the r/OntarioGrade12s spreadsheets by <a href="${CREATOR_URL}" target="_blank" rel="noopener noreferrer">u/${CREATOR}</a>.</p>
 <div class="pg-stats">
  <div><span>Reports</span><strong>${rs.length}</strong></div>
  <div><span>Offers</span><strong>${s.offers}</strong></div>
@@ -84,7 +86,7 @@ function indexPage({ pages, site, total }) {
   const title = 'All programs — Canadian university admission averages | Offer Atlas';
   const desc = `Self-reported admission averages and offer dates for ${pages.length} Canadian university programs, from ${total.toLocaleString('en-CA')} public applicant reports.`;
   return head({ title, desc, url: `${site}/programs/`, site }) + topbar + `<main class="pg">
-<h1>Every program, its reported outcomes</h1><p class="pg-sub">${pages.length} programs with at least ${MIN_REPORTS} self-reported results. Updated daily.</p>
+<h1>Every program, its reported outcomes</h1><p class="pg-disclaimer"><strong>Self-reported and unverifiable.</strong> All results come from anonymous applicant submissions, mainly the r/OntarioGrade12s spreadsheets by <a href="${CREATOR_URL}" target="_blank" rel="noopener noreferrer">u/${CREATOR}</a>. Use them as context only.</p><p class="pg-sub">${pages.length} programs with at least ${MIN_REPORTS} self-reported results. Updated daily.</p>
 <input id="pg-search" class="pg-search" type="search" placeholder="Search a program or school…" aria-label="Search programs">
 ${unis.map(u => `<section class="pg-uni" id="${esc(slugify(u))}"><h2>${esc(u)}</h2><ul>${byUni.get(u).sort((a, b) => (a.p.displayName || a.p.name).localeCompare(b.p.displayName || b.p.name)).map(pg =>
     `<li><a href="/programs/${pg.slug}/">${esc(pg.p.displayName || pg.p.name)}</a><span>${pg.rs.length} reports${pg.s.latestYear ? ` · median offer ${pct(pg.s.latestYear.median)} (Fall ${pg.s.latestYear.year})` : ''}</span></li>`).join('')}</ul></section>`).join('')}
@@ -108,6 +110,7 @@ const CSS = `:root{--ink:#162840;--muted:#536477;--paper:#f5f4ef;--line:#d9dede;
 .pg-bar{display:grid;grid-template-columns:72px 1fr 34px;align-items:center;gap:8px;font-size:13px}.pg-bar>span:first-child{color:var(--muted)}.pg-track{display:flex;gap:2px;height:12px}.pg-track i,.pg-track em{display:block;height:12px;border-radius:6px;background:var(--green)}.pg-track em{background:#c5ccd6}.pg-bar>b{font-weight:650;text-align:right}
 .k{display:inline-block;width:10px;height:10px;border-radius:3px;margin:0 4px 0 10px;vertical-align:middle}.k.off{background:var(--green);margin-left:0}.k.oth{background:#c5ccd6}
 .pg-out{font-size:12px;font-weight:700;padding:3px 9px;border-radius:20px;background:#edf1fb;color:#2846a2}.pg-out.Offer{background:#e3f2ea;color:#21654a}.pg-out.Rejected{background:#fae8ec;color:#9d3447}.pg-out.Deferred{background:#fff1dd;color:#8d5b19}
+.pg-disclaimer{background:#fff6e5;border:1px solid #f0d9a8;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.55;margin:0 0 20px;color:#5c4210}.pg-disclaimer a{font-weight:700}
 .pg-official{font-size:14px;color:var(--muted);margin-top:24px}.pg-search{width:100%;font:inherit;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin:4px 0 10px;background:#fff}
 .pg-uni h2{font-size:19px;margin:22px 0 8px}.pg-uni ul{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:6px}
 .pg-uni li{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}.pg-uni li a{font-weight:700;text-decoration:none}.pg-uni li a:hover{text-decoration:underline}.pg-uni li span{font-size:13px;color:var(--muted)}

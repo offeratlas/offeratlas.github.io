@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa3';
-import {initEntering} from './entering.js?v=oa3';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa3';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa3';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa3';
+import {layoutDots} from './plot.js?v=oa4';
+import {initEntering} from './entering.js?v=oa4';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa4';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa4';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa4';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -111,6 +111,7 @@ function evidence(id,b){
   <div class="rx-pills">${pills}</div>
   ${notes?`<section class="rx-section"><h3>In their words</h3><div class="rx-notes">${notes}</div></section>`:r.sourceType==='Spreadsheet'?`<p class="rx-unstated">${s.contextChecked?'No applicant comment supplied in the source row.':'Applicant comments not yet available for this source.'}</p>`:''}
   ${receiptCompare(r)}
+  <p class="rx-disclaimer">Self-reported by an anonymous applicant and not verified. Treat it as one data point, not proof.</p>
   <div class="rx-actions">${s.url?link(s.url,'Open source row / post','evidence-source'):''}${p.url?link(p.url,'Program page','rx-secondary'):''}<button class="rx-secondary" data-copy-receipt>Copy link to this receipt</button></div>
   <details class="rx-source"><summary>About this source</summary>
     ${raw.length?`<dl>${raw.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`:''}
