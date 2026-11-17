@@ -352,7 +352,7 @@ async function weeklyRecap(){const cy=CUR(),today=torDay(Date.now()),start=today
  const cur=reports.filter(r=>r.year===cy).map(r=>[r,subTime(r)]).filter(x=>x[1]),wk=cur.filter(x=>inWeek(x[1]));
  const offers=wk.filter(([r])=>r.outcome==='Offer'),rej=wk.filter(([r])=>r.outcome==='Rejected').length;
  const byProg=new Map();for(const [r] of offers){const k=r.isSourceCollection?(r.submittedProgram||r.programName)+'|'+r.university:r.program;const e=byProg.get(k)||{n:0,name:r.isSourceCollection?(r.submittedProgram||r.programName):r.programName,uni:r.university};e.n++;byProg.set(k,e);}
- const top=[...byProg.values()].sort((a,b)=>b.n-a.n).slice(0,5);
+ const top=[...byProg.values()].sort((a,b)=>b.n-a.n).slice(0,4);
  const firstSeen=new Map();for(const [r,t] of cur)if(r.outcome==='Offer'&&!r.isSourceCollection){const f=firstSeen.get(r.program);if(!f||t<f.t)firstSeen.set(r.program,{t,name:r.programName,uni:r.university});}
  const firsts=[...firstSeen.values()].filter(f=>inWeek(f.t)).slice(0,4);
  const dayCount=Array(7).fill(0);for(const [,t] of wk)dayCount[new Date(torDay(t)).getUTCDay()]++;const busiest=dayCount.indexOf(Math.max(...dayCount));
@@ -368,8 +368,8 @@ async function weeklyRecap(){const cy=CUR(),today=torDay(Date.now()),start=today
  const fit=(t,w)=>{let s=t;while(x.measureText(s).width>w&&s.length>4)s=s.slice(0,-2);return s===t?t:s.trimEnd()+'…';};
  if(!top.length){y+=60;x.fillStyle='#b8c4d6';x.font=`600 34px ${F}`;x.fillText('No offers reported yet this week.',80,y);}
  for(const t of top){y+=74;x.fillStyle='#fff';x.font=`750 36px ${F}`;x.fillText(fit(t.name,700),80,y);x.fillStyle='#9fb0c6';x.font=`500 26px ${F}`;x.fillText(fit(t.uni,700),80,y+32);x.fillStyle='#4fd69c';x.font=`850 40px ${F}`;x.textAlign='right';x.fillText(`+${t.n}`,1000,y+10);x.textAlign='left';y+=26;}
- y+=60;if(firsts.length){x.fillStyle='#9fb0c6';x.font=`700 26px ${F}`;x.fillText('FIRST OFFERS OF THE CYCLE',80,y);x.fillStyle='#fff';x.font=`600 30px ${F}`;for(const f of firsts){y+=44;x.fillText(fit(`★ ${f.name} · ${f.uni}`,920),80,y);}y+=20;}
- if(wk.length){y+=50;x.fillStyle='#b8c4d6';x.font=`600 30px ${F}`;x.fillText(`Busiest day: ${DAYS[busiest]}`,80,Math.min(y,1210));}
+ const LIMIT=1205;y+=56;if(firsts.length&&y+70<LIMIT){x.fillStyle='#9fb0c6';x.font=`700 26px ${F}`;x.fillText('FIRST OFFERS OF THE CYCLE',80,y);x.fillStyle='#fff';x.font=`600 30px ${F}`;for(const f of firsts){if(y+44>LIMIT-40)break;y+=44;x.fillText(fit(`★ ${f.name} · ${f.uni}`,920),80,y);}y+=12;}
+ if(wk.length&&y+50<=LIMIT){y+=50;x.fillStyle='#b8c4d6';x.font=`600 30px ${F}`;x.fillText(`Busiest day: ${DAYS[busiest]}`,80,y);}
  x.fillStyle='#d6f46a';x.font=`800 38px ${F}`;x.fillText('offeratlas.github.io',80,1270);x.fillStyle='#8193ab';x.font=`500 22px ${F}`;x.fillText('Self-reported & unverified · data: r/OntarioGrade12s spreadsheet by u/Regular-Database9310',80,1306);
  const blob=await new Promise(r=>c.toBlob(r,'image/png')),url=URL.createObjectURL(blob),file=new File([blob],`offer-atlas-weekly-recap-${new Date(today).toISOString().slice(0,10)}.png`,{type:'image/png'});
  const d=$('#share-dialog');$('#share-img').src=url;$('#share-title').textContent=`Weekly recap · ${dShort(start)}–${dShort(today)}`;$('#share-img').alt='Weekly recap image';
