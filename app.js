@@ -240,12 +240,12 @@ function compareRender(){const el=$('#cmp-results');if(!el)return;$('#cmp-avg').
   <button class="db-link" data-only-program="${esc(id)}" data-explore="true">See these receipts →</button></article>`;}).join('')+`<p class="cmp-disclaimer">Self-reported, unverified data from a non-random group of applicants. This shows where your average sits among what people posted. It is not a prediction or a cutoff, and averages are only one part of admissions.</p>`;}
 function cmpSuggest(){const q=$('#cmp-search').value.trim().toLowerCase(),el=$('#cmp-suggest');if(!q){el.innerHTML='';return;}const idx=progReports();
  const hits=catalogPrograms.filter(p=>!p.isSourceCollection&&idx.has(p.id)&&!cmp.programs.includes(p.id)&&[pname(p),p.university,...(p.aliases||[])].join(' ').toLowerCase().includes(q)).sort((a,b)=>(idx.get(b.id).length)-(idx.get(a.id).length)).slice(0,8);
- el.innerHTML=hits.map(p=>`<button data-cmp-add="${esc(p.id)}"><strong>${esc(pname(p))}</strong><span>${esc(p.university)} · ${fmt(idx.get(p.id).length)} reports</span></button>`).join('')||'<p class="fine">No matching programs.</p>';}
+ el.innerHTML=hits.map(p=>`<button data-cmp-add="${esc(p.id)}"><strong>${esc(pname(p))}</strong><span>${esc(p.university)} · ${fmt(idx.get(p.id).length)} reports</span></button>`).join('')+(loadState.archiveLoaded?(hits.length?'':'<p class="fine">No matching programs.</p>'):`<p class="fine">${hits.length?'Only programs with Fall '+CUR()+' reports are listed.':'No Fall '+CUR()+' reports match yet.'} <button class="db-link" data-archive="load">Load all years</button> to search every program.</p>`);}
 // Offer tracker -----------------------------------------------------------
 let trkLimit=60;
 function trackerRows(){const cy=CUR(),idx=progReports(),today=todayISO(),cut=String(Number(today.slice(0,4))-1)+today.slice(4),weekAgo=new Date(Date.now()-7*864e5).toISOString().slice(0,10),rows=[];
  for(const [id,rs] of idx){const p=pmap.get(id);if(!p)continue;const curO=rs.filter(r=>r.year===cy&&r.outcome==='Offer'),prevO=rs.filter(r=>r.year===cy-1&&r.outcome==='Offer');if(!curO.length&&prevO.length<3)continue;
-  const cd=curO.map(r=>r.decisionDate).filter(Boolean).sort(),pd=prevO.map(r=>r.decisionDate).filter(Boolean).sort();
+  const cd=curO.map(r=>r.decisionDate).filter(d=>d&&d<=today).sort(),pd=prevO.map(r=>r.decisionDate).filter(Boolean).sort();
   const first=cd[0]||null,last=cd[cd.length-1]||null,pFirst=pd[0]||null,pByNow=pd.filter(d=>d<=cut).length;
   let status,cls,sortKey;if(curO.length){status=last&&last>=weekAgo?'Offers out · new this week':'Offers out';cls='out';sortKey=first||'9';}
   else if(pFirst&&pFirst<=cut){status=`Not yet · last year started ${date(pFirst)}`;cls='late';sortKey='z';}
