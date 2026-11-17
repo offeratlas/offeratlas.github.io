@@ -193,7 +193,7 @@ $('#reload').addEventListener('click',async()=>{const ok=await loadSnapshot();al
 $('#evidence-dialog').addEventListener('close',()=>writeUrl());
 const filtersBox=$('.filters');if(PHONE.matches)filtersBox.classList.add('collapsed');
 $('#filters-toggle').addEventListener('click',()=>{const c=filtersBox.classList.toggle('collapsed');$('#filters-toggle').setAttribute('aria-expanded',String(!c));$('#filters-toggle').textContent=c?'Show filters':'Hide filters';});
-PHONE.addEventListener('change',()=>{averages(lastRows);});
+let phoneMode=PHONE.matches,resizeTimer;const modeCheck=()=>{if(PHONE.matches!==phoneMode){phoneMode=PHONE.matches;averages(lastRows);}};PHONE.addEventListener('change',modeCheck);addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(modeCheck,200);});
 $('#copy-view')?.addEventListener('click',()=>copyText(urlFor(filters,null),'Link to this view copied'));
 for(const id of ['avg-lo','avg-hi'])$('#'+id).addEventListener('input',()=>{let a=+$('#avg-lo').value,b=+$('#avg-hi').value;if(a>b){if(id==='avg-lo')a=b;else b=a;}setRange(a,b);});
 $('#avg-presets').addEventListener('click',e=>{const b=e.target.closest('[data-avg]');if(!b)return;const [x,y]=b.dataset.avg.split('-').map(Number);setRange(x,y);});
