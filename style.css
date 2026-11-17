@@ -167,3 +167,55 @@
   .fresh-list{grid-auto-columns:78%}
   .data-banner{width:calc(100% - 32px);font-size:14px}
 }
+
+/* ---- Phone layout ---- */
+.track-axis,.filters-toggle,.filter-summary{display:none}
+.hist-bar{position:absolute;bottom:0;padding:0 1px;display:flex;flex-direction:column;justify-content:flex-end;height:100%;background:none;border:0;cursor:pointer}
+.hist-bar span{display:block;width:100%;min-height:0}
+.hist-bar .hb-offer{background:var(--green);border-radius:3px 3px 0 0}
+.hist-bar .hb-rej{background:var(--red)}
+.hist-bar .hb-other{background:#7d93e8}
+.hist-bar:hover span,.hist-bar:focus-visible span{filter:brightness(1.15)}
+.hist-bar:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+@media(max-width:760px){
+  #average-chart{overflow-x:visible}
+  .plot-axis{display:none}
+  .plot-axis,.plot-row{min-width:0!important}
+  .plot-row{grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"name stat" "track track";gap:0 12px!important;padding:14px 0 8px;align-items:start!important}
+  .plot-row>div:first-child{grid-area:name;min-width:0}
+  .plot-row>.plot-track{grid-area:track;margin:10px 4px 26px!important;min-height:0!important}
+  .plot-row>.program-stat{grid-area:stat;text-align:right;padding-top:10px}
+  .plot-name{padding:6px 0 2px!important}
+  .plot-inspect{padding:2px 0!important;font-size:13px}
+  .plot-track.hist{background:repeating-linear-gradient(to right,#edf0f0 0,#edf0f0 1px,transparent 1px,transparent 25%)}
+  .track-axis{display:block;position:absolute;left:0;right:0;bottom:-22px;height:18px;font-size:11px;color:var(--muted)}
+  .track-axis span{position:absolute;transform:translateX(-50%)}
+  .track-axis span:first-child{left:0;transform:none}
+  .track-axis span:nth-child(2){left:50%}
+  .track-axis span:last-child{right:0;transform:none}
+  .plot-controls{gap:8px;margin:14px 0}
+  .plot-controls label{font-size:14px}
+  .plot-controls input{width:64px}
+  .plot-controls .pill-button{padding:9px 12px;font-size:13px}
+  .plot-legend{gap:6px 12px;font-size:13px;margin:14px 0}
+  /* reports table becomes cards */
+  .reports-panel .table-scroll{overflow:visible}
+  .reports-panel .table-scroll table{min-width:0!important;width:100%}
+  .reports-panel thead{display:none}
+  .reports-panel tbody tr{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:14px 2px;border-bottom:1px solid var(--line);align-items:center}
+  .reports-panel tbody td{display:block;padding:0!important;border:0!important}
+  .reports-panel tbody td:nth-child(1){grid-column:1/-1}
+  .reports-panel tbody td:nth-child(3),.reports-panel tbody td:nth-child(5){text-align:right}
+  .reports-panel .program-name{max-width:none;font-size:16px}
+  .reports-panel .school-name{font-size:13px;margin-bottom:2px}
+  .reports-panel .average-number{font-size:22px}
+  .reports-panel td small{font-size:12px}
+  .table-controls{flex-direction:column;align-items:stretch}
+  /* collapsible filters */
+  .filters-toggle{display:inline-block;background:var(--ink);color:#fff;font-weight:700;font-size:14px;padding:8px 14px;border-radius:20px}
+  .filter-summary{display:block;margin:6px 0 0;font-size:13px;color:var(--muted);line-height:1.4}
+  .filters.collapsed>*:not(.filter-title):not(.filter-summary){display:none!important}
+  .filters.collapsed{padding:14px 16px!important}
+  .filter-title{flex-wrap:wrap;gap:8px}
+  .filter-actions{flex-wrap:wrap;gap:8px 12px}
+}
