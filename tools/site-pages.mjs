@@ -311,7 +311,7 @@ export function buildSite({ snap, catalog, site = 'https://offeratlas.github.io'
   files['feeds/latest.xml'] = feedXml({ title: `Offer Atlas: latest Fall ${cur} reports`, selfUrl: `${site}/feeds/latest.xml`, pageUrl: `${site}/`, items: latest, site, updated: latest[0]?.when || snap.checked });
   files['guides/index.html'] = guidesPage({ site });
   files['changelog/index.html'] = changelogPage({ site, changes, history });
-  files['programs/map.json'] = JSON.stringify({ programs: Object.fromEntries(pages.map(x => [x.p.id, x.slug])), schools: Object.fromEntries(schools.map(x => [x.uni, x.slug])) });
+  files['programs/map.json'] = JSON.stringify({ programs: Object.fromEntries(pages.map(x => [x.p.id, x.slug])), schools: Object.fromEntries(schools.map(x => [x.uni, x.slug])), list: pages.map(x => [x.p.id, x.slug, x.p.displayName || x.p.name, x.p.university, x.rs.length]) });
   for (const sc of schools) files[`schools/${sc.slug}/index.html`] = schoolPage({ ...sc, site, cur });
   files['programs/index.html'] = indexPage({ pages, site, total: catalog.reports.length, schoolSlug });
   files['schools/index.html'] = schoolsIndex({ schools, site });

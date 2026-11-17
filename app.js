@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa11';
-import {initEntering} from './entering.js?v=oa11';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa11';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa11';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa11';
+import {layoutDots} from './plot.js?v=oa12';
+import {initEntering} from './entering.js?v=oa12';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa12';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa12';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa12';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -338,7 +338,8 @@ function gsSearch(){const q=$('#gs-input').value.trim().toLowerCase(),toks=q.spl
  const match=t=>toks.every(k=>t.includes(k));
  for(const [label,act,sub] of VIEWS)if(!q||match((label+' '+sub).toLowerCase()))out.push({type:'Page',label,sub,act,score:q?(label.toLowerCase().startsWith(q)?3:1):0});
  if(q){for(const p of catalogPrograms){if(p.isSourceCollection||!idx.has(p.id))continue;const n=pname(p),t=[n,p.university,...(p.aliases||[])].join(' ').toLowerCase();if(!match(t))continue;out.push({type:'Program',label:n,sub:`${p.university} · ${fmt(idx.get(p.id).length)} reports`,act:'prog:'+p.id,score:(n.toLowerCase().startsWith(toks[0])?2:1)+Math.min(1,idx.get(p.id).length/200)});}
-  for(const u of [...new Set(reports.map(r=>r.university))])if(match(u.toLowerCase()))out.push({type:'School',label:u,sub:'All programs at this school',act:'uni:'+u,score:u.toLowerCase().startsWith(toks[0])?2.5:1.5});}
+  const seen=new Set(out.filter(x=>x.type==='Program').map(x=>x.act.slice(5)));for(const [id,slug,n,uni,cnt] of (pageMap?.list||[])){if(seen.has(id))continue;if(!match([n,uni].join(' ').toLowerCase()))continue;out.push({type:'Program',label:n,sub:`${uni} · ${fmt(cnt)} reports (all years)`,act:'prog:'+id,score:(n.toLowerCase().startsWith(toks[0])?2:1)+Math.min(1,cnt/200)});}
+  const unis=new Set([...reports.map(r=>r.university),...(pageMap?.list||[]).map(x=>x[3])]);for(const u of unis)if(match(u.toLowerCase()))out.push({type:'School',label:u,sub:'All programs at this school',act:'uni:'+u,score:u.toLowerCase().startsWith(toks[0])?2.5:1.5});}
  gsItems=out.sort((a,b)=>b.score-a.score).slice(0,q?14:9);gsSel=0;gsDraw();}
 function gsDraw(){$('#gs-results').innerHTML=gsItems.map((x,i)=>`<li><button class="gs-item${i===gsSel?' sel':''}" data-gs="${i}"><span class="gs-type ${x.type}">${x.type}</span><span class="gs-text"><strong>${esc(x.label)}</strong><small>${esc(x.sub)}</small></span>${x.type==='Program'?`<span class="gs-hint">${pageMap?.programs?.[x.act.slice(5)]?'Program page →':'Explore →'}</span>`:''}</button></li>`).join('')||`<li class="gs-none">No matches${ALLY()?'':` in Fall ${CUR()} data. <button class="db-link" data-archive="load">Load all years</button>`}</li>`;$('#gs-results .sel')?.scrollIntoView({block:'nearest'});}
 function gsGo(i){const x=gsItems[i];if(!x)return;$('#search-dialog').close();const [k,v]=[x.act.split(':')[0],x.act.slice(x.act.indexOf(':')+1)];
@@ -346,7 +347,7 @@ function gsGo(i){const x=gsItems[i];if(!x)return;$('#search-dialog').close();con
  else if(k==='href')location.href=v;else if(k==='recap')weeklyRecap();
  else if(k==='prog'){const slug=pageMap?.programs?.[v];if(slug)location.href='programs/'+slug+'/';else{filters.programs=[v];filters.university='All';sync();picker();render();setView('explorer');$('#workspace').scrollIntoView({behavior:'auto'});}}
  else if(k==='uni'){filters.university=v;filters.programs=[];sync();picker();render();setView('explorer');$('#workspace').scrollIntoView({behavior:'auto'});}}
-async function gsOpen(){const d=$('#search-dialog');if(!d.open)d.showModal();$('#gs-input').value='';gsSearch();$('#gs-input').focus();await loadMap();gsDraw();}
+async function gsOpen(){const d=$('#search-dialog');if(!d.open)d.showModal();$('#gs-input').value='';gsSearch();$('#gs-input').focus();await loadMap();gsSearch();}
 // ---- Weekly recap image ----------------------------------------------------
 async function weeklyRecap(){const cy=CUR(),today=torDay(Date.now()),start=today-6*864e5,inWeek=t=>{const d=torDay(t);return d>=start&&d<=today;};
  const cur=reports.filter(r=>r.year===cy).map(r=>[r,subTime(r)]).filter(x=>x[1]),wk=cur.filter(x=>inWeek(x[1]));
