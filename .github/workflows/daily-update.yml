@@ -8,6 +8,13 @@ on:
     - cron: "0 12 * * *"
     - cron: "0 13 * * *"
   workflow_dispatch: {}      # lets you run it by hand from the Actions tab
+  push:                      # rebuild pages when the build tools change
+    branches: [main]
+    paths:
+      - "tools/**"
+      - "catalog.js"
+      - "official-programs.js"
+      - ".github/workflows/daily-update.yml"
 
 permissions:
   contents: write
@@ -19,7 +26,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Only run at 8 AM Toronto time
         id: gate
@@ -43,19 +50,32 @@ jobs:
         with:
           python-version: "3.12"
 
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.run == 'true'
+        with:
+          node-version: "20"
+
       - name: Pull new spreadsheet entries
         if: steps.gate.outputs.run == 'true'
         run: python tools/update_data.py
 
+      - name: Split data (Fall 2027 first, older years on request)
+        if: steps.gate.outputs.run == 'true'
+        run: python tools/split_data.py
+
+      - name: Build program pages and sitemap
+        if: steps.gate.outputs.run == 'true'
+        run: node tools/build-site.mjs
+
       - name: Publish if anything changed
         if: steps.gate.outputs.run == 'true'
         run: |
-          if git diff --quiet; then
+          git add -A snapshot.json data programs sitemap.xml
+          if git diff --cached --quiet; then
             echo "No changes today."
             exit 0
           fi
           git config user.name "Offer Atlas"
           git config user.email "site@offeratlas.invalid"
-          git add snapshot.json
           git commit -m "Daily data update $(TZ=America/Toronto date +%Y-%m-%d)"
           git push
