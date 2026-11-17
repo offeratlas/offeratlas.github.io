@@ -1,0 +1,39 @@
+name: Daily data update
+
+on:
+  schedule:
+    - cron: "0 11 * * *"   # every day at 11:00 UTC (6 AM Eastern)
+  workflow_dispatch: {}      # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Pull new spreadsheet entries
+        run: python tools/update_data.py
+
+      - name: Publish if anything changed
+        run: |
+          if git diff --quiet; then
+            echo "No changes today."
+            exit 0
+          fi
+          git config user.name "Offer Atlas"
+          git config user.email "site@offeratlas.invalid"
+          git add snapshot.json
+          git commit -m "Daily data update $(date -u +%Y-%m-%d)"
+          git push
