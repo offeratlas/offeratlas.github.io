@@ -8,7 +8,7 @@ const ISSUES = 'https://github.com/offeratlas/offeratlas.github.io/issues/new';
 const CYCLE = ['September', 'October', 'November', 'December', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August'];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const slugify = s => String(s).normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/&/g, ' and ')
-  .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90).replace(/-+$/, '');
+  .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/^(.{0,110})-.*$/, (m, a) => m.length > 110 ? a : m);
 const num = v => typeof v === 'number' && Number.isFinite(v);
 const quantile = (sorted, q) => { if (!sorted.length) return null; const i = (sorted.length - 1) * q, lo = Math.floor(i), hi = Math.ceil(i); return sorted[lo] + (sorted[hi] - sorted[lo]) * (i - lo); };
 const pct = v => v === null ? '—' : (Math.round(v * 10) / 10).toFixed(1) + '%';
@@ -35,7 +35,7 @@ function stats(rs) {
 
 const head = ({ title, desc, url, site }) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${esc(url)}">
-<meta property="og:type" content="website"><meta property="og:site_name" content="Offer Atlas"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(url)}"><meta property="og:image" content="${site}/og-image.png"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Offer Atlas"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(url)}"><meta property="og:image" content="${site}/og-image.jpg"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#162840"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/programs/page.css"></head><body>`;
 const topbar = `<header class="pg-top"><a class="pg-brand" href="/"><span class="pg-icon" aria-hidden="true">↗</span>OFFER ATLAS</a><nav><a href="/programs/">All programs</a><a href="/">Explorer</a><a class="pg-submit" href="${FORM}" target="_blank" rel="noopener noreferrer">Submit your result ↗</a></nav></header>`;
 const footer = `<footer class="pg-foot"><p><strong>Self-reported, unverified data.</strong> Reports come from public, applicant-submitted spreadsheets and Reddit posts. They are not unique applicants, not a random sample, and medians are not cutoffs. Not affiliated with any university.</p><p><a href="/#sources">Sources &amp; credits</a> · <a href="${FORM}" target="_blank" rel="noopener noreferrer">Submit your result ↗</a> · <a href="${ISSUES}" target="_blank" rel="noopener noreferrer">Report a correction ↗</a></p></footer></body></html>`;
