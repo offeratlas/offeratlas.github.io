@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa14';
-import {initEntering} from './entering.js?v=oa14';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa14';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa14';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa14';
+import {layoutDots} from './plot.js?v=oa15';
+import {initEntering} from './entering.js?v=oa15';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa15';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa15';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa15';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -284,7 +284,7 @@ async function shareProgram(id){const p=pmap.get(id);if(!p)return;const cy=CUR()
  const all=rs.filter(r=>Number.isFinite(r.average)&&r.average>=80);if(all.length){const lo=80,hi=100,n=40,b=Array.from({length:n},()=>({o:0,r:0}));for(const r of all){const i=Math.min(n-1,Math.floor((r.average-lo)/(hi-lo)*n));r.outcome==='Offer'?b[i].o++:b[i].r++;}const mx=Math.max(1,...b.map(v=>v.o+v.r)),W=900,H=260,bw=W/n;
   for(let i=0;i<n;i++){const ho=b[i].o/mx*H,hr=b[i].r/mx*H;x.fillStyle='#3fbf8a';x.fillRect(90+i*bw+2,y+H-ho,bw-4,ho);x.fillStyle='#ff7d92';x.fillRect(90+i*bw+2,y+H-ho-hr,bw-4,hr);}
   x.fillStyle='#3d5679';x.fillRect(90,y+H+4,W,3);x.fillStyle='#9fb0c6';x.font=`600 26px ${F}`;x.fillText('80%',90,y+H+46);x.textAlign='right';x.fillText('100%',990,y+H+46);x.textAlign='left';x.fillStyle='#3fbf8a';x.fillText('■ offers',360,y+H+46);x.fillStyle='#ff7d92';x.fillText('■ other outcomes',540,y+H+46);y+=H+70;}
- x.fillStyle='#d6f46a';x.font=`800 44px ${F}`;x.fillText('offeratlas.github.io',90,1760);x.fillStyle='#8193ab';x.font=`500 26px ${F}`;x.fillText('Self-reported & unverified · data: r/OntarioGrade12s spreadsheet',90,1808);x.fillText('by u/Regular-Database9310 · not a cutoff or prediction',90,1846);
+ x.fillStyle='#d6f46a';x.font=`800 44px ${F}`;x.fillText('offeratlas.github.io',90,1760);x.fillStyle='#8193ab';x.font=`500 26px ${F}`;x.fillText('Self-reported & unverified · data: r/OntarioGrade12s spreadsheet',90,1808);x.fillText('Not a cutoff or prediction',90,1846);
  const blob=await new Promise(r=>c.toBlob(r,'image/png')),url=URL.createObjectURL(blob),file=new File([blob],`offer-atlas-${(pname(p)+'-'+p.university).toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,60)}.png`,{type:'image/png'});
  const d=$('#share-dialog');$('#share-img').src=url;$('#share-title').textContent=pname(p)+' · '+p.university;$('#share-size').textContent='Sized for Instagram or TikTok stories (1080×1920). Includes the self-reported disclaimer and credit.';
  $('#share-download').onclick=()=>{const a=document.createElement('a');a.href=url;a.download=file.name;a.click();};
@@ -371,7 +371,7 @@ async function weeklyRecap(){const cy=CUR(),today=torDay(Date.now()),start=today
  for(const t of top){y+=74;x.fillStyle='#fff';x.font=`750 36px ${F}`;x.fillText(fit(t.name,700),80,y);x.fillStyle='#9fb0c6';x.font=`500 26px ${F}`;x.fillText(fit(t.uni,700),80,y+32);x.fillStyle='#4fd69c';x.font=`850 40px ${F}`;x.textAlign='right';x.fillText(`+${t.n}`,1000,y+10);x.textAlign='left';y+=26;}
  const LIMIT=1205;y+=56;if(firsts.length&&y+70<LIMIT){x.fillStyle='#9fb0c6';x.font=`700 26px ${F}`;x.fillText('FIRST OFFERS OF THE CYCLE',80,y);x.fillStyle='#fff';x.font=`600 30px ${F}`;for(const f of firsts){if(y+44>LIMIT-40)break;y+=44;x.fillText(fit(`★ ${f.name} · ${f.uni}`,920),80,y);}y+=12;}
  if(wk.length&&y+50<=LIMIT){y+=50;x.fillStyle='#b8c4d6';x.font=`600 30px ${F}`;x.fillText(`Busiest day: ${DAYS[busiest]}`,80,y);}
- x.fillStyle='#d6f46a';x.font=`800 38px ${F}`;x.fillText('offeratlas.github.io',80,1270);x.fillStyle='#8193ab';x.font=`500 22px ${F}`;x.fillText('Self-reported & unverified · data: r/OntarioGrade12s spreadsheet by u/Regular-Database9310',80,1306);
+ x.fillStyle='#d6f46a';x.font=`800 38px ${F}`;x.fillText('offeratlas.github.io',80,1270);x.fillStyle='#8193ab';x.font=`500 22px ${F}`;x.fillText('Self-reported & unverified · data: r/OntarioGrade12s spreadsheet',80,1306);
  const blob=await new Promise(r=>c.toBlob(r,'image/png')),url=URL.createObjectURL(blob),file=new File([blob],`offer-atlas-weekly-recap-${new Date(today).toISOString().slice(0,10)}.png`,{type:'image/png'});
  const d=$('#share-dialog');$('#share-img').src=url;$('#share-title').textContent=`Weekly recap · ${dShort(start)}–${dShort(today)}`;$('#share-img').alt='Weekly recap image';
  $('#share-download').onclick=()=>{const a=document.createElement('a');a.href=url;a.download=file.name;a.click();};
