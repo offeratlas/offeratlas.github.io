@@ -301,7 +301,7 @@ document.addEventListener('click',e=>{const t=e.target;
  const cr=t.closest('[data-cmp-remove]');if(cr){cmp.programs=cmp.programs.filter(x=>x!==cr.dataset.cmpRemove);saveCmp();compareRender();return;}
 },true);
 
-function all(){progIndex=null;indexData();controls();picker();render();catalog();sources();credits();freshness();fresh();watchStrip();if(!$('#compare-view').hidden)compareRender();if(!$('#tracker-view').hidden)trackerRender();}
+function all(){progIndex=null;indexData();controls();picker();render();catalog();sources();credits();freshness();fresh();watchStrip();if(!$('#compare-view').hidden){compareRender();cmpSuggest();}if(!$('#tracker-view').hidden)trackerRender();}
 $('#reload').addEventListener('click',async()=>{const ok=await loadSnapshot();all();notify(ok?'Loaded the latest saved data.':'Saved data unavailable. Please try again.');});
 $('#evidence-dialog').addEventListener('close',()=>writeUrl());
 const filtersBox=$('.filters');if(PHONE.matches)filtersBox.classList.add('collapsed');
