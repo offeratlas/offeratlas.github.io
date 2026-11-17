@@ -86,7 +86,7 @@ ${quotes.length ? `<div class="pg-quotes">${quotes.map(([r, t]) => `<blockquote>
 <p class="pg-note">Counts are of reports mentioning each theme, matched by keyword, so they're approximate. Mentions don't show what caused an offer.</p></div></section>`;
 }
 
-const themeScript = `<script>(function(){try{var t=JSON.parse(localStorage.getItem('offeratlas.theme')||'"auto"');var d=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';}catch(e){}})();</script>`;
+const themeScript = `<script>(function(){try{var t=JSON.parse(localStorage.getItem('offeratlas.theme')||'"light"');var d=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';}catch(e){}})();</script>`;
 const head = ({ title, desc, url, site, feed }) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${themeScript}
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${esc(url)}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Offer Atlas"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(url)}"><meta property="og:image" content="${site}/og-image.jpg"><meta name="twitter:card" content="summary_large_image">

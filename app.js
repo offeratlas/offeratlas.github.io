@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa13';
-import {initEntering} from './entering.js?v=oa13';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa13';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa13';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa13';
+import {layoutDots} from './plot.js?v=oa14';
+import {initEntering} from './entering.js?v=oa14';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa14';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa14';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa14';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -293,8 +293,8 @@ async function shareProgram(id){const p=pmap.get(id);if(!p)return;const cy=CUR()
 // Flag a report -----------------------------------------------------------
 function flagUrl(r){const s=reportSources[r.source]||{},title=`Flag report: ${r.programName} · ${r.university} · ${r.averageLabel} · ${r.outcome}`;const body=`**Report:** ${r.id}\n**Program:** ${r.programName} (${r.university})\n**Entry:** Fall ${r.year}\n**Average:** ${r.averageLabel}\n**Outcome:** ${r.outcome}\n**Receipt:** ${urlFor(filters,r.id)}\n**Source row:** ${s.url||''}\n\n**What looks wrong?**\n<!-- e.g. impossible average, duplicate, joke entry, wrong program -->\n`;return `${ISSUES_URL}?title=${encodeURIComponent(title)}&labels=flag&body=${encodeURIComponent(body)}`;}
 // Theme toggle ------------------------------------------------------------
-const THEMES=['auto','light','dark'],THEME_ICON={auto:'◐',light:'☀',dark:'☾'},THEME_LABEL={auto:'Theme: match device',light:'Theme: light',dark:'Theme: dark'};
-function applyTheme(){const t=store.get('offeratlas.theme','auto');const dark=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';const b=$('#theme-toggle');if(b){b.textContent=THEME_ICON[t];b.title=b.ariaLabel=THEME_LABEL[t]+' (click to change)';}document.querySelector('meta[name=theme-color]')?.setAttribute('content',dark?'#0d1726':'#162840');}
+const THEMES=['light','dark','auto'],THEME_ICON={auto:'◐',light:'☀',dark:'☾'},THEME_LABEL={auto:'Theme: match device',light:'Theme: light',dark:'Theme: dark'};
+function applyTheme(){const t=store.get('offeratlas.theme','light');const dark=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';const b=$('#theme-toggle');if(b){b.textContent=THEME_ICON[t];b.title=b.ariaLabel=THEME_LABEL[t]+' (click to change)';}document.querySelector('meta[name=theme-color]')?.setAttribute('content',dark?'#0d1726':'#162840');}
 // Events ------------------------------------------------------------------
 document.addEventListener('click',e=>{const t=e.target;
  const w=t.closest('[data-watch]');if(w){e.stopPropagation();toggleWatch(w.dataset.watch);return;}
@@ -396,7 +396,7 @@ $('#evidence-dialog').addEventListener('close',()=>writeUrl());
 const filtersBox=$('.filters');if(PHONE.matches)filtersBox.classList.add('collapsed');
 $('#filters-toggle').addEventListener('click',()=>{const c=filtersBox.classList.toggle('collapsed');$('#filters-toggle').setAttribute('aria-expanded',String(!c));$('#filters-toggle').textContent=c?'Show filters':'Hide filters';});
 let phoneMode=PHONE.matches,resizeTimer;const modeCheck=()=>{if(PHONE.matches!==phoneMode){phoneMode=PHONE.matches;averages(lastRows);}};PHONE.addEventListener('change',modeCheck);addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(modeCheck,200);});
-applyTheme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);$('#theme-toggle').addEventListener('click',()=>{const t=store.get('offeratlas.theme','auto');store.set('offeratlas.theme',THEMES[(THEMES.indexOf(t)+1)%3]);applyTheme();});
+applyTheme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);$('#theme-toggle').addEventListener('click',()=>{const t=store.get('offeratlas.theme','light');store.set('offeratlas.theme',THEMES[(THEMES.indexOf(t)+1)%3]);applyTheme();});
 $('#cmp-avg').addEventListener('input',e=>{const v=e.target.value;cmp.avg=v===''?null:Number(v);saveCmp();compareRender();});$('#cmp-scope').addEventListener('change',e=>{cmp.scope=e.target.value;saveCmp();if(cmp.scope!=='cur'&&!ALLY())requestArchive({quiet:true});compareRender();});$('#cmp-search').addEventListener('input',cmpSuggest);
 for(const id of ['trk-search','trk-sort','trk-status','trk-watch'])$('#'+id).addEventListener(id==='trk-search'?'input':'change',()=>{trkLimit=60;trackerRender();});$('#trk-more').addEventListener('click',()=>{trkLimit+=60;trackerRender();});$('#close-share').addEventListener('click',()=>$('#share-dialog').close());
 $('#wait-search').addEventListener('input',waitSuggest);$('#wait-date').addEventListener('change',e=>{wait.date=e.target.value;store.set('offeratlas.wait',wait);waitRender();});$('#gs-input').addEventListener('input',gsSearch);$('#close-search').addEventListener('click',()=>$('#search-dialog').close());
