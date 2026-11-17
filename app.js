@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa9';
-import {initEntering} from './entering.js?v=oa9';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa9';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa9';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa9';
+import {layoutDots} from './plot.js?v=oa11';
+import {initEntering} from './entering.js?v=oa11';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa11';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa11';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa11';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -12,7 +12,7 @@ let filters={...defaultFilters(),year:'2027'},page=0,catalogLimit=30,pmap=new Ma
 let catalogPrograms=[],cardModes=new Map();
 function indexData(){resetReports();const view=buildProgramCatalog(programs,reports,reportSources);catalogPrograms=view.programs;reports.length=0;for(const r of view.reports){const d=reportSources[r.source]?.applicationDetails||{};reports.push({...r,...Object.fromEntries(['applicantGroup','province','citizenship','residenceCountry','applicationDate'].map(k=>[k,d[k]||'Unstated']))});}pmap=new Map(catalogPrograms.map(p=>[p.id,p]));rmap=new Map(reports.map(r=>[r.id,r]));}
 
-function setView(view){if(!['explorer','compare','tracker','catalog','entering','sources'].includes(view))view='explorer';document.querySelectorAll('.view').forEach(el=>el.hidden=el.id!==view+'-view');document.querySelectorAll('.nav').forEach(b=>{b.classList.toggle('active',b.dataset.view===view);if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});history.replaceState(null,'',location.pathname+location.search+'#'+view);if(view==='compare')compareRender();if(view==='tracker')trackerRender();}
+function setView(view){if(!['explorer','compare','tracker','catalog','entering','sources'].includes(view))view='explorer';document.querySelectorAll('.view').forEach(el=>el.hidden=el.id!==view+'-view');document.querySelectorAll('.nav').forEach(b=>{b.classList.toggle('active',b.dataset.view===view);if(b.dataset.view===view)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});history.replaceState(null,'',location.pathname+location.search+'#'+view);if(view==='compare')compareRender();if(view==='tracker'){trackerRender();waitRender();}}
 function controls(){const old=filters.university,unis=[...new Set(reports.map(r=>r.university))].sort();$('#university').innerHTML='<option value="All">All Canadian institutions</option>'+unis.map(u=>`<option value="${esc(u)}">${esc(u)}</option>`).join('');$('#university').value=old;for(const key of ['applicantGroup','province','citizenship','residenceCountry']){const options=[...new Set(reports.map(r=>r[key]||'Unstated'))].sort();$('#'+key).innerHTML='<option value="All">All / unstated</option>'+options.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');}$('#month').innerHTML='<option value="All">All months</option>'+months.map(m=>`<option>${m}</option>`).join('');$('#outcome').innerHTML='<option value="All">All outcomes</option>'+outcomes.map(o=>`<option>${o}</option>`).join('');sync();}
 function sync(){for(const k of ['university','year','sourceType','studyMode','month','outcome','curriculum','minimum','maximum','query','sort','applicantGroup','province','citizenship','residenceCountry'])$('#'+k).value=filters[k];$('#unquantified').checked=filters.includeUnquantified;syncExtras();}
 function picker(){const q=$('#program-search').value.trim().toLowerCase();const ids=new Set(reports.filter(r=>filters.university==='All'||r.university===filters.university).map(r=>r.program));const choices=catalogPrograms.filter(p=>ids.has(p.id)&&(!q||[p.name,p.university,...(p.aliases||[])].join(' ').toLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name));const markup=choices.map(p=>`<label class="program-choice"><input type="checkbox" data-program="${p.id}" ${filters.programs.includes(p.id)?'checked':''}><span>${esc(p.name)}<small>${esc(p.university)}</small></span></label>`).join('')||'<p class="fine">No matching program labels.</p>';$('#program-options').innerHTML=markup;$('#expanded-options').innerHTML=markup;$('#expanded-note').textContent=filters.programs.length+' selected';$('#selection-note').textContent=(filters.programs.length?`${filters.programs.length} selected. Clear the selection to include all programs.`:'All programs included.')+` ${fmt(choices.length)} matching programs.`;}
@@ -286,7 +286,7 @@ async function shareProgram(id){const p=pmap.get(id);if(!p)return;const cy=CUR()
   x.fillStyle='#3d5679';x.fillRect(90,y+H+4,W,3);x.fillStyle='#9fb0c6';x.font=`600 26px ${F}`;x.fillText('80%',90,y+H+46);x.textAlign='right';x.fillText('100%',990,y+H+46);x.textAlign='left';x.fillStyle='#3fbf8a';x.fillText('■ offers',360,y+H+46);x.fillStyle='#ff7d92';x.fillText('■ other outcomes',540,y+H+46);y+=H+70;}
  x.fillStyle='#d6f46a';x.font=`800 44px ${F}`;x.fillText('offeratlas.github.io',90,1760);x.fillStyle='#8193ab';x.font=`500 26px ${F}`;x.fillText('Self-reported & unverified · data: r/OntarioGrade12s spreadsheet',90,1808);x.fillText('by u/Regular-Database9310 · not a cutoff or prediction',90,1846);
  const blob=await new Promise(r=>c.toBlob(r,'image/png')),url=URL.createObjectURL(blob),file=new File([blob],`offer-atlas-${(pname(p)+'-'+p.university).toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,60)}.png`,{type:'image/png'});
- const d=$('#share-dialog');$('#share-img').src=url;$('#share-title').textContent=pname(p)+' · '+p.university;
+ const d=$('#share-dialog');$('#share-img').src=url;$('#share-title').textContent=pname(p)+' · '+p.university;$('#share-size').textContent='Sized for Instagram or TikTok stories (1080×1920). Includes the self-reported disclaimer and credit.';
  $('#share-download').onclick=()=>{const a=document.createElement('a');a.href=url;a.download=file.name;a.click();};
  const can=navigator.canShare&&navigator.canShare({files:[file]});$('#share-native').hidden=!can;$('#share-native').onclick=()=>navigator.share({files:[file],title:'Offer Atlas',text:`${pname(p)} · ${p.university} on Offer Atlas`}).catch(()=>{});
  if(!d.open)d.showModal();}
@@ -304,7 +304,92 @@ document.addEventListener('click',e=>{const t=e.target;
  const cr=t.closest('[data-cmp-remove]');if(cr){cmp.programs=cmp.programs.filter(x=>x!==cr.dataset.cmpRemove);saveCmp();compareRender();return;}
 },true);
 
-function all(){syncYearsToggle();progIndex=null;indexData();controls();picker();render();catalog();sources();credits();freshness();fresh();watchStrip();if(!$('#compare-view').hidden){compareRender();cmpSuggest();}if(!$('#tracker-view').hidden)trackerRender();}
+// ---- When will I hear back? -----------------------------------------------
+let wait=store.get('offeratlas.wait',{pid:null,date:''});
+const mdyD=t=>{const m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(String(t||''));return m?Date.UTC(+m[3],m[1]-1,+m[2]):null;};
+const isoD=t=>t?Date.parse(t+'T00:00:00Z'):null;
+const cycleStart=ms=>{const d=new Date(ms),y=d.getUTCMonth()>=8?d.getUTCFullYear():d.getUTCFullYear()-1;return Date.UTC(y,8,1);};
+const dShort=ms=>new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(ms));
+function waitRender(){const el=$('#wait-result');if(!el)return;$('#wait-date').value=wait.date||'';const p=wait.pid&&pmap.get(wait.pid);
+ $('#wait-chosen').innerHTML=p?`<span class="cmp-chip">${esc(pname(p))} <small>${esc(p.university)}</small><button data-wait-clear aria-label="Clear program">×</button></span>`:'';
+ if(!p){el.innerHTML=`<p class="wait-empty">Pick a program and the date you applied to see how long people waited for a decision.</p>`;return;}
+ const rows=(progReports().get(wait.pid)||[]).map(r=>{const a=mdyD(r.applicationDate),d=isoD(r.decisionDate);if(!a||!d)return null;const days=Math.round((d-a)/864e5);return days>=0&&days<=300?{r,a,d,days,doc:(a-cycleStart(a))/864e5}:null;}).filter(Boolean);
+ const more=ALLY()?'':` <button class="db-link" data-archive="load">Load all years</button> for more data.`;
+ if(rows.length<3){el.innerHTML=`<p class="wait-empty">Only ${rows.length} report${rows.length===1?'':'s'} for this program include both an application date and a decision date, which isn’t enough to estimate.${more}</p>`;return;}
+ const user=wait.date?Date.parse(wait.date+'T00:00:00Z'):null,udoc=user!==null?(user-cycleStart(user))/864e5:null;
+ let pool=rows,scope='all reports with both dates';if(udoc!==null){const near=rows.filter(x=>Math.abs(x.doc-udoc)<=14);if(near.length>=5){pool=near;scope=`people who applied within 2 weeks of ${dShort(user)} (any year)`;}else scope='all reports with both dates (too few applied near your date)';}
+ const ds=pool.map(x=>x.days).sort((a,b)=>a-b),q=f=>{const i=(ds.length-1)*f,lo=Math.floor(i),hi=Math.ceil(i);return Math.round(ds[lo]+(ds[hi]-ds[lo])*(i-lo));},med=q(.5),p25=q(.25),p75=q(.75);
+ const elapsed=user!==null?Math.max(0,Math.round((Date.now()-user)/864e5)):null,heardBy=elapsed!==null?pool.filter(x=>x.days<=elapsed).length:null;
+ const W=7,maxD=Math.min(300,Math.max(...ds)+W),nb=Math.ceil(maxD/W),bins=Array.from({length:nb},()=>({o:0,x:0}));for(const x of pool){const i=Math.min(nb-1,Math.floor(x.days/W));x.r.outcome==='Offer'?bins[i].o++:bins[i].x++;}const mx=Math.max(1,...bins.map(b=>b.o+b.x)),H=70,bw=100/nb;
+ const bars=bins.map((b,i)=>b.o+b.x?`<div class="cmp-bar" style="left:${(i*bw).toFixed(2)}%;width:${bw.toFixed(2)}%" title="${i*W}–${i*W+W-1} days: ${b.o+b.x} reports"><span class="hb-other" style="height:${(b.x/mx*H).toFixed(1)}px"></span><span class="hb-offer" style="height:${(b.o/mx*H).toFixed(1)}px"></span></div>`:'').join('');
+ const now=elapsed!==null&&elapsed<=maxD?`<div class="cmp-you" style="left:${(elapsed/maxD*100).toFixed(2)}%"><span>Today · day ${elapsed}</span></div>`:'';
+ el.innerHTML=`<div class="wait-stats"><div><span>Typical wait</span><strong>${med} days</strong><small>median</small></div><div><span>Most heard between</span><strong>${p25}–${p75} days</strong><small>middle half</small></div>${user!==null?`<div><span>Likely window for you</span><strong>${dShort(user+p25*864e5)} – ${dShort(user+p75*864e5)}</strong><small>if your wait is typical</small></div>`:''}</div>
+ <div class="cmp-strip" style="height:${H+28}px">${bars}${now}</div><div class="cmp-axis"><span>0 days</span><span>${Math.round(maxD/2)}</span><span>${maxD} days</span></div>
+ <p class="cmp-sum">Based on ${fmt(pool.length)} ${scope}. ${heardBy!==null?`By day ${elapsed}, <strong>${heardBy} of ${pool.length}</strong> (${Math.round(heardBy/pool.length*100)}%) had heard back. `:''}<span class="muted">Green = offers, blue = other decisions.</span>${more}</p>
+ <p class="cmp-disclaimer">Self-reported dates, often from people who heard early. Programs release decisions in batches, so your wait can be very different. Not a prediction.</p>`;}
+function waitSuggest(){const q=$('#wait-search').value.trim().toLowerCase(),el=$('#wait-suggest');if(!q){el.innerHTML='';return;}const idx=progReports();
+ const hits=catalogPrograms.filter(p=>!p.isSourceCollection&&idx.has(p.id)&&[pname(p),p.university,...(p.aliases||[])].join(' ').toLowerCase().includes(q)).sort((a,b)=>idx.get(b.id).length-idx.get(a.id).length).slice(0,6);
+ el.innerHTML=hits.map(p=>`<button data-wait-pick="${esc(p.id)}"><strong>${esc(pname(p))}</strong><span>${esc(p.university)} · ${fmt(idx.get(p.id).length)} reports</span></button>`).join('')||`<p class="fine">No matching programs${ALLY()?'':` with Fall ${CUR()} reports. <button class="db-link" data-archive="load">Load all years</button>`}.</p>`;}
+// ---- Global search (Ctrl+K) ------------------------------------------------
+let pageMap=null;const loadMap=()=>pageMap?Promise.resolve(pageMap):fetch('programs/map.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{programs:{},schools:{}}).catch(()=>({programs:{},schools:{}})).then(m=>pageMap=m);
+const VIEWS=[['Explore reports','view:explorer','Charts, filters and every receipt'],['Compare my average','view:compare','Where your average sits among reported offers'],['Offer tracker','view:tracker','Which programs have sent offers this cycle'],['When will I hear back?','view:tracker#wait','Typical wait from application to decision'],['Programs','view:catalog','Browse every program'],['Sources & credits','view:sources','Where the data comes from'],['Guides','href:guides/','Top 6, OUAC, AIF, Kira, Casper explained'],['Changelog','href:changelog/','What’s new on Offer Atlas'],['Weekly recap image','recap','Make a shareable image of this week']];
+let gsItems=[],gsSel=0;
+function gsSearch(){const q=$('#gs-input').value.trim().toLowerCase(),toks=q.split(/\s+/).filter(Boolean),idx=progReports(),out=[];
+ const match=t=>toks.every(k=>t.includes(k));
+ for(const [label,act,sub] of VIEWS)if(!q||match((label+' '+sub).toLowerCase()))out.push({type:'Page',label,sub,act,score:q?(label.toLowerCase().startsWith(q)?3:1):0});
+ if(q){for(const p of catalogPrograms){if(p.isSourceCollection||!idx.has(p.id))continue;const n=pname(p),t=[n,p.university,...(p.aliases||[])].join(' ').toLowerCase();if(!match(t))continue;out.push({type:'Program',label:n,sub:`${p.university} · ${fmt(idx.get(p.id).length)} reports`,act:'prog:'+p.id,score:(n.toLowerCase().startsWith(toks[0])?2:1)+Math.min(1,idx.get(p.id).length/200)});}
+  for(const u of [...new Set(reports.map(r=>r.university))])if(match(u.toLowerCase()))out.push({type:'School',label:u,sub:'All programs at this school',act:'uni:'+u,score:u.toLowerCase().startsWith(toks[0])?2.5:1.5});}
+ gsItems=out.sort((a,b)=>b.score-a.score).slice(0,q?14:9);gsSel=0;gsDraw();}
+function gsDraw(){$('#gs-results').innerHTML=gsItems.map((x,i)=>`<li><button class="gs-item${i===gsSel?' sel':''}" data-gs="${i}"><span class="gs-type ${x.type}">${x.type}</span><span class="gs-text"><strong>${esc(x.label)}</strong><small>${esc(x.sub)}</small></span>${x.type==='Program'?`<span class="gs-hint">${pageMap?.programs?.[x.act.slice(5)]?'Program page →':'Explore →'}</span>`:''}</button></li>`).join('')||`<li class="gs-none">No matches${ALLY()?'':` in Fall ${CUR()} data. <button class="db-link" data-archive="load">Load all years</button>`}</li>`;$('#gs-results .sel')?.scrollIntoView({block:'nearest'});}
+function gsGo(i){const x=gsItems[i];if(!x)return;$('#search-dialog').close();const [k,v]=[x.act.split(':')[0],x.act.slice(x.act.indexOf(':')+1)];
+ if(k==='view'){const [view,anchor]=v.split('#');setView(view);if(anchor)setTimeout(()=>$('#'+anchor+'-panel')?.scrollIntoView({behavior:'smooth'}),50);else document.querySelector('.view:not([hidden])')?.scrollIntoView({behavior:'auto'});}
+ else if(k==='href')location.href=v;else if(k==='recap')weeklyRecap();
+ else if(k==='prog'){const slug=pageMap?.programs?.[v];if(slug)location.href='programs/'+slug+'/';else{filters.programs=[v];filters.university='All';sync();picker();render();setView('explorer');$('#workspace').scrollIntoView({behavior:'auto'});}}
+ else if(k==='uni'){filters.university=v;filters.programs=[];sync();picker();render();setView('explorer');$('#workspace').scrollIntoView({behavior:'auto'});}}
+async function gsOpen(){const d=$('#search-dialog');if(!d.open)d.showModal();$('#gs-input').value='';gsSearch();$('#gs-input').focus();await loadMap();gsDraw();}
+// ---- Weekly recap image ----------------------------------------------------
+async function weeklyRecap(){const cy=CUR(),today=torDay(Date.now()),start=today-6*864e5,inWeek=t=>{const d=torDay(t);return d>=start&&d<=today;};
+ const cur=reports.filter(r=>r.year===cy).map(r=>[r,subTime(r)]).filter(x=>x[1]),wk=cur.filter(x=>inWeek(x[1]));
+ const offers=wk.filter(([r])=>r.outcome==='Offer'),rej=wk.filter(([r])=>r.outcome==='Rejected').length;
+ const byProg=new Map();for(const [r] of offers){const k=r.isSourceCollection?(r.submittedProgram||r.programName)+'|'+r.university:r.program;const e=byProg.get(k)||{n:0,name:r.isSourceCollection?(r.submittedProgram||r.programName):r.programName,uni:r.university};e.n++;byProg.set(k,e);}
+ const top=[...byProg.values()].sort((a,b)=>b.n-a.n).slice(0,5);
+ const firstSeen=new Map();for(const [r,t] of cur)if(r.outcome==='Offer'&&!r.isSourceCollection){const f=firstSeen.get(r.program);if(!f||t<f.t)firstSeen.set(r.program,{t,name:r.programName,uni:r.university});}
+ const firsts=[...firstSeen.values()].filter(f=>inWeek(f.t)).slice(0,4);
+ const dayCount=Array(7).fill(0);for(const [,t] of wk)dayCount[new Date(torDay(t)).getUTCDay()]++;const busiest=dayCount.indexOf(Math.max(...dayCount));
+ const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+ const c=document.createElement('canvas');c.width=1080;c.height=1350;const x=c.getContext('2d'),F='Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif';
+ const g=x.createLinearGradient(0,0,0,1350);g.addColorStop(0,'#162840');g.addColorStop(1,'#0b1626');x.fillStyle=g;x.fillRect(0,0,1080,1350);
+ x.fillStyle='#d6f46a';x.beginPath();x.roundRect(80,80,80,80,22);x.fill();x.fillStyle='#162840';x.font=`900 50px ${F}`;x.textAlign='center';x.fillText('↗',120,138);x.textAlign='left';
+ x.fillStyle='#fff';x.font=`850 40px ${F}`;x.fillText('OFFER ATLAS',184,118);x.fillStyle='#9fb0c6';x.font=`600 28px ${F}`;x.fillText(`Weekly recap · ${dShort(start)}–${dShort(today)}`,184,156);
+ x.fillStyle='#fff';x.font=`850 78px ${F}`;x.fillText('This week in',80,290);x.fillStyle='#d6f46a';x.fillText(`Fall ${cy} admissions`,80,378);
+ const box=(lab,val,bx,by,w,col)=>{x.fillStyle='#21385a';x.beginPath();x.roundRect(bx,by,w,170,26);x.fill();x.fillStyle='#9fb0c6';x.font=`700 24px ${F}`;x.fillText(lab,bx+30,by+52);x.fillStyle=col;x.font=`850 70px ${F}`;x.fillText(val,bx+30,by+136);};
+ box('NEW REPORTS',fmt(wk.length),80,430,290,'#fff');box('OFFERS',fmt(offers.length),395,430,290,'#4fd69c');box('REJECTIONS',fmt(rej),710,430,290,'#ff7d92');
+ let y=680;x.fillStyle='#9fb0c6';x.font=`700 26px ${F}`;x.fillText('MOST NEW OFFERS',80,y);y+=20;
+ const fit=(t,w)=>{let s=t;while(x.measureText(s).width>w&&s.length>4)s=s.slice(0,-2);return s===t?t:s.trimEnd()+'…';};
+ if(!top.length){y+=60;x.fillStyle='#b8c4d6';x.font=`600 34px ${F}`;x.fillText('No offers reported yet this week.',80,y);}
+ for(const t of top){y+=74;x.fillStyle='#fff';x.font=`750 36px ${F}`;x.fillText(fit(t.name,700),80,y);x.fillStyle='#9fb0c6';x.font=`500 26px ${F}`;x.fillText(fit(t.uni,700),80,y+32);x.fillStyle='#4fd69c';x.font=`850 40px ${F}`;x.textAlign='right';x.fillText(`+${t.n}`,1000,y+10);x.textAlign='left';y+=26;}
+ y+=60;if(firsts.length){x.fillStyle='#9fb0c6';x.font=`700 26px ${F}`;x.fillText('FIRST OFFERS OF THE CYCLE',80,y);x.fillStyle='#fff';x.font=`600 30px ${F}`;for(const f of firsts){y+=44;x.fillText(fit(`★ ${f.name} · ${f.uni}`,920),80,y);}y+=20;}
+ if(wk.length){y+=50;x.fillStyle='#b8c4d6';x.font=`600 30px ${F}`;x.fillText(`Busiest day: ${DAYS[busiest]}`,80,Math.min(y,1210));}
+ x.fillStyle='#d6f46a';x.font=`800 38px ${F}`;x.fillText('offeratlas.github.io',80,1270);x.fillStyle='#8193ab';x.font=`500 22px ${F}`;x.fillText('Self-reported & unverified · data: r/OntarioGrade12s spreadsheet by u/Regular-Database9310',80,1306);
+ const blob=await new Promise(r=>c.toBlob(r,'image/png')),url=URL.createObjectURL(blob),file=new File([blob],`offer-atlas-weekly-recap-${new Date(today).toISOString().slice(0,10)}.png`,{type:'image/png'});
+ const d=$('#share-dialog');$('#share-img').src=url;$('#share-title').textContent=`Weekly recap · ${dShort(start)}–${dShort(today)}`;$('#share-img').alt='Weekly recap image';
+ $('#share-download').onclick=()=>{const a=document.createElement('a');a.href=url;a.download=file.name;a.click();};
+ const can=navigator.canShare&&navigator.canShare({files:[file]});$('#share-native').hidden=!can;$('#share-native').onclick=()=>navigator.share({files:[file],title:'Offer Atlas weekly recap'}).catch(()=>{});
+ $('#share-size').textContent='Sized for Instagram feed posts (1080×1350). Covers the last 7 days of reports.';if(!d.open)d.showModal();}
+// ---- Events ----------------------------------------------------------------
+document.addEventListener('click',e=>{const t=e.target;
+ const wp=t.closest('[data-wait-pick]');if(wp){wait.pid=wp.dataset.waitPick;store.set('offeratlas.wait',wait);$('#wait-search').value='';waitSuggest();waitRender();return;}
+ if(t.closest('[data-wait-clear]')){wait.pid=null;store.set('offeratlas.wait',wait);waitRender();return;}
+ const gi=t.closest('[data-gs]');if(gi){gsGo(+gi.dataset.gs);return;}
+ if(t.closest('#search-open')){gsOpen();return;}
+ if(t.closest('[data-recap]')){weeklyRecap();return;}
+},true);
+document.addEventListener('keydown',e=>{const typing=e.target.matches('input,textarea,select,[contenteditable]');
+ if((e.key==='k'||e.key==='K')&&(e.ctrlKey||e.metaKey)){e.preventDefault();gsOpen();return;}
+ if(e.key==='/'&&!typing){e.preventDefault();gsOpen();return;}
+ if($('#search-dialog').open&&e.target.id==='gs-input'){if(e.key==='ArrowDown'){e.preventDefault();gsSel=Math.min(gsItems.length-1,gsSel+1);gsDraw();}else if(e.key==='ArrowUp'){e.preventDefault();gsSel=Math.max(0,gsSel-1);gsDraw();}else if(e.key==='Enter'){e.preventDefault();gsGo(gsSel);}}});
+
+function all(){syncYearsToggle();progIndex=null;indexData();controls();picker();render();catalog();sources();credits();freshness();fresh();watchStrip();if(!$('#compare-view').hidden){compareRender();cmpSuggest();}if(!$('#tracker-view').hidden){trackerRender();waitRender();}}
 $('#reload').addEventListener('click',async()=>{const ok=await loadSnapshot();all();notify(ok?'Loaded the latest saved data.':'Saved data unavailable. Please try again.');});
 $('#evidence-dialog').addEventListener('close',()=>writeUrl());
 const filtersBox=$('.filters');if(PHONE.matches)filtersBox.classList.add('collapsed');
@@ -313,6 +398,7 @@ let phoneMode=PHONE.matches,resizeTimer;const modeCheck=()=>{if(PHONE.matches!==
 applyTheme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);$('#theme-toggle').addEventListener('click',()=>{const t=store.get('offeratlas.theme','auto');store.set('offeratlas.theme',THEMES[(THEMES.indexOf(t)+1)%3]);applyTheme();});
 $('#cmp-avg').addEventListener('input',e=>{const v=e.target.value;cmp.avg=v===''?null:Number(v);saveCmp();compareRender();});$('#cmp-scope').addEventListener('change',e=>{cmp.scope=e.target.value;saveCmp();if(cmp.scope!=='cur'&&!ALLY())requestArchive({quiet:true});compareRender();});$('#cmp-search').addEventListener('input',cmpSuggest);
 for(const id of ['trk-search','trk-sort','trk-status','trk-watch'])$('#'+id).addEventListener(id==='trk-search'?'input':'change',()=>{trkLimit=60;trackerRender();});$('#trk-more').addEventListener('click',()=>{trkLimit+=60;trackerRender();});$('#close-share').addEventListener('click',()=>$('#share-dialog').close());
+$('#wait-search').addEventListener('input',waitSuggest);$('#wait-date').addEventListener('change',e=>{wait.date=e.target.value;store.set('offeratlas.wait',wait);waitRender();});$('#gs-input').addEventListener('input',gsSearch);$('#close-search').addEventListener('click',()=>$('#search-dialog').close());
 $('#copy-view')?.addEventListener('click',()=>copyText(urlFor(filters,null),'Link to this view copied'));
 for(const id of ['avg-lo','avg-hi'])$('#'+id).addEventListener('input',()=>{let a=+$('#avg-lo').value,b=+$('#avg-hi').value;if(a>b){if(id==='avg-lo')a=b;else b=a;}setRange(a,b);});
 $('#avg-presets').addEventListener('click',e=>{const b=e.target.closest('[data-avg]');if(!b)return;const [x,y]=b.dataset.avg.split('-').map(Number);setRange(x,y);});

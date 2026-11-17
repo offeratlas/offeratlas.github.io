@@ -347,6 +347,23 @@ def main():
         print('No new or edited entries; snapshot.json left unchanged.')
         return
     SNAPSHOT.write_text(json.dumps(snap, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+    # Daily history for the public changelog (one entry per day with changes).
+    hist_path = ROOT / 'data' / 'history.json'
+    try:
+        hist = json.loads(hist_path.read_text(encoding='utf-8'))
+    except (FileNotFoundError, ValueError):
+        hist = []
+    entry = next((h for h in hist if h.get('date') == TODAY), None)
+    if entry is None:
+        entry = {'date': TODAY, 'new': 0, 'edited': 0, 'total': 0, 'programs': []}
+        hist.append(entry)
+    entry['new'] += len(added)
+    entry['edited'] += changed
+    entry['total'] = len(snap['reports'])
+    tops = Counter(f"{r['university']}|{model.programs.get(r['program'], {}).get('name', '')}" for r in added if r['outcome'] == 'Offer')
+    entry['programs'] = [k for k, _ in tops.most_common(5)] or entry.get('programs', [])
+    hist_path.parent.mkdir(exist_ok=True)
+    hist_path.write_text(json.dumps(sorted(hist, key=lambda h: h['date'])[-400:], ensure_ascii=False, indent=0), encoding='utf-8')
 
 
 def selftest(model, rows, existing):

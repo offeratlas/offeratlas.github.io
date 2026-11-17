@@ -87,15 +87,15 @@ ${quotes.length ? `<div class="pg-quotes">${quotes.map(([r, t]) => `<blockquote>
 }
 
 const themeScript = `<script>(function(){try{var t=JSON.parse(localStorage.getItem('offeratlas.theme')||'"auto"');var d=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';}catch(e){}})();</script>`;
-const head = ({ title, desc, url, site }) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${themeScript}
+const head = ({ title, desc, url, site, feed }) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">${themeScript}
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${esc(url)}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Offer Atlas"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(url)}"><meta property="og:image" content="${site}/og-image.jpg"><meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#162840"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/programs/page.css"></head><body>`;
-const topbar = `<header class="pg-top"><a class="pg-brand" href="/"><span class="pg-icon" aria-hidden="true">↗</span>OFFER ATLAS</a><nav><a href="/programs/">Programs</a><a href="/schools/">Schools</a><a href="/#tracker">Offer tracker</a><a href="/#compare">Compare my average</a><a class="pg-submit" href="${FORM}" ${ext}>Submit your result ↗</a></nav></header>`;
-const footer = `<footer class="pg-foot"><p><strong>Spreadsheets created by <a href="${CREATOR_URL}" ${ext}>u/${CREATOR}</a></strong> on r/OntarioGrade12s (<a href="${CREATOR_POST}" ${ext}>their post ↗</a>). Offer Atlas is a separate project that visualizes their public data.</p><p><strong>Self-reported, unverifiable data.</strong> Reports come from public, applicant-submitted spreadsheets and Reddit posts. They are not unique applicants, not a random sample, and medians are not cutoffs. Not affiliated with any university.</p><p><a href="/#sources">Sources &amp; credits</a> · <a href="${FORM}" ${ext}>Submit your result ↗</a> · <a href="${ISSUES}" ${ext}>Report a correction ↗</a></p></footer></body></html>`;
+<meta name="theme-color" content="#162840"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/programs/page.css">${feed ? `<link rel="alternate" type="application/atom+xml" title="${esc(feed.title)}" href="${feed.href}">` : ''}</head><body>`;
+const topbar = `<header class="pg-top"><a class="pg-brand" href="/"><span class="pg-icon" aria-hidden="true">↗</span>OFFER ATLAS</a><nav><a href="/programs/">Programs</a><a href="/schools/">Schools</a><a href="/#tracker">Offer tracker</a><a href="/#compare">Compare my average</a><a href="/guides/">Guides</a><a class="pg-submit" href="${FORM}" ${ext}>Submit your result ↗</a></nav></header>`;
+const footer = `<footer class="pg-foot"><p><strong>Spreadsheets created by <a href="${CREATOR_URL}" ${ext}>u/${CREATOR}</a></strong> on r/OntarioGrade12s (<a href="${CREATOR_POST}" ${ext}>their post ↗</a>). Offer Atlas is a separate project that visualizes their public data.</p><p><strong>Self-reported, unverifiable data.</strong> Reports come from public, applicant-submitted spreadsheets and Reddit posts. They are not unique applicants, not a random sample, and medians are not cutoffs. Not affiliated with any university.</p><p><a href="/#sources">Sources &amp; credits</a> · <a href="/guides/">Guides</a> · <a href="/changelog/">Changelog</a> · <a href="/feeds/latest.xml">RSS</a> · <a href="${FORM}" ${ext}>Submit your result ↗</a> · <a href="${ISSUES}" ${ext}>Report a correction ↗</a></p></footer></body></html>`;
 const disclaimer = `<p class="pg-disclaimer"><strong>Self-reported and unverifiable.</strong> Every result here was submitted anonymously by an applicant and has not been checked. Averages may be rounded, mistyped or false, and posters aren’t a random sample. Use this as rough context, not a cutoff or prediction. Data from the r/OntarioGrade12s spreadsheets by <a href="${CREATOR_URL}" ${ext}>u/${CREATOR}</a>.</p>`;
 
-function programPage({ p, rs, slug, s, site, snap, schoolSlug }) {
+function programPage({ p, rs, slug, s, site, snap, schoolSlug, similar }) {
   const name = p.displayName || p.name, url = `${site}/programs/${slug}/`;
   const explore = `/?p=${encodeURIComponent(p.id)}`;
   const ly = s.latestYear;
@@ -108,7 +108,7 @@ function programPage({ p, rs, slug, s, site, snap, schoolSlug }) {
     { '@type': 'ListItem', position: 1, name: 'Schools', item: `${site}/schools/` },
     { '@type': 'ListItem', position: 2, name: p.university, item: `${site}/schools/${schoolSlug}/` },
     { '@type': 'ListItem', position: 3, name, item: url }] };
-  return head({ title, desc, url, site }) + topbar + `<main class="pg">
+  return head({ title, desc, url, site, feed: { title: `New reports: ${name} (${p.university})`, href: `/feeds/${slug}.xml` } }) + topbar + `<main class="pg">
 <p class="pg-crumbs"><a href="/schools/">Schools</a> › <a href="/schools/${schoolSlug}/">${esc(p.university)}</a></p>
 <h1>${esc(name)}</h1><p class="pg-sub">${esc(p.university)} · self-reported admission results</p>
 ${disclaimer}
@@ -118,7 +118,7 @@ ${disclaimer}
  <div><span>Median offer average${ly ? ` · Fall ${ly.year}` : ''}</span><strong>${ly ? pct(ly.median) : '—'}</strong></div>
  <div><span>Median offer average · all years</span><strong>${pct(s.median)}</strong></div>
 </div>
-<div class="pg-cta"><a class="pg-btn" href="${explore}">Explore every receipt →</a><a class="pg-btn ghost" href="/?cp=${encodeURIComponent(p.id)}#compare">Compare my average</a><a class="pg-btn ghost" href="/?share=${encodeURIComponent(p.id)}">Share as image</a><a class="pg-btn ghost" href="${FORM}" ${ext}>Add your result ↗</a></div>
+<div class="pg-cta"><a class="pg-btn" href="${explore}">Explore every receipt →</a><a class="pg-btn ghost" href="/?cp=${encodeURIComponent(p.id)}#compare">Compare my average</a><a class="pg-btn ghost" href="/?share=${encodeURIComponent(p.id)}">Share as image</a><a class="pg-btn ghost" href="${FORM}" ${ext}>Add your result ↗</a><a class="pg-btn ghost" href="/feeds/${slug}.xml" title="Atom/RSS feed of new reports for this program">Follow (RSS)</a></div>
 <section><h2>By entry year</h2><div class="pg-scroll"><table><thead><tr><th>Entry</th><th>Reports</th><th>Offers</th><th>Median offer avg</th><th>Middle half of offers</th><th>Earliest offer</th></tr></thead><tbody>
 ${s.years.map(y => `<tr><td>Fall ${y.year}</td><td>${y.n}</td><td>${y.offers}</td><td>${y.numeric >= 3 ? pct(y.median) : '—'}</td><td>${y.numeric >= 4 ? pct(y.p25) + ' – ' + pct(y.p75) : '—'}</td><td>${fmtDate(y.first)}</td></tr>`).join('')}
 </tbody></table></div><p class="pg-note">Medians need at least 3 numeric offer averages; the middle-half range needs 4.</p></section>
@@ -128,6 +128,7 @@ ${trendChart(s.years)}
 <section><h2>Averages reported</h2><div class="pg-bars">${s.buckets.map(b => `<div class="pg-bar"><span>${b.label}</span><span class="pg-track"><i style="width:${(b.offers / maxB * 100).toFixed(1)}%"></i><em style="width:${(b.other / maxB * 100).toFixed(1)}%"></em></span><b>${b.offers + b.other || ''}</b></div>`).join('')}</div><p class="pg-note"><i class="k off"></i>Offers <i class="k oth"></i>Other outcomes (rejected, deferred, waitlisted…)</p></section>
 </div>
 ${insights(snap, rs)}
+${similar || ''}
 <section><h2>Latest reports</h2><div class="pg-scroll"><table><thead><tr><th>Entry</th><th>Average</th><th>Outcome</th><th>Decision</th><th></th></tr></thead><tbody>
 ${latest.map(r => `<tr><td>Fall ${r.year}</td><td>${esc(avgLabel(r))}</td><td><span class="pg-out ${esc(r.outcome)}">${esc(r.outcome)}</span></td><td>${r.decisionDate ? fmtDate(r.decisionDate) : esc(r.month || 'Unstated')}</td><td><a href="/?p=${encodeURIComponent(p.id)}&amp;r=${encodeURIComponent(r.id)}">Receipt →</a></td></tr>`).join('')}
 </tbody></table></div><p class="pg-note">Showing ${latest.length} of ${rs.length}. <a href="${explore}">See all ${rs.length} with filters and charts →</a></p></section>
@@ -206,10 +207,78 @@ html[data-theme=dark] .pg-disclaimer{background:#2e2410;border-color:#5a4720;col
 .pg-official{font-size:14px;color:var(--muted);margin-top:24px}.pg-search{width:100%;font:inherit;color:var(--ink);padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin:4px 0 10px;background:var(--card)}
 .pg-uni h2{font-size:19px;margin:22px 0 8px}.pg-uni h2 a{text-decoration:none}.pg-uni h2 a:hover{text-decoration:underline}.pg-grid{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:6px}
 .pg-grid li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}.pg-grid li a{font-weight:700;text-decoration:none}.pg-grid li a:hover{text-decoration:underline}.pg-grid li span{font-size:13px;color:var(--muted)}
+.pg-h3{font-size:15px;margin:0 0 8px;color:var(--muted)}.pg-grid.one{grid-template-columns:1fr}
+.pg-toc{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px}.pg-toc a{font-size:14px;font-weight:650;text-decoration:none;border:1px solid var(--line);background:var(--card);border-radius:20px;padding:6px 12px}.pg-toc a:hover{border-color:var(--ink)}
+.guide{margin-top:14px;scroll-margin-top:16px}.guide h2{margin-bottom:8px}.guide p{font-size:16px;line-height:1.7;margin:0 0 10px}
+.log{margin-top:12px}.log h2{font-size:18px;margin:0 0 8px}.log ul{margin:6px 0 0;padding-left:20px}.log li{font-size:15px;line-height:1.6}.log-data{margin:0;font-size:15px}
 .pg-foot{max-width:1100px;margin:auto;padding:24px 16px 40px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
 @media(max-width:760px){.pg-two{grid-template-columns:1fr}.pg-stats strong{font-size:24px}.pg-bar.wide{grid-template-columns:120px 1fr 30px}.pg-top nav{gap:10px;font-size:14px}}`;
 
-export function buildSite({ snap, catalog, site = 'https://offeratlas.github.io' }) {
+
+const fold = t => String(t || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
+function similarHtml(pg, pages) {
+  const me = pg.s.latestYear?.median, key = fold(pg.p.displayName || pg.p.name);
+  const li = x => `<li><a href="/programs/${x.slug}/">${esc(x.p.displayName || x.p.name)}</a><span>${esc(x.p.university)}${x.s.latestYear ? ` · median offer ${pct(x.s.latestYear.median)} (Fall ${x.s.latestYear.year})` : ''} · ${x.rs.length} reports</span></li>`;
+  const diff = x => (me === undefined || !x.s.latestYear) ? 99 : Math.abs(x.s.latestYear.median - me);
+  const same = pages.filter(x => x !== pg && x.p.university !== pg.p.university && fold(x.p.displayName || x.p.name) === key)
+    .sort((a, b) => diff(a) - diff(b) || b.rs.length - a.rs.length).slice(0, 6);
+  const near = me === undefined ? [] : pages.filter(x => x !== pg && !same.includes(x) && x.s.latestYear && Math.abs(x.s.latestYear.median - me) <= 1)
+    .sort((a, b) => (a.p.university === pg.p.university ? -1 : 0) - (b.p.university === pg.p.university ? -1 : 0) || diff(a) - diff(b) || b.rs.length - a.rs.length).slice(0, 6);
+  if (!same.length && !near.length) return '';
+  return `<section><h2>Similar programs</h2><div class="pg-two">
+${same.length ? `<div><h3 class="pg-h3">${esc(pg.p.displayName || pg.p.name)} at other schools</h3><ul class="pg-grid one">${same.map(li).join('')}</ul></div>` : ''}
+${near.length ? `<div><h3 class="pg-h3">Similar reported offer averages${me !== undefined ? ` (within 1 point of ${pct(me)})` : ''}</h3><ul class="pg-grid one">${near.map(li).join('')}</ul></div>` : ''}
+</div><p class="pg-note">Matched by program name and by median reported offer average only. Programs can differ a lot in content, supplementary requirements and competitiveness.</p></section>`;
+}
+
+const xmlEsc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
+function feedXml({ title, selfUrl, pageUrl, items, site, updated }) {
+  return `<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+<title>${xmlEsc(title)}</title>
+<subtitle>Self-reported, unverified admission results. Data: r/OntarioGrade12s spreadsheets by u/${CREATOR}.</subtitle>
+<link rel="self" href="${xmlEsc(selfUrl)}"/><link rel="alternate" href="${xmlEsc(pageUrl)}"/>
+<id>${xmlEsc(selfUrl)}</id><updated>${updated}T12:00:00Z</updated>
+${items.map(({ r, when, program, uni, pid }) => `<entry><title>${xmlEsc(`${r.outcome} · ${avgLabel(r)} · ${program} (${uni}) · Fall ${r.year}`)}</title>
+<id>tag:offeratlas.github.io,2026:report:${xmlEsc(r.id)}</id><updated>${when}T12:00:00Z</updated>
+<link href="${xmlEsc(`${site}/?p=${encodeURIComponent(pid)}&r=${encodeURIComponent(r.id)}`)}"/>
+<summary>${xmlEsc(`${r.outcome} for ${program} at ${uni}, Fall ${r.year}. Reported average ${avgLabel(r)}. Decision ${r.decisionDate ? fmtDate(r.decisionDate) : (r.month || 'date unstated')}. Self-reported and unverified.`)}</summary></entry>`).join('\n')}
+</feed>
+`;
+}
+
+function guidesPage({ site }) {
+  const url = `${site}/guides/`;
+  const sec = (id, h, body) => `<section id="${id}" class="pg-card guide"><h2>${h}</h2>${body}</section>`;
+  return head({ title: 'Ontario university admissions guide: Top 6, OUAC, AIF, Kira, Casper | Offer Atlas', desc: 'Plain-language explanations of Ontario university admissions: Top 6 averages, OUAC 101 vs 105, offer timelines, conditional offers, AIF, Kira, Casper and supplementary applications.', url, site }) + topbar + `<main class="pg">
+<h1>Admissions, explained simply</h1><p class="pg-sub">A plain-language glossary for Ontario applicants. Rules differ by university and program, so always confirm on the official pages linked below.</p>
+<nav class="pg-toc">${[['top6', 'Top 6 average'], ['groups', 'OUAC 101 vs 105'], ['timeline', 'When offers come out'], ['conditional', 'Conditional offers'], ['outcomes', 'Deferred, waitlisted, alternate'], ['aif', 'AIF'], ['kira', 'Kira'], ['casper', 'Casper'], ['supp', 'Supplementary applications'], ['ib', 'IB & AP'], ['reading', 'Reading this site']].map(([id, t]) => `<a href="#${id}">${t}</a>`).join('')}</nav>
+${sec('top6', 'Top 6 average', `<p>Most Ontario universities calculate your admission average from your <strong>six best Grade 12 U or M courses</strong>, and the program’s required courses (prerequisites) must be among them. For example, a program might require English (ENG4U), Advanced Functions (MHF4U) and Calculus (MCV4U), then add your three best remaining 4U/4M courses.</p><p>Early in the year, universities often use your <strong>Grade 11 final marks and Grade 12 midterm or first-semester marks</strong> instead, which is why early offers can arrive before you have final grades. Some programs adjust averages (for example, Waterloo applies an adjustment factor to some programs). Each program page states exactly what it uses.</p>`)}
+${sec('groups', 'OUAC 101 vs 105 (Group A vs Group B)', `<p>The Ontario Universities’ Application Centre (OUAC) has two main undergraduate applications. <strong>OUAC 101</strong> (Group A) is for students currently attending an Ontario high school. <strong>OUAC 105</strong> (Group B) is for everyone else, such as students from other provinces, international students and people who already graduated.</p><p>On this site, “Group A” and “Group B” labels come straight from applicants’ submissions. See <a href="https://www.ouac.on.ca/" ${ext}>ouac.on.ca ↗</a> for the official definitions.</p>`)}
+${sec('timeline', 'When offers come out', `<p>Universities send offers on a rolling basis. <strong>Early offers</strong> can start in the fall for strong applicants, while many programs make most decisions between <strong>February and May</strong>. Applications submitted by each university’s “equal consideration” date (often in January) are considered equally.</p><p>Use the <a href="/#tracker">Offer tracker</a> to see what applicants reported this cycle compared with last year. For official dates, check <a href="https://www.ouac.on.ca/" ${ext}>OUAC ↗</a> and each university’s admissions site.</p>`)}
+${sec('conditional', 'Conditional offers', `<p>Most offers are <strong>conditional</strong>: you must finish your courses and usually keep a minimum final average (sometimes in specific courses too). Your offer letter and the university’s applicant portal list the exact conditions. Falling below them can lead to an offer being rescinded, so read the letter carefully.</p>`)}
+${sec('outcomes', 'Deferred, waitlisted and alternate offers', `<p><strong>Deferred</strong> means the university hasn’t decided yet and will review you again later, often with newer marks. <strong>Waitlisted</strong> means you may get an offer if space opens. An <strong>alternate offer</strong> is an offer to a different program than the one you applied to. On this site these stay separate from offers and rejections.</p>`)}
+${sec('aif', 'AIF (Admission Information Form)', `<p>The <strong>AIF</strong> is the University of Waterloo’s form where applicants share information beyond grades, such as activities, achievements and interests. Some Waterloo programs require it and others strongly recommend it. See <a href="https://uwaterloo.ca/future-students/" ${ext}>Waterloo future students ↗</a> for current details.</p>`)}
+${sec('kira', 'Kira', `<p><strong>Kira</strong> is an online assessment with timed video and/or written responses that some programs use to learn about applicants’ communication and personal qualities. Programs that use it tell you in their supplementary application instructions.</p>`)}
+${sec('casper', 'Casper', `<p><strong>Casper</strong> is an online situational judgment test, where you respond to scenarios, used by some programs (often in health or education) as part of admissions. Check each program’s requirements for whether it is needed.</p>`)}
+${sec('supp', 'Supplementary applications', `<p>Many competitive programs ask for a <strong>supplementary application</strong>: extra questions, essays, videos, interviews or portfolios. These often have their own deadlines, earlier than you might expect, and can matter a lot alongside your average. The “What applicants mentioned” section on each <a href="/programs/">program page</a> shows what people reported.</p>`)}
+${sec('ib', 'IB and AP students', `<p>Universities convert IB and AP results in their own ways (for example using predicted IB scores for early offers). Averages reported here as “42/45 IB” are kept as written and aren’t converted into percentages, so they don’t appear on percentage charts. Check each university’s IB/AP admission page.</p>`)}
+${sec('reading', 'Reading this site', `<p>Everything on Offer Atlas is <strong>self-reported and unverified</strong>. A median reported offer average is <strong>not a cutoff</strong>, and people who post aren’t a random sample (people with good news post more often). Use it as context alongside official requirements, not as a prediction.</p>`)}
+</main>` + footer;
+}
+
+function changelogPage({ site, changes, history }) {
+  const days = new Map();
+  for (const c of changes) { if (!days.has(c.date)) days.set(c.date, { notes: [], data: null }); days.get(c.date).notes.push(c.text); }
+  for (const h of history) { if (!(h.new || h.edited)) continue; if (!days.has(h.date)) days.set(h.date, { notes: [], data: null }); days.get(h.date).data = h; }
+  const dates = [...days.keys()].sort().reverse();
+  return head({ title: 'Changelog | Offer Atlas', desc: 'What changed on Offer Atlas: new features, fixes and daily data updates.', url: `${site}/changelog/`, site }) + topbar + `<main class="pg">
+<h1>Changelog</h1><p class="pg-sub">New features, fixes and daily data updates. Data is refreshed every morning at 8 AM Toronto time.</p>
+${dates.map(d => { const x = days.get(d); return `<section class="pg-card log"><h2>${fmtDate(d)}</h2>${x.data ? `<p class="log-data">📈 Data update: <strong>+${x.data.new}</strong> new report${x.data.new === 1 ? '' : 's'}${x.data.edited ? ` · ${x.data.edited} edited` : ''} · ${Number(x.data.total).toLocaleString('en-CA')} total${x.data.programs?.length ? ` · new offers for ${x.data.programs.slice(0, 3).map(k => esc(k.split('|').reverse().join(', '))).join('; ')}` : ''}</p>` : ''}${x.notes.length ? `<ul>${x.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}</section>`; }).join('')}
+</main>` + footer;
+}
+
+export function buildSite({ snap, catalog, site = 'https://offeratlas.github.io', changes = [], history = [] }) {
   const files = {}, byProg = new Map();
   const cur = Math.max(...catalog.reports.map(r => r.year));
   for (const r of catalog.reports) { if (r.isSourceCollection) continue; if (!byProg.has(r.program)) byProg.set(r.program, []); byProg.get(r.program).push(r); }
@@ -230,14 +299,26 @@ export function buildSite({ snap, catalog, site = 'https://offeratlas.github.io'
     const ps = pages.filter(x => x.p.university === uni);
     schools.push({ uni, slug, pages: ps, lastmod: ps.map(x => x.lastmod).sort().pop() });
   }
-  for (const pg of pages) files[`programs/${pg.slug}/index.html`] = programPage({ ...pg, site, snap, schoolSlug: schoolSlug.get(pg.p.university) });
+  for (const pg of pages) files[`programs/${pg.slug}/index.html`] = programPage({ ...pg, site, snap, schoolSlug: schoolSlug.get(pg.p.university), similar: similarHtml(pg, pages) });
+  // Follow feeds: one per program page plus a site-wide feed of the newest current-cycle reports.
+  const whenOf = r => snap.reportSources?.[r.source]?.reportDate || r.decisionDate || snap.checked;
+  for (const pg of pages) {
+    const items = [...pg.rs].sort((a, b) => whenOf(b).localeCompare(whenOf(a))).slice(0, 30).map(r => ({ r, when: whenOf(r), program: pg.p.displayName || pg.p.name, uni: pg.p.university, pid: pg.p.id }));
+    files[`feeds/${pg.slug}.xml`] = feedXml({ title: `Offer Atlas: ${pg.p.displayName || pg.p.name} (${pg.p.university})`, selfUrl: `${site}/feeds/${pg.slug}.xml`, pageUrl: `${site}/programs/${pg.slug}/`, items, site, updated: items[0]?.when || snap.checked });
+  }
+  const latest = catalog.reports.filter(r => r.year === cur).sort((a, b) => whenOf(b).localeCompare(whenOf(a))).slice(0, 60)
+    .map(r => ({ r, when: whenOf(r), program: r.isSourceCollection ? (r.submittedProgram || r.programName) : r.programName, uni: r.university, pid: r.program }));
+  files['feeds/latest.xml'] = feedXml({ title: `Offer Atlas: latest Fall ${cur} reports`, selfUrl: `${site}/feeds/latest.xml`, pageUrl: `${site}/`, items: latest, site, updated: latest[0]?.when || snap.checked });
+  files['guides/index.html'] = guidesPage({ site });
+  files['changelog/index.html'] = changelogPage({ site, changes, history });
+  files['programs/map.json'] = JSON.stringify({ programs: Object.fromEntries(pages.map(x => [x.p.id, x.slug])), schools: Object.fromEntries(schools.map(x => [x.uni, x.slug])) });
   for (const sc of schools) files[`schools/${sc.slug}/index.html`] = schoolPage({ ...sc, site, cur });
   files['programs/index.html'] = indexPage({ pages, site, total: catalog.reports.length, schoolSlug });
   files['schools/index.html'] = schoolsIndex({ schools, site });
   files['programs/page.css'] = CSS;
   const newest = pages.map(x => x.lastmod).sort().pop() || snap.checked;
   files['sitemap.xml'] = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-    [{ loc: `${site}/`, lastmod: newest }, { loc: `${site}/programs/`, lastmod: newest }, { loc: `${site}/schools/`, lastmod: newest },
+    [{ loc: `${site}/`, lastmod: newest }, { loc: `${site}/programs/`, lastmod: newest }, { loc: `${site}/schools/`, lastmod: newest }, { loc: `${site}/guides/`, lastmod: '2026-11-17' }, { loc: `${site}/changelog/`, lastmod: newest },
       ...schools.map(x => ({ loc: `${site}/schools/${x.slug}/`, lastmod: x.lastmod })),
       ...pages.map(x => ({ loc: `${site}/programs/${x.slug}/`, lastmod: x.lastmod }))]
       .map(u => `<url><loc>${esc(u.loc)}</loc><lastmod>${u.lastmod}</lastmod></url>`).join('\n') + '\n</urlset>\n';
