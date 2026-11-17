@@ -247,3 +247,34 @@
 @media(max-width:760px){.disclaimer{padding:14px;gap:10px}.disclaimer p{font-size:14px}.creator-card{flex-direction:column;padding:18px}.creator-card h4{font-size:21px}}
 
 .fresh-avg{min-width:0;max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---- Latest reports ticker ---- */
+.fresh-list{display:block!important;overflow:visible!important;padding:0!important;position:relative}
+.ticker{position:relative;overflow:hidden;background:var(--ink);border-radius:14px;padding:0;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 40px,#000 calc(100% - 40px),transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 40px,#000 calc(100% - 40px),transparent 100%)}
+.tk-track{display:flex;width:max-content;animation:tk-scroll var(--tk-dur,90s) linear infinite}
+.ticker:hover .tk-track,.ticker:focus-within .tk-track,.ticker.paused .tk-track{animation-play-state:paused}
+.tk-run{display:flex}
+@keyframes tk-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tk-item{display:flex;align-items:baseline;gap:9px;padding:14px 22px;color:#fff;white-space:nowrap;border-right:1px solid #2b4263;font-size:15px;background:none;cursor:pointer}
+.tk-item:hover,.tk-item:focus-visible{background:#21385a}
+.tk-sym{font-size:13px}
+.tk-item.Offer .tk-sym,.tk-item.Offer .tk-out{color:#4fd69c}
+.tk-item.Rejected .tk-sym,.tk-item.Rejected .tk-out{color:#ff7d92}
+.tk-item:not(.Offer):not(.Rejected) .tk-sym,.tk-item:not(.Offer):not(.Rejected) .tk-out{color:#9fb3ff}
+.tk-prog{font-weight:750;max-width:260px;overflow:hidden;text-overflow:ellipsis}
+.tk-uni{color:#9fb0c6;font-size:13px;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.tk-avg{font-weight:800;font-variant-numeric:tabular-nums;color:var(--lime);font-size:16px}
+.tk-out{font-size:11px;font-weight:800;letter-spacing:.8px}
+.tk-when{font-size:11px;color:#8193ab;text-transform:uppercase;letter-spacing:.5px}
+.tk-toggle{position:absolute;right:0;top:-34px;font-size:12px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:4px 10px;background:#fff}
+@media(prefers-reduced-motion:reduce){
+  .ticker{overflow-x:auto;-webkit-mask-image:none;mask-image:none}
+  .tk-track{animation:none}
+  .tk-run[aria-hidden="true"],.tk-toggle{display:none}
+}
+@media(max-width:760px){
+  .tk-item{padding:12px 16px;font-size:14px;gap:7px}
+  .tk-prog{max-width:170px}
+  .tk-uni{max-width:120px}
+  .tk-toggle{position:static;margin-top:8px}
+}

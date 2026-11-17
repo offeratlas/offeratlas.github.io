@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa4';
-import {initEntering} from './entering.js?v=oa4';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa4';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa4';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa4';
+import {layoutDots} from './plot.js?v=oa5';
+import {initEntering} from './entering.js?v=oa5';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa5';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa5';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa5';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -176,7 +176,13 @@ const ago=t=>{const d=Math.round((torDay(Date.now())-torDay(t))/864e5);return d<
 function fresh(){const el=$('#fresh-list');if(!el)return;const cur=reports.filter(r=>r.year===(archiveInfo.currentYear||2027)).map(r=>[r,subTime(r)]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);const week=cur.filter(x=>Date.now()-x[1]<7*864e5);
  const upd=runtimeStatus.lastUpdated?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',timeZone:'America/Toronto'}).format(new Date(runtimeStatus.lastUpdated)):null;
  $('#fresh-meta').innerHTML=`<span class="live-dot" aria-hidden="true"></span> Updated daily at 8 AM ET${upd?` · last new entries ${esc(upd)}`:''} · <strong>${fmt(week.length)}</strong> new report${week.length===1?'':'s'} in the past 7 days`;
- el.innerHTML=cur.slice(0,8).map(([r,t])=>`<button class="fresh-card" data-record="${esc(r.id)}"><span class="fresh-when">${ago(t)}</span><strong>${esc(r.isSourceCollection?(r.submittedProgram||r.programName):r.programName)}</strong><span class="fresh-uni">${esc(r.university)}</span><span class="fresh-row"><span class="fresh-avg">${r.average!==null&&r.average!==undefined?esc(r.averageLabel)+(String(r.averageLabel).includes('%')?'':'%'):esc(r.averageLabel||'—')}</span>${badge(r)}</span></button>`).join('')||'<p class="fine">No new reports yet this cycle.</p>';}
+ const items=cur.slice(0,20);if(!items.length){el.innerHTML='<p class="fine">No new reports yet this cycle.</p>';return;}
+ const sym=o=>o==='Offer'?'▲':o==='Rejected'?'▼':'◆';
+ const avgTxt=r=>r.average!==null&&r.average!==undefined?esc(r.averageLabel)+(String(r.averageLabel).includes('%')?'':'%'):esc(String(r.averageLabel||'—').slice(0,16));
+ const item=([r,t],dup)=>`<button class="tk-item ${esc(r.outcome)}" data-record="${esc(r.id)}"${dup?' tabindex="-1" aria-hidden="true"':''}><span class="tk-sym" aria-hidden="true">${sym(r.outcome)}</span><span class="tk-prog">${esc(r.isSourceCollection?(r.submittedProgram||r.programName):r.programName)}</span><span class="tk-uni">${esc(r.university)}</span><span class="tk-avg">${avgTxt(r)}</span><span class="tk-out">${r.outcome==='Alternate'?'ALT OFFER':esc(r.outcome.toUpperCase())}</span><span class="tk-when">${ago(t)}</span></button>`;
+ const run=items.map(x=>item(x,false)).join(''),dup=items.map(x=>item(x,true)).join('');
+ el.innerHTML=`<div class="ticker" role="region" aria-label="Latest reports ticker"><div class="tk-track" style="--tk-dur:${Math.max(30,items.length*4.5)}s"><div class="tk-run">${run}</div><div class="tk-run" aria-hidden="true">${dup}</div></div></div><button class="tk-toggle" id="tk-toggle" aria-pressed="false">Pause ❚❚</button>`;
+ const box=el.querySelector('.ticker'),tg=$('#tk-toggle');tg.onclick=()=>{const p=box.classList.toggle('paused');tg.setAttribute('aria-pressed',String(p));tg.textContent=p?'Play ▶':'Pause ❚❚';};}
 // Filter panel extras: average slider, presets, "More filters" count
 const PRESETS=[['All',0,100],['95+',95,100],['90–95',90,95],['85–90',85,90],['80–85',80,85],['<80',0,80]];
 function setRange(a,b){$('#minimum').value=a;$('#maximum').value=b;$('#minimum').dispatchEvent(new Event('input',{bubbles:true}));}
