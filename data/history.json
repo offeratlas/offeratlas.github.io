@@ -1,11 +1,15 @@
 [
 {
 "date": "2026-11-17",
-"new": 17,
-"edited": 0,
-"total": 12985,
+"new": 70,
+"edited": 8,
+"total": 13038,
 "programs": [
-"Brock University|Honours Bachelor of Computing and Business"
+"University of Guelph|Bio-Medical Science",
+"Carleton University|Engineering: Electrical",
+"Wilfrid Laurier University|Health Sciences",
+"Toronto Metropolitan University|Nursing at TMU",
+"University of Ottawa|Biomedical Science"
 ]
 }
 ]
