@@ -76,6 +76,11 @@ def schools_in(raw):
         if m:
             found.append(inst)
             t = t[:m.start()] + ' ' * (m.end() - m.start()) + t[m.end():]
+    # 'UofT St. George' is one school (a campus), and Huron is an affiliated college of Western.
+    if 'Toronto' in found and {'UTSG', 'UTSC', 'UTM'} & set(found):
+        found.remove('Toronto')
+    if 'Huron' in found and 'Western' in found:
+        found.remove('Western')
     return found
 
 
