@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa16';
-import {initEntering} from './entering.js?v=oa16';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa16';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa16';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa16';
+import {layoutDots} from './plot.js?v=oa17';
+import {initEntering} from './entering.js?v=oa17';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa17';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa17';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa17';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -267,24 +267,60 @@ function trackerRender(){const el=$('#trk-rows');if(!el)return;const q=$('#trk-s
  $('#trk-more').hidden=rows.length<=trkLimit;}
 // Share as image ----------------------------------------------------------
 function wrapText(ctx,text,maxW){const words=String(text).split(/\s+/),lines=[];let line='';for(const w of words){const t=line?line+' '+w:w;if(ctx.measureText(t).width>maxW&&line){lines.push(line);line=w;}else line=t;}if(line)lines.push(line);return lines;}
+// Story image (1080×1920) for one program. Pure drawing: takes plain data, returns a canvas.
+function wrapLines(x,text,maxW){const parts=String(text).replace(/([\/–-])(?=\S)/g,'$1​').split(/(?<=\s)|​/);const lines=[];let line='';
+ const push=t=>{if(x.measureText(t).width<=maxW){line=t;return;}let s='';for(const ch of t){if(x.measureText(s+ch).width>maxW&&s){lines.push(s);s=ch;}else s+=ch;}line=s;};
+ for(const p of parts){const t=line+p;if(x.measureText(t.trimEnd()).width<=maxW)line=t;else{if(line.trim())lines.push(line.trimEnd());push(p.trimStart());}}if(line.trim())lines.push(line.trimEnd());return lines;}
+function drawStory({name,uni,cy,pick,med,offersN,curOffers,firstCur,values,allOfferMed}){
+ const c=document.createElement('canvas');c.width=1080;c.height=1920;const x=c.getContext('2d'),F='Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif',M=96,W=1080-2*M;
+ const g=x.createLinearGradient(0,0,0,1920);g.addColorStop(0,'#172b45');g.addColorStop(1,'#0b1626');x.fillStyle=g;x.fillRect(0,0,1080,1920);
+ const text=(t,px,y,{w=850,color='#fff',align='left',size=30}={})=>{x.font=`${w} ${size}px ${F}`;x.fillStyle=color;x.textAlign=align;x.fillText(t,px,y);x.textAlign='left';};
+ // header
+ x.fillStyle='#d6f46a';x.beginPath();x.roundRect(M,92,88,88,24);x.fill();text('↗',M+44,155,{w:900,size:54,color:'#162840',align:'center'});
+ text('OFFER ATLAS',M+112,132,{size:42});text('Self-reported admission results',M+112,172,{w:600,size:28,color:'#9fb0c6'});
+ // title: shrink until it fits in 3 lines
+ let size=92,lines;for(;size>=54;size-=4){x.font=`850 ${size}px ${F}`;lines=wrapLines(x,name,W);if(lines.length<=3)break;}
+ if(lines.length>3){lines=lines.slice(0,3);let l=lines[2];while(x.measureText(l+'…').width>W&&l.length>1)l=l.slice(0,-1);lines[2]=l.trimEnd()+'…';}
+ let y=270+size;for(const l of lines){text(l,M,y,{size});y+=Math.round(size*1.1);}
+ x.font=`600 40px ${F}`;for(const l of wrapLines(x,uni,W).slice(0,2)){text(l,M,y+6,{w:600,size:40,color:'#b8c4d6'});y+=50;}
+ // headline number
+ y+=58;text(pick?`MEDIAN REPORTED OFFER AVERAGE · FALL ${pick}`:'MEDIAN REPORTED OFFER AVERAGE',M,y,{w:750,size:26,color:'#9fb0c6'});
+ y+=152;text(med!==null?med.toFixed(1)+'%':'—',M-6,y,{w:900,size:164,color:'#d6f46a'});
+ y+=52;text(med!==null?`middle value of ${offersN} reported offers that year`:'Not enough reported offers yet',M,y,{w:600,size:30,color:'#b8c4d6'});
+ // stat boxes
+ y+=46;const bw=(W-24)/2,box=(lab,val,bx,small)=>{x.fillStyle='#21385a';x.beginPath();x.roundRect(bx,y,bw,156,26);x.fill();text(lab,bx+32,y+52,{w:750,size:24,color:'#9fb0c6'});text(val,bx+32,y+124,{w:850,size:small?44:60});};
+ box(`FALL ${cy} OFFERS SO FAR`,curOffers?fmt(curOffers):'None reported yet',M,!curOffers);box(`FIRST FALL ${cy} OFFER`,firstCur||'None reported yet',M+bw+24,!firstCur);
+ // chart
+ y+=156+70;const footTop=1736;
+ text('Where reported averages landed',M,y,{size:38});y+=44;
+ text('All years · each bar covers 1 percentage point',M,y,{w:600,size:28,color:'#b8c4d6'});y+=46;
+ const leg=[['#3fbf8a','Offer'],['#ff7d92','Rejected'],['#8aa0ff','Other (deferred, waitlisted…)']];let lx=M;
+ for(const [col,lab] of leg){x.fillStyle=col;x.beginPath();x.roundRect(lx,y-20,24,24,6);x.fill();text(lab,lx+34,y,{w:600,size:26,color:'#dfe6ef'});x.font=`600 26px ${F}`;lx+=34+x.measureText(lab).width+36;}
+ y+=34;
+ const vals=values.filter(v=>Number.isFinite(v.a)&&v.a<=100);
+ if(vals.length<3){text('Not enough reported averages to chart yet.',M,y+80,{w:600,size:30,color:'#b8c4d6'});}
+ else{const sorted=vals.map(v=>v.a).sort((a,b)=>a-b),p5=sorted[Math.floor(sorted.length*0.05)];let lo=Math.max(50,Math.floor((p5-1)/5)*5);if(100-lo<10)lo=90;const hi=100,n=hi-lo;
+  const bins=Array.from({length:n},()=>({o:0,r:0,x:0}));let below=0;for(const v of vals){if(v.a<lo){below++;continue;}const i=Math.min(n-1,Math.floor(v.a-lo));v.o==='Offer'?bins[i].o++:v.o==='Rejected'?bins[i].r++:bins[i].x++;}
+  const mx=Math.max(1,...bins.map(b=>b.o+b.r+b.x)),step=mx<=4?1:mx<=10?2:mx<=25?5:mx<=60?10:mx<=150?25:50,top=Math.ceil(mx/step)*step;
+  const yl=58,cx=M+yl,cw=W-yl,ch=footTop-118-y,cy0=y+ch;
+  x.font=`600 24px ${F}`;for(let t=0;t<=top;t+=step){const yy=cy0-t/top*ch;x.fillStyle='#2b4263';x.fillRect(cx,yy,cw,t?1:3);text(String(t),cx-14,yy+8,{w:600,size:24,color:'#9fb0c6',align:'right'});}
+  const bwid=cw/n;for(let i=0;i<n;i++){const b=bins[i];let yy=cy0;for(const [k,col] of [['o','#3fbf8a'],['r','#ff7d92'],['x','#8aa0ff']]){const h=b[k]/top*ch;if(!h)continue;x.fillStyle=col;x.fillRect(cx+i*bwid+2,yy-h,Math.max(2,bwid-4),h);yy-=h;}}
+  const tick=n<=12?2:5;for(let v=lo;v<=hi;v+=tick)text(v+'%',cx+(v-lo)*bwid,cy0+38,{w:650,size:26,color:'#dfe6ef',align:v===lo?'left':v===hi?'right':'center'});
+  if(allOfferMed!==null&&allOfferMed>=lo){const mxp=cx+(allOfferMed-lo)*bwid;x.strokeStyle='#d6f46a';x.lineWidth=4;x.setLineDash([12,10]);x.beginPath();x.moveTo(mxp,y-2);x.lineTo(mxp,cy0);x.stroke();x.setLineDash([]);
+   const lab=`median offer ${allOfferMed.toFixed(1)}%`;x.font=`750 26px ${F}`;const lw=x.measureText(lab).width+24;let bx=Math.min(Math.max(mxp-lw/2,cx),cx+cw-lw);x.fillStyle='#d6f46a';x.beginPath();x.roundRect(bx,y-4,lw,40,12);x.fill();text(lab,bx+12,y+25,{w:750,size:26,color:'#162840'});}
+  text(`Taller bar = more applicants reported an average in that range.${below?` ${below} report${below===1?'':'s'} below ${lo}% not shown.`:''}`,M,cy0+80,{w:600,size:24,color:'#9fb0c6'});}
+ // footer
+ x.fillStyle='#2b4263';x.fillRect(M,footTop,W,2);
+ text('offeratlas.github.io',M,footTop+62,{size:44,color:'#d6f46a'});
+ text('Self-reported & unverified · data: r/OntarioGrade12s spreadsheet',M,footTop+108,{w:500,size:26,color:'#9fb0c6'});
+ text('Reports, not unique applicants · not a cutoff or prediction',M,footTop+144,{w:500,size:26,color:'#9fb0c6'});
+ return c;}
+function storyData(p,rs,cy){const yrs=[...new Set(rs.map(r=>r.year))].sort((a,b)=>b-a),pick=yrs.find(y=>rs.filter(r=>r.year===y&&r.outcome==='Offer'&&Number.isFinite(r.average)).length>=3);
+ const offersY=pick?rs.filter(r=>r.year===pick&&r.outcome==='Offer'&&Number.isFinite(r.average)).map(r=>r.average):[],curOffers=rs.filter(r=>r.year===cy&&r.outcome==='Offer'),firstCur=curOffers.map(r=>r.decisionDate).filter(Boolean).sort()[0];
+ const allOffers=rs.filter(r=>r.outcome==='Offer'&&Number.isFinite(r.average)).map(r=>r.average);
+ return {name:pname(p),uni:p.university,cy,pick,med:offersY.length?median(offersY):null,offersN:offersY.length,curOffers:curOffers.length,firstCur:firstCur?date(firstCur).replace(/, \d{4}$/,''):null,values:rs.filter(r=>Number.isFinite(r.average)).map(r=>({a:r.average,o:r.outcome})),allOfferMed:allOffers.length>=3?median(allOffers):null};}
 async function shareProgram(id){const p=pmap.get(id);if(!p)return;const cy=CUR(),rs=(progReports().get(id)||[]);
- const yrs=[...new Set(rs.map(r=>r.year))].sort((a,b)=>b-a),pick=yrs.find(y=>rs.filter(r=>r.year===y&&r.outcome==='Offer'&&Number.isFinite(r.average)).length>=3);
- const offersY=pick?rs.filter(r=>r.year===pick&&r.outcome==='Offer'&&Number.isFinite(r.average)).map(r=>r.average):[],med=offersY.length?median(offersY):null;
- const curOffers=rs.filter(r=>r.year===cy&&r.outcome==='Offer'),firstCur=curOffers.map(r=>r.decisionDate).filter(Boolean).sort()[0];
- const c=document.createElement('canvas');c.width=1080;c.height=1920;const x=c.getContext('2d'),F='Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif';
- const g=x.createLinearGradient(0,0,0,1920);g.addColorStop(0,'#162840');g.addColorStop(1,'#0b1626');x.fillStyle=g;x.fillRect(0,0,1080,1920);
- x.fillStyle='#d6f46a';x.beginPath();x.roundRect(90,120,96,96,26);x.fill();x.fillStyle='#162840';x.font=`900 60px ${F}`;x.textAlign='center';x.fillText('↗',138,190);
- x.textAlign='left';x.fillStyle='#fff';x.font=`850 46px ${F}`;x.fillText('OFFER ATLAS',214,165);x.fillStyle='#9fb0c6';x.font=`600 30px ${F}`;x.fillText('Self-reported admission results',214,208);
- x.fillStyle='#fff';x.font=`800 92px ${F}`;let y=420;for(const l of wrapText(x,pname(p),900).slice(0,3)){x.fillText(l,90,y);y+=104;}
- x.fillStyle='#b8c4d6';x.font=`600 44px ${F}`;for(const l of wrapText(x,p.university,900).slice(0,2)){x.fillText(l,90,y);y+=56;}
- y+=70;x.fillStyle='#9fb0c6';x.font=`700 30px ${F}`;x.fillText(pick?`MEDIAN REPORTED OFFER · FALL ${pick}`:'MEDIAN REPORTED OFFER',90,y);y+=150;
- x.fillStyle='#d6f46a';x.font=`900 190px ${F}`;x.fillText(med!==null?med.toFixed(1)+'%':'—',84,y);y+=50;x.fillStyle='#9fb0c6';x.font=`600 32px ${F}`;x.fillText(med!==null?`from ${offersY.length} reported offers`:'not enough reports yet',90,y);
- y+=110;const stat=(lab,val,xx)=>{x.fillStyle='#21385a';x.beginPath();x.roundRect(xx,y,435,190,28);x.fill();x.fillStyle='#9fb0c6';x.font=`700 26px ${F}`;x.fillText(lab,xx+36,y+62);x.fillStyle='#fff';x.font=`800 64px ${F}`;x.fillText(val,xx+36,y+145);};
- stat(`OFFERS · FALL ${cy}`,fmt(curOffers.length),90);stat('FIRST OFFER',firstCur?date(firstCur).replace(/, \d{4}$/,''):'—',555);y+=250;
- const all=rs.filter(r=>Number.isFinite(r.average)&&r.average>=80);if(all.length){const lo=80,hi=100,n=40,b=Array.from({length:n},()=>({o:0,r:0}));for(const r of all){const i=Math.min(n-1,Math.floor((r.average-lo)/(hi-lo)*n));r.outcome==='Offer'?b[i].o++:b[i].r++;}const mx=Math.max(1,...b.map(v=>v.o+v.r)),W=900,H=260,bw=W/n;
-  for(let i=0;i<n;i++){const ho=b[i].o/mx*H,hr=b[i].r/mx*H;x.fillStyle='#3fbf8a';x.fillRect(90+i*bw+2,y+H-ho,bw-4,ho);x.fillStyle='#ff7d92';x.fillRect(90+i*bw+2,y+H-ho-hr,bw-4,hr);}
-  x.fillStyle='#3d5679';x.fillRect(90,y+H+4,W,3);x.fillStyle='#9fb0c6';x.font=`600 26px ${F}`;x.fillText('80%',90,y+H+46);x.textAlign='right';x.fillText('100%',990,y+H+46);x.textAlign='left';x.fillStyle='#3fbf8a';x.fillText('■ offers',360,y+H+46);x.fillStyle='#ff7d92';x.fillText('■ other outcomes',540,y+H+46);y+=H+70;}
- x.fillStyle='#d6f46a';x.font=`800 44px ${F}`;x.fillText('offeratlas.github.io',90,1760);x.fillStyle='#8193ab';x.font=`500 26px ${F}`;x.fillText('Self-reported & unverified · data: r/OntarioGrade12s spreadsheet',90,1808);x.fillText('Not a cutoff or prediction',90,1846);
+ const c=drawStory(storyData(p,rs,cy));
  const blob=await new Promise(r=>c.toBlob(r,'image/png')),url=URL.createObjectURL(blob),file=new File([blob],`offer-atlas-${(pname(p)+'-'+p.university).toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,60)}.png`,{type:'image/png'});
  const d=$('#share-dialog');$('#share-img').src=url;$('#share-title').textContent=pname(p)+' · '+p.university;$('#share-size').textContent='Sized for Instagram or TikTok stories (1080×1920). Includes the self-reported disclaimer and credit.';
  $('#share-download').onclick=()=>{const a=document.createElement('a');a.href=url;a.download=file.name;a.click();};
