@@ -302,13 +302,13 @@ function drawStory({name,uni,cy,pick,med,offersN,curOffers,firstCur,values,allOf
  else{const sorted=vals.map(v=>v.a).sort((a,b)=>a-b),p5=sorted[Math.floor(sorted.length*0.05)];let lo=Math.max(50,Math.floor((p5-1)/5)*5);if(100-lo<10)lo=90;const hi=100,n=hi-lo;
   const bins=Array.from({length:n},()=>({o:0,r:0,x:0}));let below=0;for(const v of vals){if(v.a<lo){below++;continue;}const i=Math.min(n-1,Math.floor(v.a-lo));v.o==='Offer'?bins[i].o++:v.o==='Rejected'?bins[i].r++:bins[i].x++;}
   const mx=Math.max(1,...bins.map(b=>b.o+b.r+b.x)),step=mx<=4?1:mx<=10?2:mx<=25?5:mx<=60?10:mx<=150?25:50,top=Math.ceil(mx/step)*step;
-  const yl=58,cx=M+yl,cw=W-yl,top0=y+(allOfferMed!==null&&allOfferMed>=lo?54:8),ch=footTop-118-(below?34:0)-top0,cy0=top0+ch;
+  const yl=58,cx=M+yl,cw=W-yl,top0=y+(allOfferMed!==null&&allOfferMed>=lo?54:8),ch=footTop-(below?118:86)-top0,cy0=top0+ch;
   x.font=`600 24px ${F}`;for(let t=0;t<=top;t+=step){const yy=cy0-t/top*ch;x.fillStyle='#2b4263';x.fillRect(cx,yy,cw,t?1:3);text(String(t),cx-14,yy+8,{w:600,size:24,color:'#9fb0c6',align:'right'});}
   const bwid=cw/n;for(let i=0;i<n;i++){const b=bins[i];let yy=cy0;for(const [k,col] of [['o','#3fbf8a'],['r','#ff7d92'],['x','#8aa0ff']]){const h=b[k]/top*ch;if(!h)continue;x.fillStyle=col;x.fillRect(cx+i*bwid+2,yy-h,Math.max(2,bwid-4),h);yy-=h;}}
   const tick=n<=12?2:5;for(let v=lo;v<=hi;v+=tick)text(v+'%',cx+(v-lo)*bwid,cy0+38,{w:650,size:26,color:'#dfe6ef',align:v===lo?'left':v===hi?'right':'center'});
   if(allOfferMed!==null&&allOfferMed>=lo){const mxp=cx+(allOfferMed-lo)*bwid;x.strokeStyle='#d6f46a';x.lineWidth=4;x.setLineDash([12,10]);x.beginPath();x.moveTo(mxp,top0-12);x.lineTo(mxp,cy0);x.stroke();x.setLineDash([]);
    const lab=`all-years median offer ${allOfferMed.toFixed(1)}%`;x.font=`750 26px ${F}`;const lw=x.measureText(lab).width+24;let bx=Math.min(Math.max(mxp-lw/2,cx),cx+cw-lw);x.fillStyle='#d6f46a';x.beginPath();x.roundRect(bx,y-4,lw,40,12);x.fill();text(lab,bx+12,y+25,{w:750,size:26,color:'#162840'});}
-  text('Taller bar = more applicants reported an average in that range.',M,cy0+80,{w:600,size:24,color:'#9fb0c6'});if(below)text(`${below} report${below===1?'':'s'} below ${lo}% not shown.`,M,cy0+112,{w:600,size:24,color:'#9fb0c6'});}
+  if(below)text(`${below} report${below===1?'':'s'} below ${lo}% not shown.`,M,cy0+80,{w:600,size:24,color:'#9fb0c6'});}
  // footer
  x.fillStyle='#2b4263';x.fillRect(M,footTop,W,2);
  text('offeratlas.github.io',M,footTop+62,{size:44,color:'#d6f46a'});
