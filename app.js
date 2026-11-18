@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa22';
-import {initEntering} from './entering.js?v=oa22';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa22';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa22';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa22';
+import {layoutDots} from './plot.js?v=oa23';
+import {initEntering} from './entering.js?v=oa23';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa23';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa23';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa23';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -220,7 +220,7 @@ function watchStrip(){const el=$('#watch-strip');if(!el)return;const ids=watch.i
 let cmp=store.get('offeratlas.compare',{avg:null,programs:[],scope:'cur'});
 const saveCmp=()=>store.set('offeratlas.compare',cmp);
 function cmpLabel(p,n){if(n<5)return ['few','Too few reports to say much'];return p>=75?['above','Above most reported offers']:p>=40?['within','Within the typical range of reported offers']:p>=15?['lower','Toward the lower end of reported offers']:['below','Below most reported offers'];}
-function compareRender(){const el=$('#cmp-results');if(!el)return;$('#cmp-avg').value=cmp.avg??'';$('#cmp-scope').value=cmp.scope;
+function compareRender(){const el=$('#cmp-results');if(!el)return;{const ai=$('#cmp-avg');if(document.activeElement!==ai)ai.value=cmp.avg??'';}$('#cmp-scope').value=cmp.scope;
  const cy=CUR(),idx=progReports(),avg=Number(cmp.avg),hasAvg=cmp.avg!==null&&cmp.avg!==''&&Number.isFinite(avg);
  if(!cmp.programs.length&&watch.ids.length){cmp.programs=watch.ids.filter(id=>pmap.has(id)).slice(0,6);saveCmp();}
  $('#cmp-chips').innerHTML=cmp.programs.filter(id=>pmap.has(id)).map(id=>`<span class="cmp-chip">${esc(pname(pmap.get(id)))} <small>${esc(pmap.get(id).university)}</small><button data-cmp-remove="${esc(id)}" aria-label="Remove ${esc(pname(pmap.get(id)))}">×</button></span>`).join('');
@@ -446,7 +446,7 @@ const filtersBox=$('.filters');if(PHONE.matches)filtersBox.classList.add('collap
 $('#filters-toggle').addEventListener('click',()=>{const c=filtersBox.classList.toggle('collapsed');$('#filters-toggle').setAttribute('aria-expanded',String(!c));$('#filters-toggle').textContent=c?'Show filters':'Hide filters';});
 let phoneMode=PHONE.matches,resizeTimer;const modeCheck=()=>{if(PHONE.matches!==phoneMode){phoneMode=PHONE.matches;averages(lastRows);}};PHONE.addEventListener('change',modeCheck);addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(modeCheck,200);});
 applyTheme();matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);$('#theme-toggle').addEventListener('click',()=>{const t=store.get('offeratlas.theme','light');store.set('offeratlas.theme',THEMES[(THEMES.indexOf(t)+1)%3]);applyTheme();});
-$('#cmp-avg').addEventListener('input',e=>{gcOnce('compare-average');const v=e.target.value;cmp.avg=v===''?null:Number(v);saveCmp();compareRender();});$('#cmp-scope').addEventListener('change',e=>{cmp.scope=e.target.value;saveCmp();if(cmp.scope!=='cur'&&!ALLY())requestArchive({quiet:true});compareRender();});$('#cmp-search').addEventListener('input',cmpSuggest);
+$('#cmp-avg').addEventListener('input',e=>{gcOnce('compare-average');const t=e.target.value.replace(',','.').replace(/[^0-9.]/g,'');if(t!==e.target.value.replace(',','.'))e.target.value=t;const n=parseFloat(t);cmp.avg=t===''||!Number.isFinite(n)?null:Math.min(100,Math.round(n*100)/100);e.target.classList.toggle('bad',Number.isFinite(n)&&(n>100||n<0));saveCmp();compareRender();});$('#cmp-avg').addEventListener('blur',e=>{e.target.value=cmp.avg??'';e.target.classList.remove('bad');});$('#cmp-scope').addEventListener('change',e=>{cmp.scope=e.target.value;saveCmp();if(cmp.scope!=='cur'&&!ALLY())requestArchive({quiet:true});compareRender();});$('#cmp-search').addEventListener('input',cmpSuggest);
 for(const id of ['trk-search','trk-sort','trk-status','trk-watch'])$('#'+id).addEventListener(id==='trk-search'?'input':'change',()=>{trkLimit=60;trackerRender();});$('#trk-more').addEventListener('click',()=>{trkLimit+=60;trackerRender();});$('#close-share').addEventListener('click',()=>$('#share-dialog').close());
 $('#wait-search').addEventListener('input',waitSuggest);$('#wait-date').addEventListener('change',e=>{wait.date=e.target.value;store.set('offeratlas.wait',wait);waitRender();});$('#gs-input').addEventListener('input',gsSearch);$('#close-search').addEventListener('click',()=>$('#search-dialog').close());
 $('#copy-view')?.addEventListener('click',()=>copyText(urlFor(filters,null),'Link to this view copied'));
