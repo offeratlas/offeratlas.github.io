@@ -288,7 +288,7 @@ function drawStory({name,uni,cy,pick,med,offersN,curOffers,firstCur,values,allOf
  y+=152;text(med!==null?med.toFixed(1)+'%':'—',M-6,y,{w:900,size:164,color:'#d6f46a'});
  y+=52;text(med!==null?`middle value of ${offersN} reported offers that year`:'Not enough reported offers yet',M,y,{w:600,size:30,color:'#b8c4d6'});
  // stat boxes
- y+=46;const bw=(W-24)/2,box=(lab,val,bx,small)=>{x.fillStyle='#21385a';x.beginPath();x.roundRect(bx,y,bw,156,26);x.fill();text(lab,bx+32,y+52,{w:750,size:24,color:'#9fb0c6'});text(val,bx+32,y+124,{w:850,size:small?44:60});};
+ y+=46;const bw=(W-24)/2,box=(lab,val,bx,small)=>{x.fillStyle='#21385a';x.beginPath();x.roundRect(bx,y,bw,156,26);x.fill();text(lab,bx+32,y+52,{w:750,size:24,color:'#9fb0c6'});let fs=small?44:60;x.font=`850 ${fs}px ${F}`;while(x.measureText(val).width>bw-64&&fs>26){fs-=2;x.font=`850 ${fs}px ${F}`;}text(val,bx+32,y+124,{w:850,size:fs});};
  box(`FALL ${cy} OFFERS SO FAR`,curOffers?fmt(curOffers):'None reported yet',M,!curOffers);box(`FIRST FALL ${cy} OFFER`,firstCur||'None reported yet',M+bw+24,!firstCur);
  // chart
  y+=156+70;const footTop=1736;
