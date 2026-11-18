@@ -282,7 +282,7 @@ function drawStory({name,uni,cy,pick,med,offersN,curOffers,firstCur,values,allOf
  let size=92,lines;for(;size>=54;size-=4){x.font=`850 ${size}px ${F}`;lines=wrapLines(x,name,W);if(lines.length<=3)break;}
  if(lines.length>3){lines=lines.slice(0,3);let l=lines[2];while(x.measureText(l+'…').width>W&&l.length>1)l=l.slice(0,-1);lines[2]=l.trimEnd()+'…';}
  let y=270+size;for(const l of lines){text(l,M,y,{size});y+=Math.round(size*1.1);}
- x.font=`600 40px ${F}`;for(const l of wrapLines(x,uni,W).slice(0,2)){text(l,M,y+6,{w:600,size:40,color:'#b8c4d6'});y+=50;}
+ y+=8;x.font=`600 40px ${F}`;for(const l of wrapLines(x,uni,W).slice(0,2)){text(l,M,y+6,{w:600,size:40,color:'#b8c4d6'});y+=50;}
  // headline number
  y+=58;text(pick?`MEDIAN REPORTED OFFER AVERAGE · FALL ${pick}`:'MEDIAN REPORTED OFFER AVERAGE',M,y,{w:750,size:26,color:'#9fb0c6'});
  y+=152;text(med!==null?med.toFixed(1)+'%':'—',M-6,y,{w:900,size:164,color:'#d6f46a'});
@@ -307,7 +307,7 @@ function drawStory({name,uni,cy,pick,med,offersN,curOffers,firstCur,values,allOf
   const bwid=cw/n;for(let i=0;i<n;i++){const b=bins[i];let yy=cy0;for(const [k,col] of [['o','#3fbf8a'],['r','#ff7d92'],['x','#8aa0ff']]){const h=b[k]/top*ch;if(!h)continue;x.fillStyle=col;x.fillRect(cx+i*bwid+2,yy-h,Math.max(2,bwid-4),h);yy-=h;}}
   const tick=n<=12?2:5;for(let v=lo;v<=hi;v+=tick)text(v+'%',cx+(v-lo)*bwid,cy0+38,{w:650,size:26,color:'#dfe6ef',align:v===lo?'left':v===hi?'right':'center'});
   if(allOfferMed!==null&&allOfferMed>=lo){const mxp=cx+(allOfferMed-lo)*bwid;x.strokeStyle='#d6f46a';x.lineWidth=4;x.setLineDash([12,10]);x.beginPath();x.moveTo(mxp,y-2);x.lineTo(mxp,cy0);x.stroke();x.setLineDash([]);
-   const lab=`median offer ${allOfferMed.toFixed(1)}%`;x.font=`750 26px ${F}`;const lw=x.measureText(lab).width+24;let bx=Math.min(Math.max(mxp-lw/2,cx),cx+cw-lw);x.fillStyle='#d6f46a';x.beginPath();x.roundRect(bx,y-4,lw,40,12);x.fill();text(lab,bx+12,y+25,{w:750,size:26,color:'#162840'});}
+   const lab=`all-years median offer ${allOfferMed.toFixed(1)}%`;x.font=`750 26px ${F}`;const lw=x.measureText(lab).width+24;let bx=Math.min(Math.max(mxp-lw/2,cx),cx+cw-lw);x.fillStyle='#d6f46a';x.beginPath();x.roundRect(bx,y-4,lw,40,12);x.fill();text(lab,bx+12,y+25,{w:750,size:26,color:'#162840'});}
   text(`Taller bar = more applicants reported an average in that range.${below?` ${below} report${below===1?'':'s'} below ${lo}% not shown.`:''}`,M,cy0+80,{w:600,size:24,color:'#9fb0c6'});}
  // footer
  x.fillStyle='#2b4263';x.fillRect(M,footTop,W,2);
