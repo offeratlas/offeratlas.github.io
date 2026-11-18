@@ -319,7 +319,7 @@ function storyData(p,rs,cy){const yrs=[...new Set(rs.map(r=>r.year))].sort((a,b)
  const offersY=pick?rs.filter(r=>r.year===pick&&r.outcome==='Offer'&&Number.isFinite(r.average)).map(r=>r.average):[],curOffers=rs.filter(r=>r.year===cy&&r.outcome==='Offer'),firstCur=curOffers.map(r=>r.decisionDate).filter(Boolean).sort()[0];
  const allOffers=rs.filter(r=>r.outcome==='Offer'&&Number.isFinite(r.average)).map(r=>r.average);
  return {name:pname(p),uni:p.university,cy,pick,med:offersY.length?median(offersY):null,offersN:offersY.length,curOffers:curOffers.length,firstCur:firstCur?date(firstCur).replace(/, \d{4}$/,''):null,values:rs.filter(r=>Number.isFinite(r.average)).map(r=>({a:r.average,o:r.outcome})),allOfferMed:allOffers.length>=3?median(allOffers):null};}
-async function shareProgram(id){const p=pmap.get(id);if(!p)return;const cy=CUR(),rs=(progReports().get(id)||[]);
+async function shareProgram(id){if(!ALLY()){notify('Loading all years for the chart…');await requestArchive({quiet:true});}const p=pmap.get(id);if(!p)return;const cy=CUR(),rs=(progReports().get(id)||[]);
  const c=drawStory(storyData(p,rs,cy));
  const blob=await new Promise(r=>c.toBlob(r,'image/png')),url=URL.createObjectURL(blob),file=new File([blob],`offer-atlas-${(pname(p)+'-'+p.university).toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,60)}.png`,{type:'image/png'});
  const d=$('#share-dialog');$('#share-img').src=url;$('#share-title').textContent=pname(p)+' · '+p.university;$('#share-size').textContent='Sized for Instagram or TikTok stories (1080×1920). Includes the self-reported disclaimer and credit.';
