@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa20';
-import {initEntering} from './entering.js?v=oa20';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa20';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa20';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa20';
+import {layoutDots} from './plot.js?v=oa21';
+import {initEntering} from './entering.js?v=oa21';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa21';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa21';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa21';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -398,7 +398,7 @@ async function weeklyRecap(){const cy=CUR(),today=torDay(Date.now()),start=today
  const g=x.createLinearGradient(0,0,0,1350);g.addColorStop(0,'#162840');g.addColorStop(1,'#0b1626');x.fillStyle=g;x.fillRect(0,0,1080,1350);
  x.fillStyle='#d6f46a';x.beginPath();x.roundRect(80,80,80,80,22);x.fill();x.fillStyle='#162840';x.font=`900 50px ${F}`;x.textAlign='center';x.fillText('↗',120,138);x.textAlign='left';
  x.fillStyle='#fff';x.font=`850 40px ${F}`;x.fillText('OFFER ATLAS',184,118);x.fillStyle='#9fb0c6';x.font=`600 28px ${F}`;x.fillText(`Weekly recap · ${dShort(start)}–${dShort(today)}`,184,156);
- x.fillStyle='#fff';x.font=`850 78px ${F}`;x.fillText('This week in',80,290);{const t=`Ontario Fall ${cy} admissions`;let fs=78;x.font=`850 ${fs}px ${F}`;while(x.measureText(t).width>920&&fs>48){fs-=2;x.font=`850 ${fs}px ${F}`;}x.fillStyle='#d6f46a';x.fillText(t,80,378);}
+ x.font=`850 78px ${F}`;x.fillStyle='#fff';x.fillText('This week in ',80,290);{const w=x.measureText('This week in ').width;x.fillStyle='#e0314b';x.fillText('Ontario',80+w,290);}x.fillStyle='#d6f46a';x.fillText(`Fall ${cy} admissions`,80,378);
  const box=(lab,val,bx,by,w,col)=>{x.fillStyle='#21385a';x.beginPath();x.roundRect(bx,by,w,170,26);x.fill();x.fillStyle='#9fb0c6';x.font=`700 24px ${F}`;x.fillText(lab,bx+30,by+52);x.fillStyle=col;x.font=`850 70px ${F}`;x.fillText(val,bx+30,by+136);};
  box('NEW REPORTS',fmt(wk.length),80,430,290,'#fff');box('OFFERS',fmt(offers.length),395,430,290,'#4fd69c');box('REJECTIONS',fmt(rej),710,430,290,'#ff7d92');
  let y=680;x.fillStyle='#9fb0c6';x.font=`700 26px ${F}`;x.fillText('MOST NEW OFFERS',80,y);y+=20;
