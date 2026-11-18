@@ -11,5 +11,18 @@
 "Toronto Metropolitan University|Nursing at TMU",
 "University of Ottawa|Biomedical Science"
 ]
+},
+{
+"date": "2026-11-18",
+"new": 12,
+"edited": 0,
+"total": 13050,
+"programs": [
+"Dalhousie University|Commerce",
+"Toronto Metropolitan University|Biomedical Engineering",
+"Toronto Metropolitan University|Computer Engineering",
+"University of Windsor|Mechatronic Systems Engineering",
+"Toronto Metropolitan University|Civil Engineering"
+]
 }
 ]
