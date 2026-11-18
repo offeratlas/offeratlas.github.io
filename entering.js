@@ -1,4 +1,4 @@
-import {enteringData} from './entering-data.js?v=oa24';
+import {enteringData} from './entering-data.js?v=oa25';
 const source='https://uwaterloo.ca/performance-indicators/students/entering-averages';
 const csvSource='https://uwaterloo.ca/performance-indicators/sites/default/files/uploads/documents/uw-entering_average_0.csv';
 const powerbi='https://app.powerbi.com/view?r=eyJrIjoiMmU2YzA1OTUtMzMzZS00MWQ2LTljNjQtNGZhNWRiOWQ2YmRhIiwidCI6IjcyM2E1YTg3LWYzOWEtNGEyMi05MjQ3LTNmYzI0MGMwMTM5NiJ9';

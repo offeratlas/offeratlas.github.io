@@ -57,7 +57,7 @@ jobs:
 
       - name: Pull new spreadsheet entries
         if: steps.gate.outputs.run == 'true'
-        run: python tools/update_data.py
+        run: python tools/update_data.py && python tools/update_bc.py
 
       - name: Split data (Fall 2027 first, older years on request)
         if: steps.gate.outputs.run == 'true'
