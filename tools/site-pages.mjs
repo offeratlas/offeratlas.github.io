@@ -91,7 +91,7 @@ const head = ({ title, desc, url, site, feed }) => `<!doctype html><html lang="e
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${esc(url)}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Offer Atlas"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(url)}"><meta property="og:image" content="${site}/og-image.jpg"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#162840"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/programs/page.css">${feed ? `<link rel="alternate" type="application/atom+xml" title="${esc(feed.title)}" href="${feed.href}">` : ''}</head><body>`;
-const topbar = `<header class="pg-top"><a class="pg-brand" href="/"><span class="pg-icon" aria-hidden="true">↗</span>OFFER ATLAS</a><nav><a href="/programs/">Programs</a><a href="/schools/">Schools</a><a href="/#tracker">Offer tracker</a><a href="/#compare">Compare my average</a><a href="/guides/">Guides</a><a class="pg-submit" href="${FORM}" ${ext}>Submit your result ↗</a></nav></header>`;
+const topbar = `<header class="pg-top"><a class="pg-brand" href="/"><span class="pg-icon" aria-hidden="true">↗</span>OFFER ATLAS</a><nav aria-label="Main"><a href="/#explorer">Explore</a><a href="/#compare">Compare my average</a><a href="/#tracker">Offer tracker</a><a href="/programs/">Programs</a><a href="/schools/">Schools</a><a href="/#guides">Guides</a><a href="/#search" class="pg-search-link">⌕ Search</a><a class="pg-submit" href="${FORM}" ${ext}>Submit your result ↗</a></nav></header>`;
 const footer = `<footer class="pg-foot"><p><strong>Self-reported, unverifiable data.</strong> Reports come from public, applicant-submitted spreadsheets and Reddit posts. They are not unique applicants, not a random sample, and medians are not cutoffs. Not affiliated with any university.</p><p><a href="/#sources">Sources &amp; credits</a> · <a href="/guides/">Guides</a> · <a href="/changelog/">Changelog</a> · <a href="/feeds/latest.xml">RSS</a> · <a href="${FORM}" ${ext}>Submit your result ↗</a> · <a href="${ISSUES}" ${ext}>Report a correction ↗</a></p></footer></body></html>`;
 const disclaimer = `<p class="pg-disclaimer"><strong>Self-reported and unverifiable.</strong> Every result here was submitted anonymously by an applicant and has not been checked. Averages may be rounded, mistyped or false, and posters aren’t a random sample. Use this as rough context, not a cutoff or prediction. Data from the r/OntarioGrade12s spreadsheets by <a href="${CREATOR_URL}" ${ext}>u/${CREATOR}</a>.</p>`;
 
@@ -185,7 +185,7 @@ html[data-theme=dark]{--ink:#e7edf5;--muted:#9fb0c6;--paper:#0d1726;--card:#1523
 *{box-sizing:border-box}body{margin:0;background:var(--paper)}a{color:inherit;text-underline-offset:4px}
 .pg-top{max-width:1100px;margin:auto;padding:18px 16px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
 .pg-brand{font-weight:850;letter-spacing:-.3px;text-decoration:none;display:flex;align-items:center;gap:10px}.pg-icon{background:#162840;color:var(--lime);width:34px;height:34px;border-radius:10px;display:grid;place-items:center}
-.pg-top nav{display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:15px;font-weight:650}.pg-submit{background:var(--lime);color:#162840;padding:8px 14px;border-radius:30px;text-decoration:none}
+.pg-top nav{display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:15px;font-weight:650}.pg-top nav a{text-decoration:none}.pg-top nav a:hover{text-decoration:underline}.pg-search-link{border:1px solid var(--line);border-radius:20px;padding:6px 12px;background:var(--card)}.pg-submit{background:var(--lime);color:#162840;padding:8px 14px;border-radius:30px;text-decoration:none}
 .pg{max-width:1100px;margin:auto;padding:22px 16px 40px}.pg-crumbs{font-size:14px;color:var(--muted);margin:0 0 10px}
 .pg h1{font-size:clamp(30px,5vw,46px);letter-spacing:-1.5px;line-height:1.08;margin:0}.pg-sub{color:var(--muted);margin:8px 0 22px}
 .pg-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.pg-stats div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
@@ -311,6 +311,10 @@ export function buildSite({ snap, catalog, site = 'https://offeratlas.github.io'
   files['feeds/latest.xml'] = feedXml({ title: `Offer Atlas: latest Fall ${cur} reports`, selfUrl: `${site}/feeds/latest.xml`, pageUrl: `${site}/`, items: latest, site, updated: latest[0]?.when || snap.checked });
   files['guides/index.html'] = guidesPage({ site });
   files['changelog/index.html'] = changelogPage({ site, changes, history });
+  // In-site versions: the main site loads these fragments into its Guides and Changelog tabs.
+  const inner = h => h.slice(h.indexOf('<main class="pg">') + 17, h.lastIndexOf('</main>'));
+  files['guides/fragment.html'] = inner(files['guides/index.html']);
+  files['changelog/fragment.html'] = inner(files['changelog/index.html']);
   files['programs/map.json'] = JSON.stringify({ programs: Object.fromEntries(pages.map(x => [x.p.id, x.slug])), schools: Object.fromEntries(schools.map(x => [x.uni, x.slug])), list: pages.map(x => [x.p.id, x.slug, x.p.displayName || x.p.name, x.p.university, x.rs.length]) });
   for (const sc of schools) files[`schools/${sc.slug}/index.html`] = schoolPage({ ...sc, site, cur });
   files['programs/index.html'] = indexPage({ pages, site, total: catalog.reports.length, schoolSlug });
