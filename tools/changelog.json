@@ -9,5 +9,9 @@
   {"date": "2026-11-17", "text": "Dark mode that follows your device, with a manual switch."},
   {"date": "2026-11-17", "text": "Credit to u/Regular-Database9310, creator of the r/OntarioGrade12s spreadsheets, plus clearer self-reported disclaimers."},
   {"date": "2026-11-17", "text": "New: When will I hear back? estimator, site-wide search (Ctrl+K), admissions guides, similar programs, follow-a-program feeds, weekly recap images and this changelog."},
-  {"date": "2026-11-17", "text": "Added anonymous, cookie-free visit counting (GoatCounter). No personal data is collected; see Sources & credits."}
+  {"date": "2026-11-17", "text": "Added anonymous, cookie-free visit counting (GoatCounter). No personal data is collected; see Sources & credits."},
+  {"date": "2026-11-18", "text": "Search understands nicknames like “UW CS”, “Mac Health Sci”, “Ivey AEO” and “Queens Comm”."},
+  {"date": "2026-11-18", "text": "New ☰ menu on phones."},
+  {"date": "2026-11-18", "text": "Cleaner program names: about 250 more reports now join their official program, and names applicants commonly write the same way are grouped and labelled “Name as reported”."},
+  {"date": "2026-11-18", "text": "Compare accepts decimal averages like 97.33 on every phone and browser."}
 ]

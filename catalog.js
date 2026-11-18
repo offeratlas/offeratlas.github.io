@@ -1,16 +1,21 @@
-import {officialProgramMap} from './official-programs.js?v=oa23';
+import {officialProgramMap} from './official-programs.js?v=oa24';
 // Presentation grouping only. Source records and identities stay unchanged in storage.
 const fold=s=>String(s||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/&/g,' and ').replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
 const common={cs:'Computer Science','comp sci':'Computer Science',compsci:'Computer Science','computer sci':'Computer Science',math:'Mathematics','honours math':'Mathematics',bmos:'Management and Organizational Studies','management organizational studies':'Management and Organizational Studies','med sci':'Medical Sciences',medsci:'Medical Sciences','medical science':'Medical Sciences','health sci':'Health Sciences',healthsci:'Health Sciences','health science':'Health Sciences','life sci':'Life Sciences',lifesci:'Life Sciences','life science':'Life Sciences','biomedical science':'Biomedical Sciences','bio med science':'Biomedical Sciences','business admin':'Business Administration','business administration':'Business Administration','comp eng':'Computer Engineering','computer engineer':'Computer Engineering','computer enginnering':'Computer Engineering','mech eng':'Mechanical Engineering','soft eng':'Software Engineering','eng 1':'Engineering I','engineering 1':'Engineering I','computer science 1':'Computer Science I','rotman':'Rotman Commerce','rotman comm':'Rotman Commerce','rotmans commerce':'Rotman Commerce','rotman commercec':'Rotman Commerce'};
 const waterloo={afm:'Accounting and Financial Management','accounting and finance management':'Accounting and Financial Management','accounting finance':'Accounting and Financial Management','accounting and financial management':'Accounting and Financial Management',cfm:'Computing and Financial Management',farm:'Financial Analysis and Risk Management','financial analysis risk management':'Financial Analysis and Risk Management',se:'Software Engineering',ce:'Computer Engineering',syde:'Systems Design Engineering',tron:'Mechatronics Engineering','math cpa':'Mathematics / Chartered Professional Accountancy','mathematics chartered professional accountancy':'Mathematics / Chartered Professional Accountancy','mathematics business administration':'Mathematics + Business Administration','computer science business administration':'Computer Science + Business Administration'};
+const ACR=new Set(['llb','bmos','mos','aeo','cs','ai','ml','ece','it','ux','pey','ib','ap','bba','bcom','bsc','ba']);
+// Labels that only name a school or campus are not program names.
+const PLACE=new Set(['wilfrid','laurier','waterloo','toronto','st','george','university','campus','western','queens','mcmaster','ottawa','york','uoft','scarborough','mississauga','of']);
 export function normalizeProgram(raw,institution=''){
  let s=String(raw||'Program unstated').trim();
- s=s.replace(/^(?:university of waterloo|uwaterloo|waterloo|university of toronto|uoft|mcmaster university|university of ottawa|western university|wilfrid laurier university|york university|queen[’']?s university)\s*[-–:]*\s+/i,'');
+ s=s.replace(/^(?:university of waterloo|uwaterloo|waterloo|university of toronto|uoft|mcmaster university|mcmaster|university of ottawa|uottawa|western university|western|wilfrid laurier university|laurier|york university|queen[’']?s university|queen[’']?s|mcgill university|mcgill|ubc|tmu|carleton university|carleton)\s*[-–:]*\s+(?=\S+\s*\S)/i,'');
+ s=s.replace(/^(?:bachelor|honours?|hon\.?)[^(]*\((?:major|majoring)(?: in)?\s+([^)]+)\)\s*$/i,'$1').replace(/\((?:major|majoring)(?: in)?\s+([^)]+)\)/i,' $1 ').replace(/\b(?:major|majoring) in\b/i,' ');
  let initial=fold(s);if(institution==='Waterloo'&&waterloo[initial])return waterloo[initial];if(common[initial])return common[initial];
+ s=s.replace(/\b(?:including|with)?\s*(?:an? )?(?:optional )?internship(?: option| year)?\b/gi,' ');
  s=s.replace(/\b(?:with|and)?\s*(?:non[- ]?co[- ]?op|no co[- ]?op|co[- ]?op(?:erative)?(?: program)?(?: only| available| option| optional)?|regular(?: stream| program| option)?|optional|honou?rs?)\b/gi,' ')
- .replace(/\b(?:bachelor(?:s|'s)? of|bachelor|bsc|hbsc|basc|bcs|bmath|ba|hba|bba|bcom|bcomm|beng|bafm|degree|program only)\b/gi,' ')
+ .replace(/\b(?:bachelor(?:s|'s)? of|bachelor|bsc|hbsc|basc|bcs|bmath|ba|hba|bba|bcom|bcomm|beng|bengm|bafm|bacc|bkin|bscn|bcmph|bcmp|bhsc|bmsc|bes|bas|bfa|bmus|bed|bsch|bhsch|degree|program only|direct entry)\b/gi,' ')
  .replace(/\([^a-z0-9]*\)/gi,' ');
- let k=fold(s).replace(/\bscence\b/g,'science').replace(/\bbachlors of\b/g,'').replace(/\benginnering\b/g,'engineering').replace(/\b(and|or|with)\s*$/,'').replace(/^and\s+/,'').trim();
+ let k=fold(s).replace(/\bscence\b/g,'science').replace(/\bbachlors of\b/g,'').replace(/\benginnering\b/g,'engineering').replace(/\barte\b/g,'arts').replace(/\bengineering l\b/g,'engineering i').replace(/^eng(?:ineering)? 1$/,'engineering i').replace(/\b(and|or|with)\s*$/,'').replace(/^and\s+/,'').trim();
  // A form label often repeats the complete program after its degree in parentheses.
  for(let repeat=0;repeat<3;repeat++){const w=k.split(' '),n=w.length;if(n%2===0&&w.slice(0,n/2).join(' ')===w.slice(n/2).join(' '))k=w.slice(0,n/2).join(' ');}
  // Remove a redundant trailing acronym, e.g. Accounting and Financial Management (AFM).
@@ -33,10 +38,13 @@ export function normalizeProgram(raw,institution=''){
  if(k==='chem eng')return 'Chemical Engineering';if(k==='mech')return 'Mechanical Engineering';
  
  if(institution==='McMaster'&&k==='engineering')return 'Engineering I';
+ if(/^UBC/.test(institution)){if(/\bsauder\b/.test(k)||k==='commerce')return 'Commerce';if(/^applied science(?: engineering)?$/.test(k))return 'Engineering';}
+ if(institution==='Queens'){k=k.replace(/^smith engineering (?=\S+ \S)/,'');if(k==='ece')return 'Electrical and Computer Engineering';}
  if(institution==='Queens'&&['smith engineering common first year','smith engineering','engineering common first year'].includes(k))return 'Engineering';
  if(institution==='Western'&&['ivey','aeo','ivey aeo','ivey advanced entry opportunity'].includes(k))return 'Ivey AEO';
  if(common[k])return common[k];
- return k? k.split(' ').map(x=>['and','of','in','at','for','with'].includes(x)?x:x.length===1?x.toUpperCase():x[0].toUpperCase()+x.slice(1)).join(' '):'Program unstated';
+ k=k.replace(/^in /,'');
+ return k? k.split(' ').map(x=>ACR.has(x)?x.toUpperCase():['and','of','in','at','for','with','or'].includes(x)?x:x.length===1?x.toUpperCase():x[0].toUpperCase()+x.slice(1)).join(' '):'Program unstated';
 }
 export function inferStudyMode(raw){
  const s=fold(raw);
@@ -47,6 +55,12 @@ export function inferStudyMode(raw){
  return 'Unstated';
 }
 export function matchesStudyMode(r,mode='Both'){return mode==='Both'||!mode||r.studyMode===mode;}
+// Word-set key: 'Science, Computer' and 'Computer Science' match; filler words are ignored.
+const STOP=new Set(['and','of','in','the','major','with','for','a','at','on','program','studies','general','honours','honors']);
+const SYN={'1':'i',biochem:'biochemistry',aeo:'advanced entry opportunity',comp:'computer',sci:'science',eng:'engineering',w:'',including:'',internship:'',smith:'',option:'',optional:'',bsch:'',bhsch:'',school:''};
+const tokKey=s=>[...new Set(fold(s).split(' ').flatMap(w=>(w in SYN?SYN[w]:w).split(' ')).filter(w=>w&&!STOP.has(w)))].sort().join(' ');
+// A name written the same way by at least this many reports at one school becomes a browsable "reported name" program.
+export const REPORTED_MIN=3;
 export function buildProgramCatalog(rawPrograms,rawReports,sources){
  const original=new Map(rawPrograms.map(p=>[p.id,p])),groups=new Map(),views=[];
  // Only names with official evidence enter the catalog. A new source label can
@@ -54,19 +68,26 @@ export function buildProgramCatalog(rawPrograms,rawReports,sources){
  const aliases=new Map();
  const addAlias=(inst,label,m)=>{const k=inst+'|'+fold(normalizeProgram(label,inst));const old=aliases.get(k);if(old===undefined)aliases.set(k,m);else if(old&&old.id!==m.id)aliases.set(k,null);};
  for(const p of rawPrograms){const m=officialProgramMap[p.id]||p.officialProgramMapping;if(m){addAlias(p.institutionId||'Waterloo',p.name,m);addAlias(p.institutionId||'Waterloo',m.name,m);}}
- for(const r of rawReports){
-  const sourceProgram=r.sourceProgram||r.program,p=original.get(sourceProgram);if(!p)throw new Error('Source program is missing for '+r.id);
-  const institution=r.institutionId||p.institutionId||'Waterloo',university=r.university||p.university||'University of Waterloo';
-  const submitted=sources[r.source]?.rawProgram||p.name;
+ const tokMap=new Map();for(const [k,m] of aliases){if(!m)continue;const i=k.indexOf('|'),t=k.slice(0,i)+'|'+tokKey(k.slice(i+1));const old=tokMap.get(t);if(old===undefined)tokMap.set(t,m);else if(old&&old.id!==m.id)tokMap.set(t,null);}
+ const resolve=r=>{const sourceProgram=r.sourceProgram||r.program,p=original.get(sourceProgram);if(!p)throw new Error('Source program is missing for '+r.id);
+  const institution=r.institutionId||p.institutionId||'Waterloo',submitted=sources[r.source]?.rawProgram||p.name;
   const audited=p.officialProgramMapping||officialProgramMap[sourceProgram];
-  const m=audited===undefined?aliases.get(institution+'|'+fold(normalizeProgram(p.name,institution))):audited;
-  const isSourceCollection=!m;
-  const name=m?m.name:'Source reports without a single program assignment';
-  const id=m?'OFFICIAL_'+institution+'__'+fold(m.name).replaceAll(' ','_'):'SOURCE_'+institution;
-  if(!groups.has(id))groups.set(id,{...p,id,name,displayName:name,university,institutionId:institution,aliases:[],sourcePrograms:[],isSourceCollection,url:m?.url||p.url,verification:m?'Official catalog match':'Source records',verificationNote:m?'Mapped to the official university program name. '+m.reason+'. Source wording is preserved in evidence.':'The source does not yet identify one official program confidently. These records remain searchable and browsable without becoming invented program names.',officialCatalog:m?.catalog,officialChecked:m?.checked,admissionNote:m?.admissionNote,unavailableIntakes:m?.unavailableIntakes});
+  let m=audited===undefined?aliases.get(institution+'|'+fold(normalizeProgram(p.name,institution))):audited,clean=null;
+  if(!m){for(const label of [p.name,submitted]){const hit=tokMap.get(institution+'|'+tokKey(normalizeProgram(label,institution)));if(hit){m=hit;break;}}}
+  if(!m){clean=normalizeProgram(submitted,institution);const tk=tokKey(clean);if(!tk||clean==='Program unstated'||tk.length<3||tk.split(' ').every(w=>PLACE.has(w)))clean=null;}
+  return {sourceProgram,p,institution,submitted,m,clean};};
+ const resolved=rawReports.map(resolve),cleanCount=new Map();
+ for(const x of resolved)if(x.clean){const k=x.institution+'|'+tokKey(x.clean);cleanCount.set(k,(cleanCount.get(k)||0)+1);}
+ rawReports.forEach((r,i)=>{const {sourceProgram,p,institution,submitted,m,clean}=resolved[i];
+  const university=r.university||p.university||'University of Waterloo';
+  const reported=!m&&!!clean&&cleanCount.get(institution+'|'+tokKey(clean))>=REPORTED_MIN;
+  const isSourceCollection=!m&&!reported;
+  const name=m?m.name:reported?clean:'Source reports without a single program assignment';
+  const id=m?'OFFICIAL_'+institution+'__'+fold(m.name).replaceAll(' ','_'):reported?'REPORTED_'+institution+'__'+tokKey(clean).replaceAll(' ','_'):'SOURCE_'+institution;
+  if(!groups.has(id))groups.set(id,{...p,id,name,displayName:name,university,institutionId:institution,aliases:[],sourcePrograms:[],isSourceCollection,url:m?.url||p.url,reportedName:reported,verification:m?'Official catalog match':reported?'Reported program name':'Source records',verificationNote:m?'Mapped to the official university program name. '+m.reason+'. Source wording is preserved in evidence.':reported?'Grouped from how applicants wrote the program name. It is not matched to an official university program yet, so the name may be informal or combine related programs.':'The source does not yet identify one official program confidently. These records remain searchable and browsable without becoming invented program names.',officialCatalog:m?.catalog,officialChecked:m?.checked,admissionNote:m?.admissionNote,unavailableIntakes:m?.unavailableIntakes});
   const g=groups.get(id);if(!g.sourcePrograms.includes(sourceProgram)){g.sourcePrograms.push(sourceProgram);g.aliases.push(p.name);}
   const studyMode=r.studyMode&&['Co-op','Non-co-op','Unstated'].includes(r.studyMode)?r.studyMode:inferStudyMode(submitted);
-  views.push({...r,sourceProgram,program:id,programName:name,university,institutionId:institution,submittedProgram:submitted,studyMode,programVerified:!isSourceCollection,isSourceCollection,reviewFlags:[...(r.reviewFlags||[]),...(m?.unavailableIntakes?.includes(r.year)?['Reported intake conflicts with the official admission pause. Source claim is preserved, not authenticated.']:[])]});
- }
+  views.push({...r,sourceProgram,program:id,programName:name,university,institutionId:institution,submittedProgram:submitted,studyMode,programVerified:!!m,isSourceCollection,reviewFlags:[...(r.reviewFlags||[]),...(m?.unavailableIntakes?.includes(r.year)?['Reported intake conflicts with the official admission pause. Source claim is preserved, not authenticated.']:[])]});
+ });
  return {programs:[...groups.values()],reports:views};
 }

@@ -110,7 +110,7 @@ function programPage({ p, rs, slug, s, site, snap, schoolSlug, similar }) {
     { '@type': 'ListItem', position: 3, name, item: url }] };
   return head({ title, desc, url, site, feed: { title: `New reports: ${name} (${p.university})`, href: `/feeds/${slug}.xml` } }) + topbar + `<main class="pg">
 <p class="pg-crumbs"><a href="/schools/">Schools</a> › <a href="/schools/${schoolSlug}/">${esc(p.university)}</a></p>
-<h1>${esc(name)}</h1><p class="pg-sub">${esc(p.university)} · self-reported admission results</p>
+<h1>${esc(name)}</h1><p class="pg-sub">${esc(p.university)} · self-reported admission results</p>${p.reportedName ? '<p class="pg-sub"><strong>Program name as reported:</strong> grouped from how applicants wrote it, not matched to an official program name yet.</p>' : ''}
 ${disclaimer}
 <div class="pg-stats">
  <div><span>Reports</span><strong>${rs.length}</strong></div>
