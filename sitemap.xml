@@ -16,6 +16,7 @@
 <url><loc>https://offeratlas.github.io/schools/nipissing-university/</loc><lastmod>2026-05-27</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/ontario-tech-university/</loc><lastmod>2026-11-16</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/queen-s-university/</loc><lastmod>2026-11-15</lastmod></url>
+<url><loc>https://offeratlas.github.io/schools/simon-fraser-university/</loc><lastmod>2026-03-24</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/toronto-metropolitan-university/</loc><lastmod>2026-11-18</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/trent-university/</loc><lastmod>2026-11-12</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/university-of-alberta/</loc><lastmod>2026-10-23</lastmod></url>
@@ -24,10 +25,11 @@
 <url><loc>https://offeratlas.github.io/schools/university-of-calgary/</loc><lastmod>2026-03-27</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/university-of-guelph/</loc><lastmod>2026-11-17</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/university-of-ottawa/</loc><lastmod>2026-11-18</lastmod></url>
-<url><loc>https://offeratlas.github.io/schools/university-of-toronto-campus-unstated/</loc><lastmod>2024-07-27</lastmod></url>
+<url><loc>https://offeratlas.github.io/schools/university-of-toronto-campus-unstated/</loc><lastmod>2025-03-26</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/university-of-toronto-mississauga/</loc><lastmod>2026-06-10</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/university-of-toronto-scarborough/</loc><lastmod>2026-06-06</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/university-of-toronto-st-george/</loc><lastmod>2026-07-14</lastmod></url>
+<url><loc>https://offeratlas.github.io/schools/university-of-victoria/</loc><lastmod>2026-02-12</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/university-of-waterloo/</loc><lastmod>2026-07-14</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/university-of-windsor/</loc><lastmod>2026-06-07</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/waterloo-laurier-home-unstated/</loc><lastmod>2022-05-16</lastmod></url>
@@ -67,6 +69,7 @@
 <url><loc>https://offeratlas.github.io/programs/nursing-laurentian-university/</loc><lastmod>2026-10-24</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/arts-mcgill-university/</loc><lastmod>2026-05-21</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/bachelor-of-commerce-mcgill-university/</loc><lastmod>2026-06-15</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/bioengineering-mcgill-university/</loc><lastmod>2026-04-24</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/chemical-engineering-mcgill-university/</loc><lastmod>2026-06-10</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/computer-engineering-mcgill-university/</loc><lastmod>2026-05-28</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/computer-science-mcgill-university/</loc><lastmod>2026-02-15</lastmod></url>
@@ -131,6 +134,7 @@
 <url><loc>https://offeratlas.github.io/programs/political-studies-queen-s-university/</loc><lastmod>2026-05-14</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/psychology-queen-s-university/</loc><lastmod>2026-11-11</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/science-queen-s-university/</loc><lastmod>2026-06-06</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/beedie-simon-fraser-university/</loc><lastmod>2026-03-24</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/accounting-and-finance-toronto-metropolitan-university/</loc><lastmod>2026-11-12</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/aerospace-engineering-toronto-metropolitan-university/</loc><lastmod>2026-11-16</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/architectural-science-toronto-metropolitan-university/</loc><lastmod>2026-03-22</lastmod></url>
@@ -171,10 +175,17 @@
 <url><loc>https://offeratlas.github.io/programs/computing-science-university-of-alberta/</loc><lastmod>2026-01-26</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/engineering-university-of-alberta/</loc><lastmod>2026-10-23</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/engineering-university-of-british-columbia-okanagan/</loc><lastmod>2026-04-23</lastmod></url>
-<url><loc>https://offeratlas.github.io/programs/arts-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-04-01</lastmod></url>
-<url><loc>https://offeratlas.github.io/programs/commerce-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-05-06</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/science-university-of-british-columbia-okanagan/</loc><lastmod>2026-04-14</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/applied-biology-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-03-18</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/applied-sciences-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2025-12-18</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/arts-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-05-28</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/commerce-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-06-04</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/computer-science-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-01-26</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/engineering-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-06-10</lastmod></url>
-<url><loc>https://offeratlas.github.io/programs/science-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-05-26</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/international-economics-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-02-18</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/kinesiology-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-05-28</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/science-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-05-28</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/sciences-university-of-british-columbia-vancouver-unstated/</loc><lastmod>2026-04-29</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/engineering-university-of-calgary/</loc><lastmod>2026-03-27</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/animal-biology-university-of-guelph/</loc><lastmod>2026-11-16</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/arts-and-sciences-university-of-guelph/</loc><lastmod>2026-11-16</lastmod></url>
@@ -236,7 +247,7 @@
 <url><loc>https://offeratlas.github.io/programs/software-engineering-university-of-ottawa/</loc><lastmod>2026-11-18</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/statistics-university-of-ottawa/</loc><lastmod>2026-05-08</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/chemical-engineering-university-of-toronto-campus-unstated/</loc><lastmod>2024-05-29</lastmod></url>
-<url><loc>https://offeratlas.github.io/programs/civil-engineering-university-of-toronto-campus-unstated/</loc><lastmod>2024-05-24</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/civil-engineering-university-of-toronto-campus-unstated/</loc><lastmod>2025-03-26</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/commerce-university-of-toronto-campus-unstated/</loc><lastmod>2024-05-28</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/computer-engineering-university-of-toronto-campus-unstated/</loc><lastmod>2024-07-11</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/computer-science-university-of-toronto-campus-unstated/</loc><lastmod>2024-06-09</lastmod></url>
@@ -250,7 +261,7 @@
 <url><loc>https://offeratlas.github.io/programs/mathematics-and-physical-sciences-university-of-toronto-campus-unstated/</loc><lastmod>2024-06-12</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/mechanical-engineering-university-of-toronto-campus-unstated/</loc><lastmod>2024-05-21</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/rotman-commerce-university-of-toronto-campus-unstated/</loc><lastmod>2024-07-27</lastmod></url>
-<url><loc>https://offeratlas.github.io/programs/social-sciences-university-of-toronto-campus-unstated/</loc><lastmod>2024-05-30</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/social-sciences-university-of-toronto-campus-unstated/</loc><lastmod>2025-03-17</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/trackone-undeclared-engineering-university-of-toronto-campus-unstated/</loc><lastmod>2024-06-07</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/chemical-and-physical-sciences-university-of-toronto-mississauga/</loc><lastmod>2026-03-01</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/commerce-university-of-toronto-mississauga/</loc><lastmod>2026-03-22</lastmod></url>
@@ -288,6 +299,8 @@
 <url><loc>https://offeratlas.github.io/programs/rotman-commerce-university-of-toronto-st-george/</loc><lastmod>2026-05-29</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/social-sciences-university-of-toronto-st-george/</loc><lastmod>2026-05-28</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/trackone-undeclared-engineering-university-of-toronto-st-george/</loc><lastmod>2026-06-11</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/engineering-university-of-victoria/</loc><lastmod>2026-02-12</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/science-university-of-victoria/</loc><lastmod>2025-03-23</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/accounting-and-financial-management-university-of-waterloo/</loc><lastmod>2026-06-10</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/architectural-engineering-university-of-waterloo/</loc><lastmod>2026-05-17</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/architecture-university-of-waterloo/</loc><lastmod>2026-05-19</lastmod></url>
