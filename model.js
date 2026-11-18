@@ -1,6 +1,7 @@
-import {reports,programs} from './data.js?v=oa15';
-import {matchesStudyMode} from './catalog.js?v=oa15';
-export const months=['January','February','March','April','May','June','July','August','September','October','November','December','Unknown'];
+import {reports,programs} from './data.js?v=oa16';
+import {matchesStudyMode} from './catalog.js?v=oa16';
+// Admissions-cycle order: applications open in the fall, decisions run from fall through summer.
+export const months=['September','October','November','December','January','February','March','April','May','June','July','August','Unknown'];
 export const outcomes=['Offer','Rejected','Deferred','Alternate','Waitlisted','Unstated'];
 export const defaultFilters=()=>({university:'All',programs:[],year:'All',month:'All',outcome:'All',curriculum:'All',sourceType:'All',studyMode:'Both',minimum:0,maximum:100,includeUnquantified:true,query:'',sort:'university',applicantGroup:'All',province:'All',citizenship:'All',residenceCountry:'All'});
 export function filterReports(f,ignoreMonth=false){const pids=new Set(f.programs);return reports.filter(r=>['applicantGroup','province','citizenship','residenceCountry'].every(k=>!f[k]||f[k]==='All'||r[k]===f[k])&&matchesStudyMode(r,f.studyMode)&&(f.university==='All'||r.university===f.university)&&(!pids.size||pids.has(r.program))&&(f.year==='All'||r.year===Number(f.year))&&(ignoreMonth||f.month==='All'||r.month===f.month)&&(f.outcome==='All'||r.outcome===f.outcome)&&(f.curriculum==='All'||r.curriculum===f.curriculum)&&(f.sourceType==='All'||r.sourceType===f.sourceType)&&(r.average===null?f.includeUnquantified:r.average>=f.minimum&&r.average<=f.maximum)&&(!f.query||[r.university,r.programName,r.submittedProgram,r.averageLabel,r.outcome,r.month,r.year].join(' ').toLowerCase().includes(f.query.toLowerCase())));}
