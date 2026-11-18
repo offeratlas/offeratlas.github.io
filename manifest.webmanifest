@@ -1,0 +1,21 @@
+{
+  "name": "Offer Atlas",
+  "short_name": "Offer Atlas",
+  "description": "Self-reported Canadian university admission averages, offer dates and results.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f4ef",
+  "theme_color": "#162840",
+  "icons": [
+    {"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "Compare my average", "url": "/#compare"},
+    {"name": "Offer tracker", "url": "/#tracker"},
+    {"name": "Programs", "url": "/#catalog"}
+  ]
+}
