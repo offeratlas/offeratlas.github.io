@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa34';
-import {initEntering} from './entering.js?v=oa34';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa34';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa34';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa34';
+import {layoutDots} from './plot.js?v=oa35';
+import {initEntering} from './entering.js?v=oa35';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa35';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa35';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa35';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -515,7 +515,7 @@ function seasonCard(){const el=$('#hc-season');if(!el)return;const rows=trackerR
   ${ALLY()?'':'<p class="fine">Load all years to see which big programs haven’t started yet. <button class="db-link" data-archive="load">Load all years</button></p>'}
   <button type="button" class="hc-link" data-view="tracker">Open the offer tracker →</button>`;}
 // ---- Deadlines (deadlines.json, copied from official university pages) ----
-let DL=null;fetch('deadlines.json?v=oa34',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
+let DL=null;fetch('deadlines.json?v=oa35',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
 const kdVersion=()=>{try{return new URLSearchParams(location.search).get('kd')||localStorage.getItem('offeratlas.kd')||'a';}catch{return 'a';}};
 const dlDays=d=>Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(todayISO()+'T12:00:00Z'))/864e5);
 const dlDate=(d,y)=>new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',...(y?{year:'numeric'}:{}),timeZone:'UTC'}).format(new Date(d+'T12:00:00Z'));
@@ -572,6 +572,8 @@ function wkReports(){const cy=CUR(),today=torDay(Date.now()),start=today-6*864e5
 const wkKey=r=>r.isSourceCollection?(r.submittedProgram||r.programName)+'|'+r.university:r.program;
 const wkName=r=>r.isSourceCollection?(r.submittedProgram||r.programName):r.programName;
 const wkOutcome=o=>o==='Offer'?'offer':o==='Rejected'?'rejected':'other';
+// Short labels so big counts always fit above a bar: 1,234 -> 1.2k
+const wkShort=n=>n>=10000?Math.round(n/1000)+'k':n>=1000?(n/1000).toFixed(1).replace(/\.0$/,'')+'k':String(n);
 function wkSummary(all){const today=torDay(Date.now()),days=[...Array(7)].map((_,i)=>today-(6-i)*864e5);
  const per=days.map(d=>{const rs=all.filter(([,t])=>torDay(t)===d);return {d,o:rs.filter(([r])=>r.outcome==='Offer').length,x:rs.filter(([r])=>r.outcome!=='Offer').length};});
  const mx=Math.max(1,...per.map(p=>p.o+p.x)),dayName=d=>new Intl.DateTimeFormat('en-CA',{weekday:'short',timeZone:'UTC'}).format(new Date(d+12*36e5));
@@ -583,7 +585,7 @@ function wkSummary(all){const today=torDay(Date.now()),days=[...Array(7)].map((_
  return `<div class="wk-sum">
   <div class="wk-chips">${[['all','All',all.length],['offer','Offers',offers],['rejected','Rejections',rej],['other','Other',other]].map(([k,l,n])=>`<button type="button" class="wk-chip${wkFilter.outcome===k?' on':''} ${k}" data-wk-out="${k}"><b>${fmt(n)}</b>${l}</button>`).join('')}</div>
   <div class="wk-grid">
-   <div><h4>Results per day</h4><div class="wk-bars">${per.map(p=>`<div class="wk-bar" title="${p.o} offers, ${p.x} other"><i class="x" style="height:${p.x/mx*100}%"></i><i class="o" style="height:${p.o/mx*100}%"></i><span>${dayName(p.d)}</span><em>${p.o+p.x}</em></div>`).join('')}</div>
+   <div><h4>Results per day</h4><div class="wk-bars">${per.map(p=>{const n=p.o+p.x;return `<div class="wk-bar" title="${fmt(n)} results (${fmt(p.o)} offers)"><em>${wkShort(n)}</em><div class="wk-stack" style="--h:${(n/mx).toFixed(3)}">${p.o?`<i class="o" style="flex:${p.o}"></i>`:''}${p.x?`<i class="x" style="flex:${p.x}"></i>`:''}</div><span>${dayName(p.d)}</span></div>`;}).join('')}</div>
     ${avgs.length?`<p class="wk-fine">Median reported average this week: <b>${median(avgs).toFixed(1)}%</b> (${fmt(avgs.length)} with a number)</p>`:''}</div>
    <div><h4>Most new offers</h4><ol class="wk-top">${top.map(e=>`<li><button type="button" data-wk-prog="${esc(e.k)}" class="${wkFilter.prog===e.k?'on':''}"><span><b>${esc(e.name)}</b><small>${esc(e.uni)}</small></span><em>+${e.n}</em></button></li>`).join('')}</ol></div>
    <div><h4>Busiest schools</h4><ol class="wk-top">${topS.map(([u,n])=>`<li><span><b>${esc(u)}</b></span><em>${n}</em></li>`).join('')}</ol></div>
