@@ -1,5 +1,5 @@
-import {reports,programs} from './data.js?v=oa39';
-import {matchesStudyMode} from './catalog.js?v=oa39';
+import {reports,programs} from './data.js?v=oa40';
+import {matchesStudyMode} from './catalog.js?v=oa40';
 // Admissions-cycle order: applications open in the fall, decisions run from fall through summer.
 export const months=['September','October','November','December','January','February','March','April','May','June','July','August','Unknown'];
 export const outcomes=['Offer','Rejected','Deferred','Alternate','Waitlisted','Unstated'];
