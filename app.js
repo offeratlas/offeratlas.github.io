@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa36';
-import {initEntering} from './entering.js?v=oa36';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa36';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa36';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa36';
+import {layoutDots} from './plot.js?v=oa37';
+import {initEntering} from './entering.js?v=oa37';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa37';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa37';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa37';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -515,7 +515,7 @@ function seasonCard(){const el=$('#hc-season');if(!el)return;const rows=trackerR
   ${ALLY()?'':'<p class="fine">Load all years to see which big programs haven’t started yet. <button class="db-link" data-archive="load">Load all years</button></p>'}
   <button type="button" class="hc-link" data-view="tracker">Open the offer tracker →</button>`;}
 // ---- Deadlines (deadlines.json, copied from official university pages) ----
-let DL=null;fetch('deadlines.json?v=oa36',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
+let DL=null;fetch('deadlines.json?v=oa37',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
 const kdVersion=()=>{try{return new URLSearchParams(location.search).get('kd')||localStorage.getItem('offeratlas.kd')||'a';}catch{return 'a';}};
 const dlDays=d=>Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(todayISO()+'T12:00:00Z'))/864e5);
 const dlDate=(d,y)=>new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',...(y?{year:'numeric'}:{}),timeZone:'UTC'}).format(new Date(d+'T12:00:00Z'));
