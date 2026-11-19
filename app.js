@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa30';
-import {initEntering} from './entering.js?v=oa30';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa30';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa30';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa30';
+import {layoutDots} from './plot.js?v=oa31';
+import {initEntering} from './entering.js?v=oa31';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa31';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa31';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa31';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -463,7 +463,63 @@ document.addEventListener('click',e=>{const a=e.target.closest('#guides-view a, 
  hb?.querySelector('nav')?.addEventListener('click',e=>{if(e.target.closest('[data-view]'))setMenu(false);});
  document.addEventListener('click',e=>{if(hb.classList.contains('menu-open')&&!e.target.closest('header.topbar nav'))setMenu(false);});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&hb.classList.contains('menu-open')){setMenu(false);mb.focus();}});}
-function all(){syncYearsToggle();progIndex=null;indexData();controls();picker();render();catalog();sources();credits();freshness();fresh();watchStrip();if(!$('#compare-view').hidden){compareRender();cmpSuggest();}if(!$('#tracker-view').hidden){trackerRender();waitRender();}}
+// ---- Front page cards: quick compare, this week, offer season, key dates ----
+let qcPid=null,qcInit=false,qcUser=false;
+const qcDefault=()=>{if(pmap.has('OFFICIAL_Waterloo__computer_science')&&(progReports().get('OFFICIAL_Waterloo__computer_science')||[]).some(r=>r.outcome==='Offer'))return 'OFFICIAL_Waterloo__computer_science';let best=null,n=0;for(const [id,rs] of progReports()){const k=rs.filter(r=>r.outcome==='Offer'&&Number.isFinite(r.average)).length;if(k>n&&pmap.has(id)){n=k;best=id;}}return best;};
+const KEY_DATES=[{d:'2027-01-15',t:'OUAC equal-consideration date',s:'Ontario university applications (101)'},
+ {d:'2027-01-15',t:'UBC application deadline',s:'Most UBC programs'},
+ {d:'2027-06-01',t:'Reply to Ontario offers by',s:'Ontario universities’ usual response date'}];
+function qcSuggest(){const q=$('#qc-prog').value.trim().toLowerCase(),el=$('#qc-suggest');if(!q||(qcPid&&$('#qc-prog').value===qcLabel(pmap.get(qcPid)))){el.innerHTML='';return;}
+ const idx=progReports(),toks=q.split(/\s+/).filter(Boolean);
+ const hits=catalogPrograms.filter(p=>!p.isSourceCollection&&idx.has(p.id)&&nickMatch([pname(p),p.university,...(p.aliases||[])].join(' '),toks)).sort((x,y)=>idx.get(y.id).length-idx.get(x.id).length).slice(0,5);
+ el.innerHTML=hits.length?hits.map(p=>`<button type="button" data-qc-pick="${esc(p.id)}"><strong>${esc(pname(p))}</strong><span>${esc(p.university)}</span></button>`).join(''):`<p class="fine">No match${ALLY()?'':'. Older programs appear after you load all years.'}</p>`;}
+const qcLabel=p=>p?`${pname(p)} · ${p.university.replace(/^University of /,'').split(' · ')[0]}`:'';
+function qcRender(){const el=$('#qc-result');if(!el)return;if(!qcUser&&!(qcPid&&pmap.has(qcPid))){qcPid=qcDefault();if(qcPid)$('#qc-prog').value=qcLabel(pmap.get(qcPid));}const p=qcPid&&pmap.get(qcPid);
+ if(!p){el.innerHTML='<p class="qc-hint">Pick a program to see where your average lands among reported offers.</p>';return;}
+ const t=$('#qc-avg').value.replace(',','.').trim(),avg=parseFloat(t),has=t!==''&&Number.isFinite(avg)&&avg>=50&&avg<=100;
+ const offers=(progReports().get(p.id)||[]).filter(r=>r.outcome==='Offer'&&Number.isFinite(r.average)&&r.average<=100).map(r=>r.average).sort((x,y)=>x-y);
+ const scope=ALLY()?'all years':`Fall ${CUR()}`;
+ if(offers.length<3){el.innerHTML=`<p class="qc-hint">Only ${offers.length} reported offer${offers.length===1?'':'s'} with an average for ${esc(pname(p))} (${scope}).${ALLY()?'':' <button class="db-link" data-archive="load">Load all years</button> for more.'}</p>`;return;}
+ const med=median(offers),lo=Math.max(50,Math.floor(Math.min(offers[Math.floor(offers.length*0.1)],has?avg:100))-1),n=100-lo,bins=Array(n).fill(0);
+ for(const v of offers)if(v>=lo)bins[Math.min(n-1,Math.floor(v-lo))]++;const mx=Math.max(...bins,1);
+ const pct=v=>((v-lo)/n*100).toFixed(1);
+ let line=`Median reported offer <strong>${med.toFixed(1)}%</strong> · ${fmt(offers.length)} offers (${scope})`,tag='';
+ if(has){const below=offers.filter(v=>v<avg).length+offers.filter(v=>v===avg).length/2,pc=Math.round(below/offers.length*100),[cls,txt]=cmpLabel(pc,offers.length);
+  tag=`<span class="cmp-tag ${cls}">${txt}</span>`;line=`Your <strong>${avg}%</strong> is higher than <strong>${pc}%</strong> of ${fmt(offers.length)} reported offers (${scope}). Median <strong>${med.toFixed(1)}%</strong>.`;}
+ el.innerHTML=`<div class="qc-head"><strong>${esc(pname(p))}</strong><span>${esc(p.university)}</span></div>${tag}
+  <div class="qc-chart" aria-hidden="true">${bins.map(b=>`<i style="height:${Math.max(b?6:0,Math.round(b/mx*100))}%"></i>`).join('')}
+  <b class="qc-med" style="left:${pct(med)}%"></b>${has&&avg>=lo?`<b class="qc-you${pct(avg)>70?' flip':''}" style="left:${pct(avg)}%"><span>You</span></b>`:''}</div>
+  <div class="qc-axis"><span>${lo}%</span><span>100%</span></div><p class="qc-line">${line}</p>
+  <button type="button" class="qc-open" data-qc-open="${esc(p.id)}">Open in Compare →</button>`;}
+function qcSetup(){if(qcInit)return;qcInit=true;const avgEl=$('#qc-avg'),progEl=$('#qc-prog');if(!avgEl)return;
+ if(cmp.avg!=null)avgEl.value=cmp.avg;
+ qcPid=(cmp.programs||[]).find(id=>pmap.has(id))||null;if(qcPid){qcUser=true;progEl.value=qcLabel(pmap.get(qcPid));}
+ avgEl.addEventListener('input',()=>{avgEl.value=avgEl.value.replace(/[^0-9.,]/g,'');qcRender();});
+ progEl.addEventListener('input',qcSuggest);progEl.addEventListener('focus',()=>{if(qcPid&&progEl.value===qcLabel(pmap.get(qcPid)))progEl.select();});
+ document.addEventListener('click',e=>{const b=e.target.closest?.('[data-qc-pick]');if(b){qcPid=b.dataset.qcPick;qcUser=true;progEl.value=qcLabel(pmap.get(qcPid));$('#qc-suggest').innerHTML='';qcRender();return;}
+  const o=e.target.closest?.('[data-qc-open]');if(o){const t=avgEl.value.replace(',','.'),v=parseFloat(t);if(Number.isFinite(v))cmp.avg=Math.min(100,Math.round(v*100)/100);
+   if(!cmp.programs.includes(o.dataset.qcOpen))cmp.programs.unshift(o.dataset.qcOpen);if(cmp.scope==='cur'&&ALLY())cmp.scope='all';saveCmp();setView('compare',true);document.getElementById('compare-view')?.scrollIntoView({block:'start'});}});}
+function weekCard(){const el=$('#hc-week');if(!el)return;const cy=CUR(),today=torDay(Date.now()),start=today-6*864e5;
+ const wk=reports.filter(r=>r.year===cy).filter(r=>{const t=subTime(r);if(!t)return false;const d=torDay(t);return d>=start&&d<=today;});
+ const offers=wk.filter(r=>r.outcome==='Offer'),rej=wk.filter(r=>r.outcome==='Rejected').length,other=wk.length-offers.length-rej;
+ const by=new Map();for(const r of offers){const k=r.isSourceCollection?(r.submittedProgram||r.programName)+'|'+r.university:r.program;const e=by.get(k)||{n:0,name:r.isSourceCollection?(r.submittedProgram||r.programName):r.programName,uni:r.university};e.n++;by.set(k,e);}
+ const top=[...by.values()].sort((x,y)=>y.n-x.n).slice(0,3);
+ el.innerHTML=`<h3>This week</h3><p class="hc-sub">New results in the last 7 days</p>
+  <div class="hc-stats"><div><b>${fmt(wk.length)}</b><span>new results</span></div><div><b class="ok">${fmt(offers.length)}</b><span>offers</span></div><div><b class="bad">${fmt(rej)}</b><span>rejections</span></div></div>
+  ${top.length?`<p class="hc-label">Most new offers</p><ol class="hc-list">${top.map(e=>`<li><span class="hc-nm"><b title="${esc(e.name)}">${esc(e.name)}</b><small>${esc(e.uni)}</small></span><em class="hc-plus">+${fmt(e.n)}</em></li>`).join('')}</ol>`:'<p class="fine">Quiet week so far.</p>'}
+  <button type="button" class="hc-link" data-recap>Weekly recap image →</button>`;}
+function seasonCard(){const el=$('#hc-season');if(!el)return;const rows=trackerRows(),out=rows.filter(r=>r.cls==='out');
+ const pop=[...rows].sort((x,y)=>(y.curN+y.prevN)-(x.curN+x.prevN)).slice(0,5);
+ el.innerHTML=`<h3>Offer season</h3><p class="hc-sub"><strong>${fmt(out.length)}</strong> programs have reported Fall ${CUR()} offers so far</p>
+  <ul class="hc-season">${pop.map(r=>`<li><span class="hc-nm"><b title="${esc(pname(r.p))}">${esc(pname(r.p))}</b><small>${esc(r.p.university)}</small></span>${r.cls==='out'?`<em class="go">✓ ${fmt(r.curN)} offer${r.curN===1?'':'s'}</em>`:`<em class="wait">${r.pFirst?'Not yet':'—'}</em>`}</li>`).join('')}</ul>
+  ${ALLY()?'':'<p class="fine">Load all years to see which big programs haven’t started yet. <button class="db-link" data-archive="load">Load all years</button></p>'}
+  <button type="button" class="hc-link" data-view="tracker">Open the offer tracker →</button>`;}
+function datesCard(){const el=$('#hc-dates');if(!el)return;const today=todayISO(),days=d=>Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(today+'T12:00:00Z'))/864e5);
+ el.innerHTML=`<h3>Key dates</h3><p class="hc-sub">Fall ${CUR()} applications</p><ul class="hc-dates">${KEY_DATES.map(k=>{const n=days(k.d);return `<li><div class="hc-count${n<0?' past':''}"><b>${n<0?'✓':fmt(n)}</b><span>${n<0?'passed':n===1?'day':'days'}</span></div><div class="hc-dt"><strong>${esc(k.t)}</strong><span class="hc-when">${new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}).format(new Date(k.d+'T12:00:00Z'))}</span><small>${esc(k.s)}</small></div></li>`;}).join('')}</ul>
+  <p class="fine">Dates can change. Always check <a href="https://www.ouac.on.ca/" target="_blank" rel="noopener noreferrer">OUAC</a> and each university’s site.</p>`;}
+function heroCards(){try{qcSetup();qcRender();qcSuggest();weekCard();seasonCard();datesCard();}catch(err){console.warn('front page cards',err);}}
+
+function all(){syncYearsToggle();progIndex=null;indexData();controls();picker();render();catalog();sources();credits();freshness();fresh();watchStrip();heroCards();if(!$('#compare-view').hidden){compareRender();cmpSuggest();}if(!$('#tracker-view').hidden){trackerRender();waitRender();}}
 $('#reload').addEventListener('click',async()=>{const ok=await loadSnapshot();all();notify(ok?'Loaded the latest saved data.':'Saved data unavailable. Please try again.');});
 $('#evidence-dialog').addEventListener('close',()=>writeUrl());
 const filtersBox=$('.filters');if(PHONE.matches)filtersBox.classList.add('collapsed');

@@ -531,6 +531,87 @@ html[data-theme=dark] .fresh-credit,html[data-theme=dark] .fresh-credit a{color:
 .hero-simple .hero-secondary{font-size:16px}
 @media(max-width:760px){.hero.hero-simple{padding:26px 0 18px}.hero-simple h1{font-size:34px}.hero-simple .hero-description{font-size:16px}}
 
+
+/* ---- Front page: quick compare + three cards ---- */
+.hero.hero-simple{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:44px;align-items:center;max-width:none}
+.hero-qc{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px 24px}
+.hero-qc h3{margin:0 0 12px;font-size:20px}
+.qc-row{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:10px}
+.qc-row label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:700;color:var(--muted);min-width:0}
+.qc-row input{font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);width:100%;min-width:0;box-sizing:border-box}
+.qc-suggest{display:grid;gap:4px;margin-top:6px}
+.qc-suggest button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:1px solid var(--line);background:#f8f8f5;border-radius:10px;padding:8px 10px;font:inherit;font-size:14px;cursor:pointer}
+.qc-suggest button span{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qc-suggest button:hover{border-color:var(--ink)}
+.qc-result{margin-top:14px}
+.qc-hint{color:var(--muted);font-size:15px;margin:0}
+.qc-head{display:flex;flex-direction:column;margin-bottom:6px}.qc-head strong{font-size:17px}.qc-head span{font-size:13px;color:var(--muted)}
+.qc-chart{position:relative;display:flex;align-items:flex-end;gap:2px;height:96px;margin-top:12px;border-bottom:2px solid var(--line)}
+.qc-chart i{flex:1;background:#3fbf8a;border-radius:3px 3px 0 0;min-width:2px}
+.qc-chart .qc-med{position:absolute;top:0;bottom:-2px;width:2px;background:var(--ink);opacity:.55}
+.qc-chart .qc-you{position:absolute;top:-6px;bottom:-2px;width:3px;margin-left:-1px;background:var(--ink)}
+.qc-chart .qc-you span{position:absolute;top:-4px;left:6px;font-size:12px;font-weight:800;background:var(--lime);color:#162840;padding:1px 7px;border-radius:7px;white-space:nowrap}
+.qc-chart .qc-you.flip span{left:auto;right:6px}
+.qc-axis{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+.qc-line{font-size:15px;line-height:1.5;margin:10px 0 12px}
+.qc-open,.hc-link{border:0;background:none;padding:0;font:inherit;font-size:15px;font-weight:700;color:var(--blue);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.hero-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin:0 0 30px}
+.hc{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;min-width:0}
+.hc h3{margin:0;font-size:19px}
+.hc-sub{margin:4px 0 14px;font-size:14px;color:var(--muted)}
+.hc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.hc-stats div{background:#f6f6f2;border-radius:12px;padding:10px}
+.hc-stats b{display:block;font-size:24px;line-height:1.1}.hc-stats b.ok{color:var(--green)}.hc-stats b.bad{color:var(--red)}
+.hc-stats span{font-size:12px;color:var(--muted)}
+.hc-label{margin:0 0 6px;font-size:13px;font-weight:700;color:var(--muted)}
+.hc-list,.hc-season,.hc-dates{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:8px}
+.hc-list li,.hc-season li{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;font-weight:650}
+.hc-list li span,.hc-season li span{display:flex;flex-direction:column;min-width:0}
+.hc-list small,.hc-season small,.hc-dates small{font-size:12px;font-weight:500;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hc-list b{color:var(--green);font-size:16px}
+.hc-season em{font-style:normal;font-size:13px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.hc-season em.go{background:#e3f4ea;color:#1d6b4b}.hc-season em.wait{background:#f1f1ec;color:var(--muted)}
+.hc-dates li{display:flex;gap:12px;align-items:center}
+.hc-dates li>div:last-child{min-width:0}.hc-dates small{white-space:normal;display:block}
+.hc-dates strong{display:block;font-size:15px}
+.hc-count{flex:none;width:58px;height:58px;border-radius:14px;background:var(--ink);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.hc-count b{font-size:20px;color:var(--lime)}.hc-count span{font-size:11px;margin-top:3px}
+.hc-count.past{background:#e7e7e1;color:var(--muted)}.hc-count.past b{color:var(--muted)}
+.hc .fine{margin-top:auto}
+.hc .hc-link{margin-top:auto;align-self:flex-start}
+.hc .fine+.hc-link{margin-top:10px}
+@media(max-width:1000px){.hero.hero-simple{grid-template-columns:1fr;gap:22px}.hero-cards{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.hero-cards{grid-template-columns:1fr;gap:14px}.hero-qc{padding:18px}.qc-row{grid-template-columns:1fr 1.5fr}}
+
+
+/* ---- Front cards: safe for any text length ---- */
+.hero-main,.hero-qc,.hc,.hc *{min-width:0}
+.hc,.hero-qc{overflow-wrap:anywhere}
+.hc-nm{display:flex;flex-direction:column;flex:1;min-width:0}
+.hc-nm b{color:var(--ink)!important;font-size:15px;font-weight:650;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.3}
+.hc-nm small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hc-list li,.hc-season li{align-items:flex-start}
+.hc-plus{flex:none;font-style:normal;font-weight:800;color:var(--green);font-size:16px}
+.hc-season em{flex:none}
+.hc-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.hc-stats b{font-size:clamp(18px,1.9vw,24px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hc-stats span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hc-dates li{align-items:flex-start}
+.hc-count{width:56px;height:56px}
+.hc-count b{font-size:clamp(15px,1.6vw,20px)}
+.hc-dt{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.hc-dt strong{font-size:15px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hc-dt .hc-when{font-size:13px;font-weight:700;color:var(--ink)}
+.hc-dt small{font-size:12px;color:var(--muted);line-height:1.4;white-space:normal}
+.qc-head strong{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.qc-head span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qc-suggest button strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.qc-suggest button span{flex:none;max-width:45%}
+.qc-line{overflow-wrap:anywhere}
+/* ticker: Pause sits under the ticker on the right, never over the buttons */
+.tk-toggle{position:static!important;margin:8px 0 0 auto}
+@media (prefers-reduced-motion:no-preference){.tk-toggle{display:block}}
+
 /* ==== DARK THEME (generated by tools/dark_theme.py) ==== */
 html[data-theme=dark]{--ink:#e7edf5;--muted:#9fb0c6;--paper:#0d1726;--line:#2a3d5a;--blue:#7f9bff;--green:#3fbf8a;--red:#ff7d92;color-scheme:dark}
 html[data-theme=dark] body{background:var(--paper);color:var(--ink)}
@@ -655,4 +736,10 @@ html[data-theme=dark] /* ---- Program names grouped from applicants' wording ---
 @media(max-width:760px){html[data-theme=dark] header.topbar>.menu-toggle{background:#15233a}}
 @media(max-width:760px){html[data-theme=dark] header.topbar>.menu-toggle[aria-expanded="true"]{background:#24406b;border-color:#24406b}}
 @media(max-width:760px){html[data-theme=dark] header.topbar.menu-open>nav{background:#15233a}}
+html[data-theme=dark] .hero-qc{background:#15233a}
+html[data-theme=dark] .qc-row input{background:#15233a}
+html[data-theme=dark] .qc-chart .qc-med{background:#24406b}
+html[data-theme=dark] .qc-chart .qc-you{background:#24406b}
+html[data-theme=dark] .hc{background:#15233a}
+html[data-theme=dark] .hc-count{background:#24406b}
 /* ==== END DARK THEME ==== */
