@@ -31,6 +31,9 @@ export function tidyName(raw){
 // Drop a leading school name the applicant repeated, e.g. 'University of Guelph - Food Science'.
 export function tidySubmitted(raw,university){let s=tidyName(raw);const u=String(university||'').split(/\s*[·(]/)[0].trim();if(u&&s.toLowerCase().startsWith(u.toLowerCase())){const rest=s.slice(u.length).replace(/^[\s–:,-]+/,'');if(rest.length>2)s=rest;}return s;}
 export function tidyLabel(raw){const s=String(raw??'').replace(/\s+/g,' ').trim();return /^[a-z]/.test(s)?s[0].toUpperCase()+s.slice(1):s;}
+// Official names corrected after checking OUInfo (the OUAC listing students apply through) and university pages.
+// Keyed by official program id. Only the displayed name changes; ids and page addresses stay the same.
+export const NAME_FIX={};
 export function normalizeProgram(raw,institution=''){
  let s=String(raw||'Program unstated').trim();
  s=s.replace(/^(?:university of waterloo|uwaterloo|waterloo|university of toronto|uoft|mcmaster university|mcmaster|university of ottawa|uottawa|western university|western|wilfrid laurier university|laurier|york university|queen[’']?s university|queen[’']?s|mcgill university|mcgill|ubc|tmu|carleton university|carleton)\s*[-–:]*\s+(?=\S+\s*\S)/i,'');
@@ -107,10 +110,10 @@ export function buildProgramCatalog(rawPrograms,rawReports,sources){
   const university=r.university||p.university||'University of Waterloo';
   const reported=!m&&!!clean&&cleanCount.get(institution+'|'+tokKey(clean))>=REPORTED_MIN;
   const isSourceCollection=!m&&!reported;
-  const name=m?m.name:reported?tidyName(clean):'Source reports without a single program assignment';
+  const name=m?(NAME_FIX[m.id]||m.name):reported?tidyName(clean):'Source reports without a single program assignment';
   const id=m?'OFFICIAL_'+institution+'__'+fold(m.name).replaceAll(' ','_'):reported?'REPORTED_'+institution+'__'+tokKey(clean).replaceAll(' ','_'):'SOURCE_'+institution;
-  if(!groups.has(id))groups.set(id,{...p,id,name,displayName:name,university,institutionId:institution,aliases:[],sourcePrograms:[],isSourceCollection,url:m?.url||p.url,reportedName:reported,verification:m?'Official catalog match':reported?'Reported program name':'Source records',verificationNote:m?'Mapped to the official university program name. '+m.reason+'. Source wording is preserved in evidence.':reported?'Grouped from how applicants wrote the program name. It is not matched to an official university program yet, so the name may be informal or combine related programs.':'The source does not yet identify one official program confidently. These records remain searchable and browsable without becoming invented program names.',officialCatalog:m?.catalog,officialChecked:m?.checked,admissionNote:m?.admissionNote,unavailableIntakes:m?.unavailableIntakes});
-  const g=groups.get(id);if(!g.sourcePrograms.includes(sourceProgram)){g.sourcePrograms.push(sourceProgram);g.aliases.push(p.name);}
+  if(!groups.has(id))groups.set(id,{...p,id,name,displayName:name,slugName:m?m.name:name,university,institutionId:institution,aliases:[],sourcePrograms:[],isSourceCollection,url:m?.url||p.url,reportedName:reported,verification:m?'Official catalog match':reported?'Reported program name':'Source records',verificationNote:m?'Mapped to the official university program name. '+m.reason+'. Source wording is preserved in evidence.':reported?'Grouped from how applicants wrote the program name. It is not matched to an official university program yet, so the name may be informal or combine related programs.':'The source does not yet identify one official program confidently. These records remain searchable and browsable without becoming invented program names.',officialCatalog:m?.catalog,officialChecked:m?.checked,admissionNote:m?.admissionNote,unavailableIntakes:m?.unavailableIntakes});
+  const g=groups.get(id);if(!g.sourcePrograms.includes(sourceProgram)){g.sourcePrograms.push(sourceProgram);g.aliases.push(p.name);}if(m&&NAME_FIX[m.id]&&!g.aliases.includes(m.name))g.aliases.push(m.name);
   const studyMode=r.studyMode&&['Co-op','Non-co-op','Unstated'].includes(r.studyMode)?r.studyMode:inferStudyMode(submitted);
   views.push({...r,sourceProgram,program:id,programName:name,university,institutionId:institution,submittedProgram:tidySubmitted(submitted,university),rawSubmittedProgram:submitted,averageLabel:tidyLabel(r.averageLabel),studyMode,programVerified:!!m,isSourceCollection,reviewFlags:[...(r.reviewFlags||[]),...(m?.unavailableIntakes?.includes(r.year)?['Reported intake conflicts with the official admission pause. Source claim is preserved, not authenticated.']:[])]});
  });
