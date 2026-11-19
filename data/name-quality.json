@@ -1,0 +1,812 @@
+{
+ "checked": "2026-11-19",
+ "reports": 13486,
+ "namesTidied": 2418,
+ "distinctNames": 3542,
+ "needsAttention": 155,
+ "newThisWeekNeedingAttention": 0,
+ "examples": [
+  {
+   "university": "Wilfrid Laurier University",
+   "raw": "Business Administration (BBA) and Computer Science (BCS) at University of Waterloo Double Degree, Waterloo Campus",
+   "shown": "Business Administration (BBA) and Computer Science (BCS) at University of Waterloo Double Degree, Waterloo Campus",
+   "reports": 4,
+   "recent": false,
+   "problems": [
+    "very long"
+   ]
+  },
+  {
+   "university": "University of Waterloo",
+   "raw": "d",
+   "shown": "D",
+   "reports": 3,
+   "recent": false,
+   "problems": [
+    "too short or no letters"
+   ]
+  },
+  {
+   "university": "Trent University",
+   "raw": "Law (LL.B.) Criminology (B.A.): Trent/Swansea Dual degree",
+   "shown": "Law (LL.B.) Criminology (B.A.): Trent/Swansea Dual Degree",
+   "reports": 2,
+   "recent": false,
+   "problems": [
+    "unknown short form \"LL\""
+   ]
+  },
+  {
+   "university": "Western University",
+   "raw": "MN: Science",
+   "shown": "MN: Science",
+   "reports": 2,
+   "recent": false,
+   "problems": [
+    "unknown short form \"MN\""
+   ]
+  },
+  {
+   "university": "University of Windsor",
+   "raw": "Concurrent Education (Bachelor of Arts (Psychology)/Bachelor of Education/Diploma in Early Childhood Education)",
+   "shown": "Concurrent Education (Bachelor of Arts (Psychology)/Bachelor of Education/Diploma in Early Childhood Education)",
+   "reports": 2,
+   "recent": false,
+   "problems": [
+    "very long"
+   ]
+  },
+  {
+   "university": "Toronto Metropolitan University",
+   "raw": "BURPI",
+   "shown": "BURPI",
+   "reports": 2,
+   "recent": null,
+   "problems": [
+    "unknown short form \"BURPI\""
+   ]
+  },
+  {
+   "university": "Brock University",
+   "raw": "Computer Science (BG)",
+   "shown": "Computer Science (BG)",
+   "reports": 2,
+   "recent": null,
+   "problems": [
+    "unknown short form \"BG\""
+   ]
+  },
+  {
+   "university": "Toronto Metropolitan University",
+   "raw": "BM",
+   "shown": "BM",
+   "reports": 2,
+   "recent": null,
+   "problems": [
+    "unknown short form \"BM\""
+   ]
+  },
+  {
+   "university": "Western University",
+   "raw": "MN: Computer Science",
+   "shown": "MN: Computer Science",
+   "reports": 2,
+   "recent": false,
+   "problems": [
+    "unknown short form \"MN\""
+   ]
+  },
+  {
+   "university": "Western University",
+   "raw": "Western University - MN: Health Sciences",
+   "shown": "MN: Health Sciences",
+   "reports": 2,
+   "recent": false,
+   "problems": [
+    "unknown short form \"MN\""
+   ]
+  },
+  {
+   "university": "Western University",
+   "raw": "MN: Management & Organizational Studies",
+   "shown": "MN: Management & Organizational Studies",
+   "reports": 2,
+   "recent": false,
+   "problems": [
+    "unknown short form \"MN\""
+   ]
+  },
+  {
+   "university": "McMaster University",
+   "raw": "Integrated Biomedical Engineering & Health Sciences I (iBioMed) (Co-op) (Biomedical Engineering Specialization (co-op only))",
+   "shown": "Integrated Biomedical Engineering & Health Sciences I (iBioMed) (Co-op) (Biomedical Engineering Specialization (Co-op Only))",
+   "reports": 2,
+   "recent": false,
+   "problems": [
+    "very long"
+   ]
+  },
+  {
+   "university": "McMaster University",
+   "raw": "Integrated Biomedical Engineering & Health Sciences I (iBioMed) (Co-op) (Health, Engineering Science & Entrepreneurship Specialization (co-op only))",
+   "shown": "Integrated Biomedical Engineering & Health Sciences I (iBioMed) (Co-op) (Health, Engineering Science & Entrepreneurship Specialization (Co-op Only))",
+   "reports": 2,
+   "recent": false,
+   "problems": [
+    "very long"
+   ]
+  },
+  {
+   "university": "University of Waterloo",
+   "raw": "Computer Science (WCS)",
+   "shown": "Computer Science (WCS)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"WCS\""
+   ]
+  },
+  {
+   "university": "University of Waterloo",
+   "raw": "Waterloo BME/CS/SYED/LBJ/FCB/CTE",
+   "shown": "Waterloo BME/CS/SYED/LBJ/FCB/CTE",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"SYED\""
+   ]
+  },
+  {
+   "university": "Carleton University",
+   "raw": "Public Affairs and Policy Management, Specialization in International Policy Studies (International Relations and Conflict)",
+   "shown": "Public Affairs and Policy Management, Specialization in International Policy Studies (International Relations and Conflict)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "very long"
+   ]
+  },
+  {
+   "university": "University of Guelph-Humber",
+   "raw": "Kinesiology AND Diploma in Fitness and Health Promotion",
+   "shown": "Kinesiology AND Diploma in Fitness and Health Promotion",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"AND\""
+   ]
+  },
+  {
+   "university": "University of Guelph-Humber",
+   "raw": "Justice Studies AND Diploma in Police Foundations",
+   "shown": "Justice Studies AND Diploma in Police Foundations",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"AND\""
+   ]
+  },
+  {
+   "university": "Lakehead University",
+   "raw": "Concurrent Education (Primary/Junior - Teach Kindergarten to Grades 6) (Environmental Sustainability (Arts & Sciences) (Orillia))",
+   "shown": "Concurrent Education (Primary/Junior – Teach Kindergarten to Grades 6) (Environmental Sustainability (Arts & Sciences) (Orillia))",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "very long"
+   ]
+  },
+  {
+   "university": "Lakehead University",
+   "raw": "Concurrent Education (I/S History TBAY)",
+   "shown": "Concurrent Education (I/S History TBAY)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"TBAY\""
+   ]
+  },
+  {
+   "university": "Wilfrid Laurier University",
+   "raw": "Arts (BA) and Master's Degree (MA, MAP or MIPP) With Managment Option",
+   "shown": "Arts (BA) and Master's Degree (MA, MAP or MIPP) With Management Option",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"MAP\""
+   ]
+  },
+  {
+   "university": "Wilfrid Laurier University",
+   "raw": "Multid­isciplinary Studies (BA) with Law Degree (JD) at Griffith University",
+   "shown": "Multid­Isciplinary Studies (BA) with Law Degree (JD) at Griffith University",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unusual symbols",
+    "unknown short form \"JD\""
+   ]
+  },
+  {
+   "university": "Wilfrid Laurier University",
+   "raw": "Science Degree (BA or BSc) and Master of Business Admini­stration (MBA)",
+   "shown": "Science Degree (BA or BSc) and Master of Business Admini­Stration (MBA)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unusual symbols"
+   ]
+  },
+  {
+   "university": "McGill University",
+   "raw": "B.ed secondary education",
+   "shown": "B.ed Secondary Education",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "lowercase word \"ed\""
+   ]
+  },
+  {
+   "university": "McGill University",
+   "raw": "B.Ed Secondary School SS",
+   "shown": "B.Ed Secondary School SS",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"SS\""
+   ]
+  },
+  {
+   "university": "Trent University",
+   "raw": "Law (LL.B) Human Rights & Global Justice (B.A.): Trent/Swansea Dual Degree",
+   "shown": "Law (LL.B) Human Rights & Global Justice (B.A.): Trent/Swansea Dual Degree",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"LL\""
+   ]
+  },
+  {
+   "university": "Trent University",
+   "raw": "Law (LL.B.) & Political Studies (B.A.): Trent/Swansea Dual Degree",
+   "shown": "Law (LL.B.) & Political Studies (B.A.): Trent/Swansea Dual Degree",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"LL\""
+   ]
+  },
+  {
+   "university": "University of Toronto · Mississauga",
+   "raw": "Computer Science (CMP1 Admission)",
+   "shown": "Computer Science (CMP1 Admission)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"CMP\""
+   ]
+  },
+  {
+   "university": "University of Waterloo",
+   "raw": "Life Science + CAP Status",
+   "shown": "Life Science + CAP Status",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"CAP\""
+   ]
+  },
+  {
+   "university": "York University",
+   "raw": "Concurrent Education - French Studies (FSL BEd)",
+   "shown": "Concurrent Education – French Studies (FSL BEd)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"FSL\""
+   ]
+  },
+  {
+   "university": "York University",
+   "raw": "Health Policy, Management, and Digital Health (BHS)",
+   "shown": "Health Policy, Management, and Digital Health (BHS)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"BHS\""
+   ]
+  },
+  {
+   "university": "University of Waterloo",
+   "raw": "Honours Computer Engineering | Honours Coop",
+   "shown": "Honours Computer Engineering | Honours Co-op",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unusual symbols"
+   ]
+  },
+  {
+   "university": "University of Toronto · St. George",
+   "raw": "Computer Science (TAD)",
+   "shown": "Computer Science (TAD)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"TAD\""
+   ]
+  },
+  {
+   "university": "University of Toronto · Scarborough",
+   "raw": "Computer Science (TXC))",
+   "shown": "Computer Science (TXC))",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"TXC\""
+   ]
+  },
+  {
+   "university": "Toronto Metropolitan University",
+   "raw": "Computer Science (Honours) (SAB)",
+   "shown": "Computer Science (Honours) (SAB)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"SAB\""
+   ]
+  },
+  {
+   "university": "Carleton University",
+   "raw": "Computer Science - Honours (COD)",
+   "shown": "Computer Science – Honours (COD)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"COD\""
+   ]
+  },
+  {
+   "university": "York University",
+   "raw": "Computer Science (YSG)",
+   "shown": "Computer Science (YSG)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"YSG\""
+   ]
+  },
+  {
+   "university": "Queen’s University",
+   "raw": "Computing (QD)",
+   "shown": "Computing (QD)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"QD\""
+   ]
+  },
+  {
+   "university": "University of Ottawa",
+   "raw": "Software Engineering (OJA)",
+   "shown": "Software Engineering (OJA)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"OJA\""
+   ]
+  },
+  {
+   "university": "University of Waterloo",
+   "raw": "Software Engineering (WSO)",
+   "shown": "Software Engineering (WSO)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"WSO\""
+   ]
+  },
+  {
+   "university": "Wilfrid Laurier University",
+   "raw": "Computer Science (UFA)",
+   "shown": "Computer Science (UFA)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"UFA\""
+   ]
+  },
+  {
+   "university": "Ontario Tech University",
+   "raw": "Computer Science (DCD)",
+   "shown": "Computer Science (DCD)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"DCD\""
+   ]
+  },
+  {
+   "university": "Ontario Tech University",
+   "raw": "Software Engineering (DCW)",
+   "shown": "Software Engineering (DCW)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"DCW\""
+   ]
+  },
+  {
+   "university": "University of Windsor",
+   "raw": "Computer Science (NT)",
+   "shown": "Computer Science (NT)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"NT\""
+   ]
+  },
+  {
+   "university": "Trent University",
+   "raw": "Software Engineering (RZC)",
+   "shown": "Software Engineering (RZC)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"RZC\""
+   ]
+  },
+  {
+   "university": "University of Ottawa",
+   "raw": "Computer Science (ORC)",
+   "shown": "Computer Science (ORC)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"ORC\""
+   ]
+  },
+  {
+   "university": "Carleton University",
+   "raw": "Public Affairs and Policy Management (PAPM) Honours + Co-Op",
+   "shown": "Public Affairs and Policy Management (PAPM) Honours + Co-op",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"PAPM\""
+   ]
+  },
+  {
+   "university": "University of Waterloo",
+   "raw": "Conditional Admission to Pharmacy (CAP), under life sciences",
+   "shown": "Conditional Admission to Pharmacy (CAP), Under Life Sciences",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"CAP\""
+   ]
+  },
+  {
+   "university": "University of Toronto · Scarborough",
+   "raw": "Management and International Business (MIB)",
+   "shown": "Management and International Business (MIB)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"MIB\""
+   ]
+  },
+  {
+   "university": "McGill University",
+   "raw": "Philosophy - MAT, Finance",
+   "shown": "Philosophy – MAT, Finance",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"MAT\""
+   ]
+  },
+  {
+   "university": "Carleton University",
+   "raw": "Bachelor of Public Affairs and Policy Management Specialization in Public Policy and Administration (Social Policy) (With Co-op)",
+   "shown": "Bachelor of Public Affairs and Policy Management Specialization in Public Policy and Administration (Social Policy) (With Co-op)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "very long"
+   ]
+  },
+  {
+   "university": "University of Guelph",
+   "raw": "CS Co OP",
+   "shown": "CS Co OP",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"OP\""
+   ]
+  },
+  {
+   "university": "Wilfrid Laurier University",
+   "raw": "Game Development (BFAA)",
+   "shown": "Game Development (BFAA)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"BFAA\""
+   ]
+  },
+  {
+   "university": "McGill University",
+   "raw": "Bachelor of Arts (prob gonna do Political science?)",
+   "shown": "Bachelor of Arts (Prob Gonna Do Political Science?)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unusual symbols"
+   ]
+  },
+  {
+   "university": "McMaster University",
+   "raw": "Health Sciences (*Honours*)",
+   "shown": "Health Sciences (*Honours*)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unusual symbols"
+   ]
+  },
+  {
+   "university": "Queen’s University",
+   "raw": "Computing [CS]",
+   "shown": "Computing [CS]",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unusual symbols"
+   ]
+  },
+  {
+   "university": "Queen’s University",
+   "raw": "Health Sciences (BISC)",
+   "shown": "Health Sciences (BISC)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"BISC\""
+   ]
+  },
+  {
+   "university": "Toronto Metropolitan University",
+   "raw": "GCM",
+   "shown": "GCM",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"GCM\""
+   ]
+  },
+  {
+   "university": "York University",
+   "raw": "IBBA",
+   "shown": "IBBA",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"IBBA\""
+   ]
+  },
+  {
+   "university": "University of Toronto · campus unstated",
+   "raw": "CS SG",
+   "shown": "CS SG",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"SG\""
+   ]
+  },
+  {
+   "university": "University of Guelph",
+   "raw": "Biomedical Engineering NO COOP",
+   "shown": "Biomedical Engineering NO Co-op",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"NO\""
+   ]
+  },
+  {
+   "university": "University of Guelph",
+   "raw": "Biomedical Eng WITH coop",
+   "shown": "Biomedical Eng WITH Co-op",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"WITH\""
+   ]
+  },
+  {
+   "university": "University of Toronto · campus unstated",
+   "raw": "USTG Comp Sci",
+   "shown": "USTG Comp Sci",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"USTG\""
+   ]
+  },
+  {
+   "university": "University of Toronto · campus unstated",
+   "raw": "CS-SG",
+   "shown": "CS-SG",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"CS-SG\""
+   ]
+  },
+  {
+   "university": "University of Waterloo",
+   "raw": "Management Engineering (MGTE)",
+   "shown": "Management Engineering (MGTE)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"MGTE\""
+   ]
+  },
+  {
+   "university": "Western University",
+   "raw": "BMOS (ED)",
+   "shown": "BMOS (ED)",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"ED\""
+   ]
+  },
+  {
+   "university": "Western University",
+   "raw": "Science (Major: Computer Science) [Program Code ES]",
+   "shown": "Science (Major: Computer Science) [Program Code ES]",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unusual symbols",
+    "unknown short form \"ES\""
+   ]
+  },
+  {
+   "university": "Wilfrid Laurier University",
+   "raw": "BBTM",
+   "shown": "BBTM",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"BBTM\""
+   ]
+  },
+  {
+   "university": "York University",
+   "raw": "ITEC",
+   "shown": "ITEC",
+   "reports": 1,
+   "recent": null,
+   "problems": [
+    "unknown short form \"ITEC\""
+   ]
+  },
+  {
+   "university": "University of Ottawa",
+   "raw": "University of Ottawa - UP: Computer science",
+   "shown": "UP: Computer Science",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"UP\""
+   ]
+  },
+  {
+   "university": "Lakehead University",
+   "raw": "Computer science With Co-op (HBSC.COMP.PGC)",
+   "shown": "Computer Science With Co-op (HBSC.COMP.PGC)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"COMP\""
+   ]
+  },
+  {
+   "university": "York University",
+   "raw": "Computer Science BSC- Co-op",
+   "shown": "Computer Science BSC- Co-op",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"BSC-\""
+   ]
+  },
+  {
+   "university": "Queen’s University",
+   "raw": "QD - Including optional internship",
+   "shown": "QD – Including Optional Internship",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"QD\""
+   ]
+  },
+  {
+   "university": "University of Waterloo",
+   "raw": "Mechanical Engineering (Co-op）",
+   "shown": "Mechanical Engineering (Co-op）",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unusual symbols"
+   ]
+  },
+  {
+   "university": "University of Ottawa",
+   "raw": "Bachelor of Applied Science in Mechanical Engineering and Bachelor of Sc. in Computing Technology COOP Program",
+   "shown": "Bachelor of Applied Science in Mechanical Engineering and Bachelor of Sc. in Computing Technology Co-op Program",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "very long"
+   ]
+  },
+  {
+   "university": "University of Ottawa",
+   "raw": "UO: Civil Engineering Co-op Program",
+   "shown": "UO: Civil Engineering Co-op Program",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"UO\""
+   ]
+  },
+  {
+   "university": "Western University",
+   "raw": "MN: Engineering (Co-op and Regular)",
+   "shown": "MN: Engineering (Co-op and Regular)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"MN\""
+   ]
+  },
+  {
+   "university": "Queen’s University",
+   "raw": "Queens engineering (common first year) + optional QUIP",
+   "shown": "Queens Engineering (Common First Year) + Optional QUIP",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"QUIP\""
+   ]
+  },
+  {
+   "university": "Queen’s University",
+   "raw": "Queen's University - Computer Engineering or Electrical Engineering - Innovation - including optional internship (BASc)",
+   "shown": "Queen's University – Computer Engineering or Electrical Engineering – Innovation – Including Optional Internship (BASc)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "very long"
+   ]
+  },
+  {
+   "university": "Western University",
+   "raw": "MN: Medical Sciences (BMSc and BSc)",
+   "shown": "MN: Medical Sciences (BMSc and BSc)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"MN\""
+   ]
+  }
+ ]
+}
