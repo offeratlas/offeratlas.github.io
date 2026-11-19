@@ -3,7 +3,11 @@
 <title>Offer Atlas: latest Fall 2027 reports</title>
 <subtitle>Self-reported, unverified admission results. Data: r/OntarioGrade12s spreadsheets by u/Regular-Database9310.</subtitle>
 <link rel="self" href="https://offeratlas.github.io/feeds/latest.xml"/><link rel="alternate" href="https://offeratlas.github.io/"/>
-<id>https://offeratlas.github.io/feeds/latest.xml</id><updated>2026-11-18T12:00:00Z</updated>
+<id>https://offeratlas.github.io/feeds/latest.xml</id><updated>2026-11-19T12:00:00Z</updated>
+<entry><title>Offer · 95.5% · Health Sciences (University of Ottawa) · Fall 2027</title>
+<id>tag:offeratlas.github.io,2026:report:R_03e86771cd7095a2aa774842ce4bee9d</id><updated>2026-11-19T12:00:00Z</updated>
+<link href="https://offeratlas.github.io/?p=OFFICIAL_Ottawa__health_sciences&amp;r=R_03e86771cd7095a2aa774842ce4bee9d"/>
+<summary>Offer for Health Sciences at University of Ottawa, Fall 2027. Reported average 95.5%. Decision Nov 12, 2009. Self-reported and unverified.</summary></entry>
 <entry><title>Offer · 87% · Biomedical Engineering (Toronto Metropolitan University) · Fall 2027</title>
 <id>tag:offeratlas.github.io,2026:report:R_f1e7de3e48318785295db6f0cf66da80</id><updated>2026-11-18T12:00:00Z</updated>
 <link href="https://offeratlas.github.io/?p=OFFICIAL_TMU__biomedical_engineering&amp;r=R_f1e7de3e48318785295db6f0cf66da80"/>
@@ -240,8 +244,4 @@
 <id>tag:offeratlas.github.io,2026:report:R_b361f0076ea0d64296e48b61bc7bb9b7</id><updated>2026-11-17T12:00:00Z</updated>
 <link href="https://offeratlas.github.io/?p=SOURCE_Guelph&amp;r=R_b361f0076ea0d64296e48b61bc7bb9b7"/>
 <summary>Offer for Arts, Honours (Major Justice and Legal Studies) at University of Guelph, Fall 2027. Reported average 86.5%. Decision Nov 17, 2026. Self-reported and unverified.</summary></entry>
-<entry><title>Offer · 86.5% · Psychology (University of Guelph) · Fall 2027</title>
-<id>tag:offeratlas.github.io,2026:report:R_e29758590a116b79b8ef0a9bb13dfb6f</id><updated>2026-11-17T12:00:00Z</updated>
-<link href="https://offeratlas.github.io/?p=OFFICIAL_Guelph__psychology&amp;r=R_e29758590a116b79b8ef0a9bb13dfb6f"/>
-<summary>Offer for Psychology at University of Guelph, Fall 2027. Reported average 86.5%. Decision Nov 17, 2026. Self-reported and unverified.</summary></entry>
 </feed>
