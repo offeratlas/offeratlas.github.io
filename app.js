@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa31';
-import {initEntering} from './entering.js?v=oa31';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa31';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa31';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa31';
+import {layoutDots} from './plot.js?v=oa32';
+import {initEntering} from './entering.js?v=oa32';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa32';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa32';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa32';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -518,6 +518,20 @@ function datesCard(){const el=$('#hc-dates');if(!el)return;const today=todayISO(
  el.innerHTML=`<h3>Key dates</h3><p class="hc-sub">Fall ${CUR()} applications</p><ul class="hc-dates">${KEY_DATES.map(k=>{const n=days(k.d);return `<li><div class="hc-count${n<0?' past':''}"><b>${n<0?'✓':fmt(n)}</b><span>${n<0?'passed':n===1?'day':'days'}</span></div><div class="hc-dt"><strong>${esc(k.t)}</strong><span class="hc-when">${new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}).format(new Date(k.d+'T12:00:00Z'))}</span><small>${esc(k.s)}</small></div></li>`;}).join('')}</ul>
   <p class="fine">Dates can change. Always check <a href="https://www.ouac.on.ca/" target="_blank" rel="noopener noreferrer">OUAC</a> and each university’s site.</p>`;}
 function heroCards(){try{qcSetup();qcRender();qcSuggest();weekCard();seasonCard();datesCard();}catch(err){console.warn('front page cards',err);}}
+
+// ---- Keyboard navigation for every program picker: ↑/↓ to move, Enter to pick, Esc to close ----
+const KB_PICKERS={'qc-prog':'qc-suggest','cmp-search':'cmp-suggest','wait-search':'wait-suggest'};
+function kbItems(box){return [...box.querySelectorAll('button')].filter(b=>b.offsetParent!==null);}
+document.addEventListener('keydown',e=>{const box=KB_PICKERS[e.target?.id]&&document.getElementById(KB_PICKERS[e.target.id]);if(!box)return;
+ const items=kbItems(box);if(!items.length){if(e.key==='Escape')box.innerHTML='';return;}
+ let i=items.findIndex(b=>b.classList.contains('kb-active'));
+ if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();i=e.key==='ArrowDown'?(i+1)%items.length:(i<=0?items.length-1:i-1);
+  items.forEach((b,k)=>{b.classList.toggle('kb-active',k===i);b.setAttribute('aria-selected',String(k===i));});items[i].scrollIntoView({block:'nearest'});}
+ else if(e.key==='Enter'){e.preventDefault();(items[i>=0?i:0]).click();}
+ else if(e.key==='Escape'){box.innerHTML='';}});
+// the first suggestion is highlighted as soon as the list appears, so Enter picks it straight away
+new MutationObserver(ms=>{for(const m of ms){const box=m.target;if(!Object.values(KB_PICKERS).includes(box.id))continue;const items=kbItems(box);if(items.length&&!box.querySelector('.kb-active')){items[0].classList.add('kb-active');items[0].setAttribute('aria-selected','true');}}})
+ .observe(document.body,{childList:true,subtree:true});
 
 function all(){syncYearsToggle();progIndex=null;indexData();controls();picker();render();catalog();sources();credits();freshness();fresh();watchStrip();heroCards();if(!$('#compare-view').hidden){compareRender();cmpSuggest();}if(!$('#tracker-view').hidden){trackerRender();waitRender();}}
 $('#reload').addEventListener('click',async()=>{const ok=await loadSnapshot();all();notify(ok?'Loaded the latest saved data.':'Saved data unavailable. Please try again.');});
