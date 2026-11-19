@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa33';
-import {initEntering} from './entering.js?v=oa33';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa33';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa33';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa33';
+import {layoutDots} from './plot.js?v=oa34';
+import {initEntering} from './entering.js?v=oa34';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa34';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa34';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa34';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -505,9 +505,9 @@ function weekCard(){const el=$('#hc-week');if(!el)return;const cy=CUR(),today=to
  const by=new Map();for(const r of offers){const k=r.isSourceCollection?(r.submittedProgram||r.programName)+'|'+r.university:r.program;const e=by.get(k)||{n:0,name:r.isSourceCollection?(r.submittedProgram||r.programName):r.programName,uni:r.university};e.n++;by.set(k,e);}
  const top=[...by.values()].sort((x,y)=>y.n-x.n).slice(0,3);
  el.innerHTML=`<h3>This week</h3><p class="hc-sub">New results in the last 7 days</p>
-  <div class="hc-stats"><div><b>${fmt(wk.length)}</b><span>new results</span></div><div><b class="ok">${fmt(offers.length)}</b><span>offers</span></div><div><b class="bad">${fmt(rej)}</b><span>rejections</span></div></div>
+  <div class="hc-stats"><button type="button" data-wk-open="all"><b>${fmt(wk.length)}</b><span>new results</span></button><button type="button" data-wk-open="offer"><b class="ok">${fmt(offers.length)}</b><span>offers</span></button><button type="button" data-wk-open="rejected"><b class="bad">${fmt(rej)}</b><span>rejections</span></button></div>
   ${top.length?`<p class="hc-label">Most new offers</p><ol class="hc-list">${top.map(e=>`<li><span class="hc-nm"><b title="${esc(e.name)}">${esc(e.name)}</b><small>${esc(e.uni)}</small></span><em class="hc-plus">+${fmt(e.n)}</em></li>`).join('')}</ol>`:'<p class="fine">Quiet week so far.</p>'}
-  <button type="button" class="hc-link" data-recap>Weekly recap image →</button>`;}
+  <div class="hc-links"><button type="button" class="hc-link" data-wk-open="all">See all ${fmt(wk.length)} results →</button><button type="button" class="hc-link quiet" data-recap>Recap image</button></div>`;}
 function seasonCard(){const el=$('#hc-season');if(!el)return;const rows=trackerRows(),out=rows.filter(r=>r.cls==='out');
  const pop=[...rows].sort((x,y)=>(y.curN+y.prevN)-(x.curN+x.prevN)).slice(0,5);
  el.innerHTML=`<h3>Offer season</h3><p class="hc-sub"><strong>${fmt(out.length)}</strong> programs have reported Fall ${CUR()} offers so far</p>
@@ -515,7 +515,7 @@ function seasonCard(){const el=$('#hc-season');if(!el)return;const rows=trackerR
   ${ALLY()?'':'<p class="fine">Load all years to see which big programs haven’t started yet. <button class="db-link" data-archive="load">Load all years</button></p>'}
   <button type="button" class="hc-link" data-view="tracker">Open the offer tracker →</button>`;}
 // ---- Deadlines (deadlines.json, copied from official university pages) ----
-let DL=null;fetch('deadlines.json?v=oa33',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
+let DL=null;fetch('deadlines.json?v=oa34',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
 const kdVersion=()=>{try{return new URLSearchParams(location.search).get('kd')||localStorage.getItem('offeratlas.kd')||'a';}catch{return 'a';}};
 const dlDays=d=>Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(todayISO()+'T12:00:00Z'))/864e5);
 const dlDate=(d,y)=>new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',...(y?{year:'numeric'}:{}),timeZone:'UTC'}).format(new Date(d+'T12:00:00Z'));
@@ -563,6 +563,55 @@ function dlRenderAll(){const d=$('#dl-dialog');if(!d||!DL)return;const q=$('#dl-
  $('#dl-checked').textContent=`Copied from official university pages, last checked ${dlDate(DL.checked,true)}. Dates can change, so always confirm on the linked page.`;}
 document.addEventListener('click',e=>{if(e.target.closest?.('[data-dl-all]')){const d=$('#dl-dialog');if(d&&DL){$('#dl-search').value='';dlRenderAll();d.showModal();}}if(e.target.closest?.('[data-dl-close]'))$('#dl-dialog')?.close();});
 document.addEventListener('input',e=>{if(e.target.id==='dl-search')dlRenderAll();});
+
+// ---- "This week" drill-down: summary first, then every result with its source ----
+const wkVersion=()=>'a';  // pop-up version chosen
+let wkFilter={outcome:'all',q:'',prog:null},wkShown=30;
+function wkReports(){const cy=CUR(),today=torDay(Date.now()),start=today-6*864e5;
+ return reports.filter(r=>r.year===cy).map(r=>[r,subTime(r)]).filter(([,t])=>{if(!t)return false;const d=torDay(t);return d>=start&&d<=today;}).sort((x,y)=>y[1]-x[1]);}
+const wkKey=r=>r.isSourceCollection?(r.submittedProgram||r.programName)+'|'+r.university:r.program;
+const wkName=r=>r.isSourceCollection?(r.submittedProgram||r.programName):r.programName;
+const wkOutcome=o=>o==='Offer'?'offer':o==='Rejected'?'rejected':'other';
+function wkSummary(all){const today=torDay(Date.now()),days=[...Array(7)].map((_,i)=>today-(6-i)*864e5);
+ const per=days.map(d=>{const rs=all.filter(([,t])=>torDay(t)===d);return {d,o:rs.filter(([r])=>r.outcome==='Offer').length,x:rs.filter(([r])=>r.outcome!=='Offer').length};});
+ const mx=Math.max(1,...per.map(p=>p.o+p.x)),dayName=d=>new Intl.DateTimeFormat('en-CA',{weekday:'short',timeZone:'UTC'}).format(new Date(d+12*36e5));
+ const offers=all.filter(([r])=>r.outcome==='Offer').length,rej=all.filter(([r])=>r.outcome==='Rejected').length,other=all.length-offers-rej;
+ const by=new Map();for(const [r] of all)if(r.outcome==='Offer'){const k=wkKey(r),e=by.get(k)||{k,n:0,name:wkName(r),uni:r.university};e.n++;by.set(k,e);}
+ const top=[...by.values()].sort((x,y)=>y.n-x.n).slice(0,6);
+ const sch=new Map();for(const [r] of all)sch.set(r.university,(sch.get(r.university)||0)+1);const topS=[...sch.entries()].sort((x,y)=>y[1]-x[1]).slice(0,5);
+ const avgs=all.map(([r])=>r.average).filter(v=>Number.isFinite(v)&&v<=100);
+ return `<div class="wk-sum">
+  <div class="wk-chips">${[['all','All',all.length],['offer','Offers',offers],['rejected','Rejections',rej],['other','Other',other]].map(([k,l,n])=>`<button type="button" class="wk-chip${wkFilter.outcome===k?' on':''} ${k}" data-wk-out="${k}"><b>${fmt(n)}</b>${l}</button>`).join('')}</div>
+  <div class="wk-grid">
+   <div><h4>Results per day</h4><div class="wk-bars">${per.map(p=>`<div class="wk-bar" title="${p.o} offers, ${p.x} other"><i class="x" style="height:${p.x/mx*100}%"></i><i class="o" style="height:${p.o/mx*100}%"></i><span>${dayName(p.d)}</span><em>${p.o+p.x}</em></div>`).join('')}</div>
+    ${avgs.length?`<p class="wk-fine">Median reported average this week: <b>${median(avgs).toFixed(1)}%</b> (${fmt(avgs.length)} with a number)</p>`:''}</div>
+   <div><h4>Most new offers</h4><ol class="wk-top">${top.map(e=>`<li><button type="button" data-wk-prog="${esc(e.k)}" class="${wkFilter.prog===e.k?'on':''}"><span><b>${esc(e.name)}</b><small>${esc(e.uni)}</small></span><em>+${e.n}</em></button></li>`).join('')}</ol></div>
+   <div><h4>Busiest schools</h4><ol class="wk-top">${topS.map(([u,n])=>`<li><span><b>${esc(u)}</b></span><em>${n}</em></li>`).join('')}</ol></div>
+  </div></div>`;}
+function wkTable(all){let rows=all;if(wkFilter.outcome!=='all')rows=rows.filter(([r])=>wkOutcome(r.outcome)===wkFilter.outcome);if(wkFilter.prog)rows=rows.filter(([r])=>wkKey(r)===wkFilter.prog);
+ if(wkFilter.q)rows=rows.filter(([r])=>nickMatch([wkName(r),r.university].join(' '),wkFilter.q));
+ const when=t=>{const d=Math.round((torDay(Date.now())-torDay(t))/864e5);return d===0?'Today':d===1?'Yesterday':new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',timeZone:'America/Toronto'}).format(new Date(t));};
+ const show=rows.slice(0,wkShown);
+ return `<div class="wk-tools"><input type="search" id="wk-q" placeholder="Filter by program or school, e.g. “uw cs”" value="${esc(wkFilter.q)}" aria-label="Filter this week's results">${wkFilter.prog||wkFilter.outcome!=='all'||wkFilter.q?'<button type="button" class="wk-clear" data-wk-clear>Clear filters</button>':''}<span class="wk-count">${fmt(rows.length)} result${rows.length===1?'':'s'}</span></div>
+  <div class="wk-table" role="table">${show.map(([r,t])=>`<button type="button" class="wk-row" data-record="${r.id}" role="row"><span class="wk-when">${when(t)}</span><span class="wk-prog"><b>${esc(wkName(r))}</b><small>${esc(r.university)}</small></span><span class="wk-avg">${esc(r.averageLabel||'—')}${/^[\d.]+$/.test(String(r.averageLabel||''))?'%':''}</span><span class="wk-out ${wkOutcome(r.outcome)}">${esc(r.outcome)}</span><span class="wk-go">Details →</span></button>`).join('')||'<p class="fine">No results match.</p>'}</div>
+  ${rows.length>wkShown?`<button type="button" class="pill-button wk-more" data-wk-more>Show ${fmt(Math.min(50,rows.length-wkShown))} more</button>`:''}
+  <p class="wk-src">Each result opens its details card with a link to the exact spreadsheet row. Sources: ${datasets.filter(d=>d.year===CUR()||String(d.id).startsWith('BC')).filter((d,i,arr)=>arr.findIndex(x=>x.spreadsheetId===d.spreadsheetId)===i).map(d=>`<a href="${esc(String(d.url).split('#')[0])}" target="_blank" rel="noopener noreferrer">${esc(String(d.title).replace(/ \(Responses\)/,'').slice(0,60))} ↗</a>`).join(' · ')}. Self-reported and unverified.</p>`;}
+function wkBody(){const all=wkReports();return wkSummary(all)+`<h4 class="wk-h">All results this week</h4>`+wkTable(all);}
+function wkOpen(){const v=wkVersion();wkShown=30;
+ if(v==='b'){const p=$('#wk-panel');if(!p)return;p.hidden=false;p.innerHTML=`<div class="wk-head"><div><h3>This week in detail</h3><p class="hc-sub">${wkRange()}</p></div><button type="button" class="dialog-close" data-wk-close aria-label="Close">×</button></div>`+wkBody();p.scrollIntoView({behavior:'smooth',block:'start'});}
+ else{const d=$('#wk-dialog');if(!d)return;$('#wk-dbody').innerHTML=wkBody();$('#wk-range').textContent=wkRange();if(!d.open)d.showModal();}}
+const wkRange=()=>{const t=torDay(Date.now()),f=x=>new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(x+12*36e5));return `New results ${f(t-6*864e5)} – ${f(t)} · self-reported`;};
+function wkRefresh(){const v=wkVersion(),host=v==='b'?$('#wk-panel'):$('#wk-dbody');if(!host||(v==='b'&&host.hidden))return;const keepQ=document.activeElement?.id==='wk-q';
+ if(v==='b'){const head=host.querySelector('.wk-head').outerHTML;host.innerHTML=head+wkBody();}else host.innerHTML=wkBody();
+ if(keepQ){const q=$('#wk-q');q.focus();q.setSelectionRange(q.value.length,q.value.length);}}
+document.addEventListener('click',e=>{const t=e.target;if(!t.closest)return;
+ if(t.closest('[data-wk-open]')){wkFilter={outcome:t.closest('[data-wk-open]').dataset.wkOpen||'all',q:'',prog:null};wkOpen();return;}
+ const o=t.closest('[data-wk-out]');if(o){wkFilter.outcome=o.dataset.wkOut;wkShown=30;wkRefresh();return;}
+ const p=t.closest('[data-wk-prog]');if(p){wkFilter.prog=wkFilter.prog===p.dataset.wkProg?null:p.dataset.wkProg;wkShown=30;wkRefresh();return;}
+ if(t.closest('[data-wk-clear]')){wkFilter={outcome:'all',q:'',prog:null};wkRefresh();return;}
+ if(t.closest('[data-wk-more]')){wkShown+=50;wkRefresh();return;}
+ if(t.closest('[data-wk-close]')){const d=$('#wk-dialog');if(d?.open)d.close();const pn=$('#wk-panel');if(pn&&!pn.hidden){pn.hidden=true;$('#hc-week')?.scrollIntoView({block:'center'});}}});
+document.addEventListener('input',e=>{if(e.target.id==='wk-q'){wkFilter.q=e.target.value.trim().toLowerCase();wkShown=30;wkRefresh();}});
 
 function heroCards(){try{qcSetup();qcRender();qcSuggest();weekCard();seasonCard();datesCard();}catch(err){console.warn('front page cards',err);}}
 
