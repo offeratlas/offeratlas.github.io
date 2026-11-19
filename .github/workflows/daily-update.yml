@@ -14,6 +14,7 @@ on:
       - "tools/**"
       - "catalog.js"
       - "official-programs.js"
+      - "deadlines.json"
       - ".github/workflows/daily-update.yml"
 
 permissions:
@@ -70,6 +71,10 @@ jobs:
       - name: Check program names (casing, short forms, typos)
         if: steps.gate.outputs.run == 'true'
         run: node tools/name-check.mjs
+
+      - name: Check application deadlines are still current
+        if: steps.gate.outputs.run == 'true'
+        run: node tools/deadline-check.mjs
 
       - name: Publish if anything changed
         if: steps.gate.outputs.run == 'true'

@@ -1,0 +1,405 @@
+{
+ "cycle": "Fall 2027",
+ "checked": "2026-11-19",
+ "note": "Dates copied from official university pages. A null date means the school hasn't posted it yet. tools/deadline-check.mjs flags entries that go stale.",
+ "items": [
+  {
+   "id": "ouac",
+   "school": "Ontario universities",
+   "program": "All programs (Ontario high school, OUAC 101)",
+   "task": "OUAC equal-consideration date",
+   "date": "2027-01-15",
+   "general": true,
+   "url": "https://future.utoronto.ca/apply/important-application-dates",
+   "checked": "2026-11-19"
+  },
+  {
+   "id": "ubc",
+   "school": "UBC",
+   "program": "All programs",
+   "task": "Application + personal profile",
+   "date": "2027-01-15",
+   "url": "https://you.ubc.ca/applying-ubc/dates-deadlines/",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "UBC",
+     "UBCO"
+    ]
+   }
+  },
+  {
+   "id": "reply",
+   "school": "Ontario universities",
+   "program": "Ontario high school applicants",
+   "task": "Reply to offers by",
+   "date": "2027-06-01",
+   "general": true,
+   "url": "https://discover.engineering.utoronto.ca/how-to-apply/important-deadlines/",
+   "checked": "2026-11-19"
+  },
+  {
+   "id": "schulich-early",
+   "school": "York · Schulich",
+   "program": "BBA",
+   "task": "Early-consideration supplementary",
+   "date": "2026-11-23",
+   "note": "Optional early round (OUAC by Nov 6)",
+   "url": "https://schulich.yorku.ca/admissions/suppapp/",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "York"
+    ],
+    "name": [
+     "business administration",
+     "bba"
+    ]
+   }
+  },
+  {
+   "id": "schulich",
+   "school": "York · Schulich",
+   "program": "BBA",
+   "task": "Supplementary application (video + writing)",
+   "date": "2027-02-01",
+   "url": "https://schulich.yorku.ca/admissions/suppapp/",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "York"
+    ],
+    "name": [
+     "business administration",
+     "bba"
+    ]
+   }
+  },
+  {
+   "id": "rotman-early",
+   "school": "UofT",
+   "program": "Rotman Commerce",
+   "task": "Early-consideration supplemental",
+   "date": "2026-12-01",
+   "url": "https://rotmancommerce.utoronto.ca/future-students/important-dates/",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "UTSG",
+     "Toronto"
+    ],
+    "name": [
+     "rotman",
+     "commerce"
+    ]
+   }
+  },
+  {
+   "id": "rotman",
+   "school": "UofT",
+   "program": "Rotman Commerce",
+   "task": "Supplemental application + documents",
+   "date": "2027-02-01",
+   "url": "https://rotmancommerce.utoronto.ca/future-students/important-dates/",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "UTSG",
+     "Toronto"
+    ],
+    "name": [
+     "rotman",
+     "commerce"
+    ]
+   }
+  },
+  {
+   "id": "uoft-eng-early",
+   "school": "UofT",
+   "program": "Engineering",
+   "task": "Early: supplemental application + documents",
+   "date": "2026-12-01",
+   "note": "For the February/March offer rounds",
+   "url": "https://discover.engineering.utoronto.ca/how-to-apply/important-deadlines/",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "UTSG",
+     "Toronto"
+    ],
+    "name": [
+     "engineer",
+     "trackone"
+    ]
+   }
+  },
+  {
+   "id": "uoft-eng",
+   "school": "UofT",
+   "program": "Engineering",
+   "task": "Supplemental application + documents",
+   "date": "2027-01-15",
+   "url": "https://discover.engineering.utoronto.ca/how-to-apply/important-deadlines/",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "UTSG",
+     "Toronto"
+    ],
+    "name": [
+     "engineer",
+     "trackone"
+    ]
+   }
+  },
+  {
+   "id": "uw-pharm",
+   "school": "Waterloo",
+   "program": "Pharmacy",
+   "task": "Supplementary questions + reference",
+   "date": "2027-01-20",
+   "url": "https://uwaterloo.ca/future-students/admissions/admission-information-form",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "Waterloo"
+    ],
+    "name": [
+     "pharmac"
+    ]
+   }
+  },
+  {
+   "id": "mac-eng",
+   "school": "McMaster",
+   "program": "Engineering, Computer Science, iBioMed, BTech",
+   "task": "Supplementary application",
+   "date": "2027-01-28",
+   "url": "https://www.eng.mcmaster.ca/supplementary-application/",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "McMaster"
+    ],
+    "name": [
+     "engineer",
+     "computer science",
+     "ibiomed",
+     "biomedical",
+     "technology"
+    ]
+   }
+  },
+  {
+   "id": "uw-eng",
+   "school": "Waterloo",
+   "program": "Engineering",
+   "task": "AIF + online interview + documents",
+   "date": "2027-02-01",
+   "note": "Apply on OUAC by Jan 15, 2027",
+   "url": "https://uwaterloo.ca/future-students/admissions/admission-information-form",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "Waterloo"
+    ],
+    "name": [
+     "engineer"
+    ]
+   }
+  },
+  {
+   "id": "uw-math",
+   "school": "Waterloo",
+   "program": "Math, CS and other AIF programs",
+   "task": "Admission Information Form (AIF)",
+   "date": "2027-02-15",
+   "note": "Apply by Feb 1, 2027",
+   "url": "https://uwaterloo.ca/future-students/admissions/admission-information-form",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "Waterloo",
+     "Joint"
+    ],
+    "name": [
+     "math",
+     "computer science",
+     "computing and financial",
+     "financial analysis",
+     "actuar",
+     "statistic",
+     "data science",
+     "combinatorics"
+    ]
+   }
+  },
+  {
+   "id": "ivey",
+   "school": "Western · Ivey",
+   "program": "Ivey AEO",
+   "task": "AEO application",
+   "date": "2027-01-15",
+   "url": "https://www.ivey.uwo.ca/hba/admissions/high-school-students/",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "Western",
+     "Huron",
+     "KingsWestern"
+    ],
+    "name": [
+     "ivey",
+     "aeo"
+    ]
+   }
+  },
+  {
+   "id": "queens",
+   "school": "Queen’s",
+   "program": "Commerce, Health Sciences, Nursing",
+   "task": "Supplementary application",
+   "date": "2027-02-15",
+   "note": "Apply on OUAC by Feb 1, 2027",
+   "url": "https://www.queensu.ca/admission/applying/key-dates-deadlines",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "Queens"
+    ],
+    "name": [
+     "commerce",
+     "health sciences",
+     "nursing"
+    ]
+   }
+  },
+  {
+   "id": "mac-bhsc",
+   "school": "McMaster",
+   "program": "Health Sciences (BHSc)",
+   "task": "Supplementary application",
+   "date": null,
+   "note": "Not posted yet, usually due in February",
+   "url": "https://bhsc.healthsci.mcmaster.ca/",
+   "checked": "2026-11-19",
+   "match": {
+    "inst": [
+     "McMaster"
+    ],
+    "name": [
+     "health sciences"
+    ],
+    "not": [
+     "biomedical",
+     "ibiomed"
+    ]
+   }
+  }
+ ],
+ "offerWindows": [
+  {
+   "id": "uw-engmath",
+   "school": "Waterloo",
+   "scope": "Engineering and Math (incl. CS)",
+   "window": "January – May",
+   "detail": "Most Waterloo offers come in May; every Ontario offer is out by mid-May.",
+   "url": "https://uwaterloo.ca/future-students/applicants/offer-timing",
+   "match": {
+    "inst": [
+     "Waterloo",
+     "Joint"
+    ],
+    "name": [
+     "engineer",
+     "math",
+     "computer science",
+     "computing",
+     "financial analysis",
+     "actuar",
+     "statistic",
+     "data science",
+     "combinatorics"
+    ]
+   }
+  },
+  {
+   "id": "uw",
+   "school": "Waterloo",
+   "scope": "Other programs",
+   "window": "December – May",
+   "detail": "Most offers come in May, after second-semester midterm grades.",
+   "url": "https://uwaterloo.ca/future-students/applicants/offer-timing",
+   "match": {
+    "inst": [
+     "Waterloo",
+     "Joint"
+    ]
+   }
+  },
+  {
+   "id": "uoft",
+   "school": "UofT",
+   "scope": "All programs and campuses",
+   "window": "Late January – late May",
+   "detail": "Released in rounds. If you don't hear in one round, you're reconsidered in the next.",
+   "url": "https://future.utoronto.ca/admission-decisions",
+   "match": {
+    "inst": [
+     "UTSG",
+     "UTSC",
+     "UTM",
+     "Toronto"
+    ]
+   }
+  },
+  {
+   "id": "queens",
+   "school": "Queen’s",
+   "scope": "All programs",
+   "window": "November – mid-May",
+   "detail": "Rolling. Offers can use Grade 11 marks when Grade 12 marks aren't in yet.",
+   "url": "https://www.queensu.ca/admission/applicants/faqs",
+   "match": {
+    "inst": [
+     "Queens"
+    ]
+   }
+  },
+  {
+   "id": "mcmaster",
+   "school": "McMaster",
+   "scope": "Ontario high school applicants",
+   "window": "From February (rolling)",
+   "detail": "Rolling once six Grade 12 midterm marks or three final marks are in.",
+   "url": "https://go2.ouac.on.ca/wp-content/uploads/cfc_resource_guide/mcmaster_2.docx",
+   "match": {
+    "inst": [
+     "McMaster"
+    ]
+   }
+  },
+  {
+   "id": "mcgill",
+   "school": "McGill",
+   "scope": "Ontario high school applicants",
+   "window": "Mid-February – end of May",
+   "detail": "Other provinces: mid-January to mid-May.",
+   "url": "https://www.mcgill.ca/undergraduate-admissions/apply/admission-decision-dates",
+   "match": {
+    "inst": [
+     "McGill"
+    ]
+   }
+  },
+  {
+   "id": "ontario",
+   "school": "All Ontario universities",
+   "scope": "Applied through OUAC by Jan 15",
+   "window": "By May 28, 2027",
+   "detail": "Latest date you should hear back. You don't have to reply before June 1.",
+   "url": "https://www.ouac.on.ca/guide/undergrad-toronto",
+   "general": true
+  }
+ ]
+}

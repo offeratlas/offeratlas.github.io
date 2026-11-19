@@ -8,7 +8,7 @@ import { buildSite } from './site-pages.mjs';
 const snap = JSON.parse(readFileSync('snapshot.json', 'utf8'));
 const catalog = buildProgramCatalog(snap.programs, snap.reports, snap.reportSources);
 const readJson = (f, d) => { try { return JSON.parse(readFileSync(f, 'utf8')); } catch { return d; } };
-const files = buildSite({ snap, catalog, changes: readJson('tools/changelog.json', []), history: readJson('data/history.json', []) });
+const files = buildSite({ snap, catalog, changes: readJson('tools/changelog.json', []), history: readJson('data/history.json', []), deadlines: readJson('deadlines.json', null) });
 
 // Remove generated page folders that no longer exist, then write only files whose content changed.
 for (const root of ['programs', 'schools']) {  // folders of generated pages

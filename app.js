@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa32';
-import {initEntering} from './entering.js?v=oa32';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa32';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa32';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa32';
+import {layoutDots} from './plot.js?v=oa33';
+import {initEntering} from './entering.js?v=oa33';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa33';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa33';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa33';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -514,13 +514,60 @@ function seasonCard(){const el=$('#hc-season');if(!el)return;const rows=trackerR
   <ul class="hc-season">${pop.map(r=>`<li><span class="hc-nm"><b title="${esc(pname(r.p))}">${esc(pname(r.p))}</b><small>${esc(r.p.university)}</small></span>${r.cls==='out'?`<em class="go">✓ ${fmt(r.curN)} offer${r.curN===1?'':'s'}</em>`:`<em class="wait">${r.pFirst?'Not yet':'—'}</em>`}</li>`).join('')}</ul>
   ${ALLY()?'':'<p class="fine">Load all years to see which big programs haven’t started yet. <button class="db-link" data-archive="load">Load all years</button></p>'}
   <button type="button" class="hc-link" data-view="tracker">Open the offer tracker →</button>`;}
-function datesCard(){const el=$('#hc-dates');if(!el)return;const today=todayISO(),days=d=>Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(today+'T12:00:00Z'))/864e5);
- el.innerHTML=`<h3>Key dates</h3><p class="hc-sub">Fall ${CUR()} applications</p><ul class="hc-dates">${KEY_DATES.map(k=>{const n=days(k.d);return `<li><div class="hc-count${n<0?' past':''}"><b>${n<0?'✓':fmt(n)}</b><span>${n<0?'passed':n===1?'day':'days'}</span></div><div class="hc-dt"><strong>${esc(k.t)}</strong><span class="hc-when">${new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',year:'numeric',timeZone:'UTC'}).format(new Date(k.d+'T12:00:00Z'))}</span><small>${esc(k.s)}</small></div></li>`;}).join('')}</ul>
-  <p class="fine">Dates can change. Always check <a href="https://www.ouac.on.ca/" target="_blank" rel="noopener noreferrer">OUAC</a> and each university’s site.</p>`;}
+// ---- Deadlines (deadlines.json, copied from official university pages) ----
+let DL=null;fetch('deadlines.json?v=oa33',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
+const kdVersion=()=>{try{return new URLSearchParams(location.search).get('kd')||localStorage.getItem('offeratlas.kd')||'a';}catch{return 'a';}};
+const dlDays=d=>Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(todayISO()+'T12:00:00Z'))/864e5);
+const dlDate=(d,y)=>new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',...(y?{year:'numeric'}:{}),timeZone:'UTC'}).format(new Date(d+'T12:00:00Z'));
+const dlSorted=()=>{const it=DL?.items||[],up=it.filter(x=>x.date&&dlDays(x.date)>=0).sort((p,q)=>p.date.localeCompare(q.date));return {up,tbd:it.filter(x=>!x.date),past:it.filter(x=>x.date&&dlDays(x.date)<0).sort((p,q)=>q.date.localeCompare(p.date))};};
+const dlCount=x=>{if(!x.date)return '<div class="hc-count tbd"><b>?</b><span>TBA</span></div>';const n=dlDays(x.date);return `<div class="hc-count${n<0?' past':n<=7?' soon':''}"><b>${n<0?'✓':n===0?'!':fmt(n)}</b><span>${n<0?'passed':n===0?'today':n===1?'day':'days'}</span></div>`;};
+const dlRow=(x,link)=>`<li>${dlCount(x)}<div class="hc-dt"><strong>${esc(x.school)} · ${esc(x.program)}</strong><span class="hc-when">${x.date?dlDate(x.date,link):'Date not posted yet'}</span><small>${esc(x.task)}${x.note?' · '+esc(x.note):''}${link&&x.url?` · <a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">Official page ↗</a>`:''}</small></div></li>`;
+let kdTab='dl',otPid=null,otUser=false;
+function datesCard(){const el=$('#hc-dates');if(!el)return;const v=kdVersion();if(kdTab==='ot')return otCard(el);
+ if(!DL){el.innerHTML='<h3>Key dates</h3><p class="hc-sub">Loading deadlines…</p>';return;}
+ const {up,tbd}=dlSorted(),list=[...up,...tbd],head=kdTabs()+`<p class="hc-sub">Upcoming ${esc(DL.cycle)} deadlines</p>`,
+  foot=`<button type="button" class="hc-link" data-dl-all>See all ${DL.items.length} deadlines →</button>`;
+ if(v==='b'&&list.length>3){const rows=list.map(x=>dlRow(x)).join('');
+  el.innerHTML=head+`<div class="dl-scroll" style="--dur:${Math.max(18,list.length*4)}s"><ul class="hc-dates dl-run">${rows}</ul><ul class="hc-dates dl-run" aria-hidden="true">${rows}</ul></div>`+foot;}
+ else el.innerHTML=head+`<ul class="hc-dates">${list.slice(0,3).map(x=>dlRow(x)).join('')}</ul>`+foot;
+ const bar=$('#dl-bar');if(bar){bar.hidden=v!=='c';if(v==='c'){const items=list.map(x=>`<button type="button" class="dl-item" data-dl-all><b>${x.date?(dlDays(x.date)===0?'Today':fmt(dlDays(x.date))+(dlDays(x.date)===1?' day':' days')):'TBA'}</b>${esc(x.school)} · ${esc(x.program)}: ${esc(x.task)}<span>${x.date?dlDate(x.date):'not posted yet'}</span></button>`).join('');
+  bar.innerHTML=`<span class="dl-tag">⏰ Deadlines</span><div class="dl-viewport"><div class="dl-track" style="--dur:${Math.max(40,list.length*7)}s">${items}${items.replace(/<button /g,'<button tabindex="-1" aria-hidden="true" ')}</div></div>`;}}}
+
+const kdTabs=()=>`<div class="kd-tabs" role="tablist"><button type="button" role="tab" data-kd-tab="dl" aria-selected="${kdTab==='dl'}">Deadlines</button><button type="button" role="tab" data-kd-tab="ot" aria-selected="${kdTab==='ot'}">Offer timing</button></div>`;
+const otWindow=p=>(DL?.offerWindows||[]).find(w=>w.match&&w.match.inst.includes(p.institutionId)&&(!w.match.name||w.match.name.some(n=>pname(p).toLowerCase().includes(n))));
+const MONTHS_FULL=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function otFacts(p){const rs=progReports().get(p.id)||[],cy=CUR(),today=todayISO();
+ const prev=rs.filter(r=>r.year===cy-1&&r.outcome==='Offer'&&r.decisionDate).map(r=>r.decisionDate).sort();
+ const cur=rs.filter(r=>r.year===cy&&r.outcome==='Offer'&&r.decisionDate&&r.decisionDate<=today).map(r=>r.decisionDate).sort();
+ const byM={};for(const d of prev){const m=Number(d.slice(5,7))-1;byM[m]=(byM[m]||0)+1;}const peak=Object.entries(byM).sort((x,y)=>y[1]-x[1])[0];
+ return {prevFirst:prev[0]||null,prevN:prev.length,peak:peak?MONTHS_FULL[peak[0]]:null,peakN:peak?peak[1]:0,curFirst:cur[0]||null,curN:cur.length};}
+function otCard(el){if(!otUser&&!(otPid&&pmap.has(otPid)))otPid=qcDefault();const p=otPid&&pmap.get(otPid);
+ el.innerHTML=kdTabs()+`<p class="hc-sub">When offers usually come out</p><div class="ot-pick"><input id="ot-prog" type="search" autocomplete="off" placeholder="Program, e.g. uw cs" value="${p?esc(qcLabel(p)):''}" aria-label="Program for offer timing"><div id="ot-suggest" class="qc-suggest"></div></div><div id="ot-result">${p?otResult(p):'<p class="qc-hint">Pick a program.</p>'}</div><button type="button" class="hc-link" data-ot-all>All official offer windows →</button>`;}
+function otResult(p){const w=otWindow(p),f=otFacts(p),cy=CUR();
+ const off=w?`<li><span class="ot-k">Official</span><span><b>${esc(w.window)}</b><small>${esc(w.detail)} <a href="${esc(w.url)}" target="_blank" rel="noopener noreferrer">Source ↗</a></small></span></li>`:`<li><span class="ot-k">Official</span><span><b>No dates published</b><small>${esc(p.university)} doesn’t publish an offer window. Ontario applicants hear back by May 28.</small></span></li>`;
+ const last=ALLY()?(f.prevN?`<li><span class="ot-k">Fall ${cy-1}</span><span><b>First offer ${date(f.prevFirst).replace(/, \d{4}$/,'')}</b><small>Most offers came in ${f.peak} (${f.peakN} of ${f.prevN} reported)</small></span></li>`:`<li><span class="ot-k">Fall ${cy-1}</span><span><b>No dated offers reported</b></span></li>`)
+  :`<li><span class="ot-k">Fall ${cy-1}</span><span><small>Load all years to see when offers came last year. <button class="db-link" data-archive="load">Load all years</button></small></span></li>`;
+ const now=f.curN?`<li><span class="ot-k">Fall ${cy}</span><span><b class="ot-go">✓ ${fmt(f.curN)} offer${f.curN===1?'':'s'} reported</b><small>First on ${date(f.curFirst).replace(/, \d{4}$/,'')}</small></span></li>`:`<li><span class="ot-k">Fall ${cy}</span><span><b>None reported yet</b></span></li>`;
+ return `<div class="qc-head"><strong>${esc(pname(p))}</strong><span>${esc(p.university)}</span></div><ul class="ot-list">${off}${last}${now}</ul><p class="ot-note">Past years are self-reported dates, not official.</p>`;}
+function otSuggest(){const inp=$('#ot-prog'),el=$('#ot-suggest');if(!inp||!el)return;const q=inp.value.trim().toLowerCase();if(!q||(otPid&&inp.value===qcLabel(pmap.get(otPid)))){el.innerHTML='';return;}
+ const idx=progReports(),toks=q.split(/\s+/).filter(Boolean);const hits=catalogPrograms.filter(p=>!p.isSourceCollection&&idx.has(p.id)&&nickMatch([pname(p),p.university,...(p.aliases||[])].join(' '),toks)).sort((x,y)=>idx.get(y.id).length-idx.get(x.id).length).slice(0,5);
+ el.innerHTML=hits.length?hits.map(p=>`<button type="button" data-ot-pick="${esc(p.id)}"><strong>${esc(pname(p))}</strong><span>${esc(p.university)}</span></button>`).join(''):'<p class="fine">No match.</p>';}
+function otRenderAll(){const d=$('#ot-dialog');if(!d||!DL)return;$('#ot-list').innerHTML=(DL.offerWindows||[]).map(w=>`<li><div><strong>${esc(w.school)}</strong> · <span>${esc(w.scope)}</span></div><b>${esc(w.window)}</b><small>${esc(w.detail)} <a href="${esc(w.url)}" target="_blank" rel="noopener noreferrer">Source ↗</a></small></li>`).join('');}
+document.addEventListener('click',e=>{const t=e.target.closest?.('[data-kd-tab]');if(t){kdTab=t.dataset.kdTab;datesCard();$(`[data-kd-tab="${kdTab}"]`)?.focus();return;}
+ const pk=e.target.closest?.('[data-ot-pick]');if(pk){otPid=pk.dataset.otPick;otUser=true;datesCard();return;}
+ if(e.target.closest?.('[data-ot-all]')){const d=$('#ot-dialog');if(d){otRenderAll();d.showModal();}}if(e.target.closest?.('[data-ot-close]'))$('#ot-dialog')?.close();});
+document.addEventListener('input',e=>{if(e.target.id==='ot-prog')otSuggest();});
+function dlRenderAll(){const d=$('#dl-dialog');if(!d||!DL)return;const q=$('#dl-search').value.trim().toLowerCase(),m=x=>!q||nickMatch([x.school,x.program,x.task].join(' '),q);
+ const {up,tbd,past}=dlSorted(),sec=(t,arr)=>arr.filter(m).length?`<h3>${t}</h3><ul class="hc-dates dl-all">${arr.filter(m).map(x=>dlRow(x,true)).join('')}</ul>`:'';
+ $('#dl-list').innerHTML=(sec('Coming up',up)+sec('Not posted yet',tbd)+sec('Passed',past))||'<p class="fine">No deadlines match. Try a school name like “waterloo” or “ubc”.</p>';
+ $('#dl-checked').textContent=`Copied from official university pages, last checked ${dlDate(DL.checked,true)}. Dates can change, so always confirm on the linked page.`;}
+document.addEventListener('click',e=>{if(e.target.closest?.('[data-dl-all]')){const d=$('#dl-dialog');if(d&&DL){$('#dl-search').value='';dlRenderAll();d.showModal();}}if(e.target.closest?.('[data-dl-close]'))$('#dl-dialog')?.close();});
+document.addEventListener('input',e=>{if(e.target.id==='dl-search')dlRenderAll();});
+
 function heroCards(){try{qcSetup();qcRender();qcSuggest();weekCard();seasonCard();datesCard();}catch(err){console.warn('front page cards',err);}}
 
 // ---- Keyboard navigation for every program picker: ↑/↓ to move, Enter to pick, Esc to close ----
-const KB_PICKERS={'qc-prog':'qc-suggest','cmp-search':'cmp-suggest','wait-search':'wait-suggest'};
+const KB_PICKERS={'qc-prog':'qc-suggest','cmp-search':'cmp-suggest','wait-search':'wait-suggest','ot-prog':'ot-suggest'};
 function kbItems(box){return [...box.querySelectorAll('button')].filter(b=>b.offsetParent!==null);}
 document.addEventListener('keydown',e=>{const box=KB_PICKERS[e.target?.id]&&document.getElementById(KB_PICKERS[e.target.id]);if(!box)return;
  const items=kbItems(box);if(!items.length){if(e.key==='Escape')box.innerHTML='';return;}

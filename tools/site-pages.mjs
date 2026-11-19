@@ -95,7 +95,7 @@ const topbar = `<header class="pg-top"><a class="pg-brand" href="/"><span class=
 const footer = `<footer class="pg-foot"><p><strong>Self-reported, unverifiable data.</strong> Reports come from public, applicant-submitted spreadsheets and Reddit posts. They are not unique applicants, not a random sample, and medians are not cutoffs. Not affiliated with any university.</p><p><a href="/#sources">Sources &amp; credits</a> · <a href="/guides/">Guides</a> · <a href="/changelog/">Changelog</a> · <a href="/feeds/latest.xml">RSS</a> · <a href="${FORM}" ${ext}>Submit your result ↗</a> · <a href="${ISSUES}" ${ext}>Report a correction ↗</a></p></footer></body></html>`;
 const disclaimer = `<p class="pg-disclaimer"><strong>Self-reported and unverifiable.</strong> Every result here was submitted anonymously by an applicant and has not been checked. Averages may be rounded, mistyped or false, and posters aren’t a random sample. Use this as rough context, not a cutoff or prediction. Data from the r/OntarioGrade12s spreadsheets by <a href="${CREATOR_URL}" ${ext}>u/${CREATOR}</a>.</p>`;
 
-function programPage({ p, rs, slug, s, site, snap, schoolSlug, similar }) {
+function programPage({ p, rs, slug, s, site, snap, schoolSlug, similar, deadlines }) {
   const name = p.displayName || p.name, url = `${site}/programs/${slug}/`;
   const explore = `/?p=${encodeURIComponent(p.id)}`;
   const ly = s.latestYear;
@@ -119,7 +119,7 @@ ${disclaimer}
  <div><span>Median offer average · all years</span><strong>${pct(s.median)}</strong></div>
 </div>
 <div class="pg-cta"><a class="pg-btn" href="${explore}">Explore every receipt →</a><a class="pg-btn ghost" href="/?cp=${encodeURIComponent(p.id)}#compare">Compare my average</a><a class="pg-btn ghost" href="/?share=${encodeURIComponent(p.id)}">Share as image</a><a class="pg-btn ghost" href="${FORM}" ${ext}>Add your result ↗</a><a class="pg-btn ghost" href="/feeds/${slug}.xml" title="Atom/RSS feed of new reports for this program">Follow (RSS)</a></div>
-<section><h2>By entry year</h2><div class="pg-scroll"><table><thead><tr><th>Entry</th><th>Reports</th><th>Offers</th><th>Median offer avg</th><th>Middle half of offers</th><th>Earliest offer</th></tr></thead><tbody>
+${deadlineBox(p, deadlines)}<section><h2>By entry year</h2><div class="pg-scroll"><table><thead><tr><th>Entry</th><th>Reports</th><th>Offers</th><th>Median offer avg</th><th>Middle half of offers</th><th>Earliest offer</th></tr></thead><tbody>
 ${s.years.map(y => `<tr><td>Fall ${y.year}</td><td>${y.n}</td><td>${y.offers}</td><td>${y.numeric >= 3 ? pct(y.median) : '—'}</td><td>${y.numeric >= 4 ? pct(y.p25) + ' – ' + pct(y.p75) : '—'}</td><td>${fmtDate(y.first)}</td></tr>`).join('')}
 </tbody></table></div><p class="pg-note">Medians need at least 3 numeric offer averages; the middle-half range needs 4.</p></section>
 ${trendChart(s.years)}
@@ -204,7 +204,7 @@ html[data-theme=dark] .pg-btn:not(.ghost){background:var(--lime);color:#162840}
 html[data-theme=dark] .pg-out{background:#1b2a4a;color:#a9bcff}html[data-theme=dark] .pg-out.Offer{background:#163a2c;color:#6fdcaa}html[data-theme=dark] .pg-out.Rejected{background:#3d1820;color:#ff8fa1}html[data-theme=dark] .pg-out.Deferred{background:#3d2c10;color:#f0b45c}
 .pg-disclaimer{background:#fff6e5;border:1px solid #f0d9a8;border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.55;margin:0 0 20px;color:#5c4210}.pg-disclaimer a{font-weight:700}
 html[data-theme=dark] .pg-disclaimer{background:#2e2410;border-color:#5a4720;color:#f2d49a}
-.pg-official{font-size:14px;color:var(--muted);margin-top:24px}.pg-search{width:100%;font:inherit;color:var(--ink);padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin:4px 0 10px;background:var(--card)}
+.pg-official{font-size:14px;color:var(--muted);margin-top:24px}.pg-deadlines ul{margin:6px 0 8px;padding-left:20px}.pg-deadlines li{font-size:15px;line-height:1.7}.pg-deadlines a{font-weight:700}.pg-passed{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase}.pg-dl-note{font-size:13px;color:var(--muted)}.pg-search{width:100%;font:inherit;color:var(--ink);padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin:4px 0 10px;background:var(--card)}
 .pg-uni h2{font-size:19px;margin:22px 0 8px}.pg-uni h2 a{text-decoration:none}.pg-uni h2 a:hover{text-decoration:underline}.pg-grid{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:6px}
 .pg-grid li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}.pg-grid li a{font-weight:700;text-decoration:none}.pg-grid li a:hover{text-decoration:underline}.pg-grid li span{font-size:13px;color:var(--muted)}
 .pg-h3{font-size:15px;margin:0 0 8px;color:var(--muted)}.pg-grid.one{grid-template-columns:1fr}
@@ -278,7 +278,22 @@ ${dates.map(d => { const x = days.get(d); return `<section class="pg-card log"><
 </main>` + footer;
 }
 
-export function buildSite({ snap, catalog, site = 'https://offeratlas.github.io', changes = [], history = [] }) {
+// Deadlines from deadlines.json that apply to one program (matched by school and words in its name).
+export function deadlinesFor(p, items = []) {
+  const name = String(p.displayName || p.name || '').toLowerCase();
+  return items.filter(x => x.match && x.match.inst.includes(p.institutionId)
+    && (!x.match.name || x.match.name.some(w => name.includes(w)))
+    && !(x.match.not || []).some(w => name.includes(w)));
+}
+export function deadlineBox(p, dl, today = new Date().toISOString().slice(0, 10)) {
+  const items = deadlinesFor(p, dl?.items || []);
+  if (!items.length) return '';
+  const fmtD = d => new Intl.DateTimeFormat('en-CA', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }).format(new Date(d + 'T12:00:00Z'));
+  const rows = items.sort((a, b) => String(a.date || '9').localeCompare(String(b.date || '9'))).map(x =>
+    `<li><b>${x.date ? fmtD(x.date) : 'Not posted yet'}</b>${x.date && x.date < today ? ' <span class="pg-passed">passed</span>' : ''} · ${esc(x.task)}${x.note ? ` <span class="pg-dl-note">(${esc(x.note)})</span>` : ''} · <a href="${esc(x.url)}" ${ext}>Official page ↗</a></li>`).join('');
+  return `<section class="pg-card pg-deadlines"><h2>${esc(dl.cycle || '')} deadlines</h2><ul>${rows}</ul><p class="pg-dl-note">Copied from official pages (checked ${esc(dl.checked)}). Dates can change, so always confirm on the official page.</p></section>`;
+}
+export function buildSite({ snap, catalog, site = 'https://offeratlas.github.io', changes = [], history = [], deadlines = null }) {
   const files = {}, byProg = new Map();
   const cur = Math.max(...catalog.reports.map(r => r.year));
   for (const r of catalog.reports) { if (r.isSourceCollection) continue; if (!byProg.has(r.program)) byProg.set(r.program, []); byProg.get(r.program).push(r); }
@@ -299,7 +314,7 @@ export function buildSite({ snap, catalog, site = 'https://offeratlas.github.io'
     const ps = pages.filter(x => x.p.university === uni);
     schools.push({ uni, slug, pages: ps, lastmod: ps.map(x => x.lastmod).sort().pop() });
   }
-  for (const pg of pages) files[`programs/${pg.slug}/index.html`] = programPage({ ...pg, site, snap, schoolSlug: schoolSlug.get(pg.p.university), similar: similarHtml(pg, pages) });
+  for (const pg of pages) files[`programs/${pg.slug}/index.html`] = programPage({ ...pg, site, snap, schoolSlug: schoolSlug.get(pg.p.university), similar: similarHtml(pg, pages), deadlines });
   // Follow feeds: one per program page plus a site-wide feed of the newest current-cycle reports.
   const whenOf = r => snap.reportSources?.[r.source]?.reportDate || r.decisionDate || snap.checked;
   for (const pg of pages) {
