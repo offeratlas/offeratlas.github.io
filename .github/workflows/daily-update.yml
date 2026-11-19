@@ -2,11 +2,11 @@ name: Daily data update
 
 on:
   schedule:
-    # 8 AM Toronto time. GitHub schedules only use UTC, so this runs at both
-    # possible UTC hours (12:00 during EDT, 13:00 during EST) and the first
-    # step skips whichever one isn't 8 AM for the current season.
-    - cron: "0 12 * * *"
-    - cron: "0 13 * * *"
+    # 8 AM Toronto time. GitHub often starts timed jobs late (sometimes hours) or
+    # drops them, so this wakes up every 30 minutes from early morning to about noon Toronto
+    # time (EDT or EST); the gate step runs the real update once per day, on the
+    # first wake-up at or after 8 AM, and skips the rest in a few seconds.
+    - cron: "7,37 11-17 * * *"
   workflow_dispatch: {}      # lets you run it by hand from the Actions tab
   push:                      # rebuild pages when the build tools change
     branches: [main]
@@ -29,22 +29,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: Only run at 8 AM Toronto time
+      - uses: actions/checkout@v4
+
+      - name: Only run once a day, at or after 8 AM Toronto time
         id: gate
         env:
           EVENT: ${{ github.event_name }}
-          SCHEDULE: ${{ github.event.schedule }}
         run: |
-          if [ "$(TZ=America/Toronto date +%Z)" = "EDT" ]; then want="0 12 * * *"; else want="0 13 * * *"; fi
-          if [ "$EVENT" = "schedule" ] && [ "$SCHEDULE" != "$want" ]; then
-            echo "This is the other season's slot; skipping."
+          today=$(TZ=America/Toronto date +%F); hour=$(TZ=America/Toronto date +%-H)
+          last=$(cat data/last-morning-run.txt 2>/dev/null || true)
+          if [ "$EVENT" = "schedule" ] && { [ "$hour" -lt 8 ] || [ "$last" = "$today" ]; }; then
+            echo "Not time yet, or today's morning update already ran ($last); skipping."
             echo "run=false" >> "$GITHUB_OUTPUT"
           else
             echo "run=true" >> "$GITHUB_OUTPUT"
           fi
-
-      - uses: actions/checkout@v4
-        if: steps.gate.outputs.run == 'true'
 
       - uses: actions/setup-python@v5
         if: steps.gate.outputs.run == 'true'
@@ -79,6 +78,7 @@ jobs:
       - name: Publish if anything changed
         if: steps.gate.outputs.run == 'true'
         run: |
+          if [ "${{ github.event_name }}" != "push" ]; then TZ=America/Toronto date +%F > data/last-morning-run.txt; fi
           git add -A snapshot.json data programs schools feeds guides changelog sitemap.xml
           if git diff --cached --quiet; then
             echo "No changes today."

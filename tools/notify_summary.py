@@ -53,5 +53,4 @@ if names.get('newThisWeekNeedingAttention'):
 if dl.get('needsAttention'):
     checks.append(f"{dl['needsAttention']} deadlines need a re-check")
 lines.append('Checks: ' + ('; '.join(checks) if checks else 'all clear'))
-print(title)
-print('\n'.join(lines))
+send(title, '\n'.join(lines))
