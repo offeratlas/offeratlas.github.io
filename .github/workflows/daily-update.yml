@@ -67,6 +67,10 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         run: node tools/build-site.mjs
 
+      - name: Check program names (casing, short forms, typos)
+        if: steps.gate.outputs.run == 'true'
+        run: node tools/name-check.mjs
+
       - name: Publish if anything changed
         if: steps.gate.outputs.run == 'true'
         run: |
