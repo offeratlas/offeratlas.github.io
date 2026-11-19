@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa37';
-import {initEntering} from './entering.js?v=oa37';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa37';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa37';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa37';
+import {layoutDots} from './plot.js?v=oa38';
+import {initEntering} from './entering.js?v=oa38';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa38';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa38';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa38';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -180,7 +180,8 @@ const prefSet=v=>{try{v?localStorage.setItem(PREF_KEY,v):localStorage.removeItem
 function baseFilters(){return {...defaultFilters(),year:ALLY()?'All':String(archiveInfo.currentYear||2027)};}
 function readUrl(){const q=new URLSearchParams(location.search),f={};let any=false;for(const [k,key] of Object.entries(URLKEYS))if(q.has(key)){any=true;const v=q.get(key);f[k]=(k==='minimum'||k==='maximum')?Number(v):v;}if(q.has('p')){any=true;f.programs=q.get('p').split(',').filter(Boolean);}if(q.get('nq')==='1'){any=true;f.includeUnquantified=false;}if(any&&!('year' in f))f.year='All';return {filters:any?f:null,receipt:q.get('r')};}
 function urlFor(f,receipt){const d=defaultFilters(),q=new URLSearchParams();for(const [k,key] of Object.entries(URLKEYS))if(f[k]!==undefined&&String(f[k])!==String(d[k])&&!(k==='query'&&!f[k]))q.set(key,f[k]);if(f.year&&(f.year!==d.year||ALLY()))q.set('y',f.year);if(f.programs?.length)q.set('p',f.programs.join(','));if(f.includeUnquantified===false)q.set('nq','1');if(receipt)q.set('r',receipt);let s=q.toString();if(s==='y='+(archiveInfo.currentYear||2027)&&!ALLY())s='';return location.origin+location.pathname+(s?'?'+s:'')+(location.hash||'');}
-let urlTimer;function writeUrl(){clearTimeout(urlTimer);urlTimer=setTimeout(()=>{const open=$('#evidence-dialog').open?receiptId:null;const u=urlFor(filters,open);if(u!==location.href)history.replaceState(null,'',u);},150);}
+const PICKS_KEY='offeratlas.explorerPicks';let picksReady=false;const savePicks=()=>{if(!picksReady)return;try{filters.programs?.length?localStorage.setItem(PICKS_KEY,JSON.stringify(filters.programs)):localStorage.removeItem(PICKS_KEY);}catch{}};const savedPicks=()=>{try{const v=JSON.parse(localStorage.getItem(PICKS_KEY)||'[]');const ok=new Set(catalogPrograms.map(p=>p.id));return Array.isArray(v)?v.filter(id=>ok.has(id)):[];}catch{return [];}};
+let urlTimer;function writeUrl(){clearTimeout(urlTimer);urlTimer=setTimeout(()=>{savePicks();const open=$('#evidence-dialog').open?receiptId:null;const u=urlFor(filters,open);if(u!==location.href)history.replaceState(null,'',u);},150);}
 async function copyText(text,msg){try{await navigator.clipboard.writeText(text);}catch{const t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.append(t);t.select();try{document.execCommand('copy');}catch{}t.remove();}notify(msg||'Link copied');}
 // Archive (earlier years)
 function banner(state){const el=$('#data-banner');if(!el)return;const n=fmt(archiveInfo.reports||0),yrs=archiveInfo.years||[],range=yrs.length?`${yrs[0]}–${yrs[yrs.length-1]}`:'earlier years',mb=((archiveInfo.gzipBytes||0)/1048576).toFixed(1);
@@ -515,7 +516,7 @@ function seasonCard(){const el=$('#hc-season');if(!el)return;const rows=trackerR
   ${ALLY()?'':'<p class="fine">Load all years to see which big programs haven’t started yet. <button class="db-link" data-archive="load">Load all years</button></p>'}
   <button type="button" class="hc-link" data-view="tracker">Open the offer tracker →</button>`;}
 // ---- Deadlines (deadlines.json, copied from official university pages) ----
-let DL=null;fetch('deadlines.json?v=oa37',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
+let DL=null;fetch('deadlines.json?v=oa38',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
 const kdVersion=()=>{try{return new URLSearchParams(location.search).get('kd')||localStorage.getItem('offeratlas.kd')||'a';}catch{return 'a';}};
 const dlDays=d=>Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(todayISO()+'T12:00:00Z'))/864e5);
 const dlDate=(d,y)=>new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',...(y?{year:'numeric'}:{}),timeZone:'UTC'}).format(new Date(d+'T12:00:00Z'));
@@ -645,7 +646,7 @@ $('#copy-view')?.addEventListener('click',()=>copyText(urlFor(filters,null),'Lin
 for(const id of ['avg-lo','avg-hi'])$('#'+id).addEventListener('input',()=>{let a=+$('#avg-lo').value,b=+$('#avg-hi').value;if(a>b){if(id==='avg-lo')a=b;else b=a;}setRange(a,b);});
 $('#avg-presets').addEventListener('click',e=>{const b=e.target.closest('[data-avg]');if(!b)return;const [x,y]=b.dataset.avg.split('-').map(Number);setRange(x,y);});
 window.addEventListener('hashchange',()=>setView(location.hash.slice(1)));window.addEventListener('popstate',()=>{setView(location.hash.slice(1)||'explorer');document.querySelector('.view:not([hidden])')?.scrollIntoView({behavior:'auto',block:'start'});});initEntering();all();setView(location.hash.slice(1)||'explorer');
-(async()=>{const url=readUrl(),sp=new URLSearchParams(location.search);banner('hidden');const ok=await loadSnapshot();if(url.filters)filters={...baseFilters(),...url.filters};all();if(!ok)return;
+(async()=>{const url=readUrl(),sp=new URLSearchParams(location.search);banner('hidden');const ok=await loadSnapshot();if(url.filters)filters={...baseFilters(),...url.filters};else{const sp0=savedPicks();if(sp0.length)filters.programs=sp0;}picksReady=true;all();if(!ok)return;
  const cy=String(archiveInfo.currentYear||2027),needAll=prefGet()==='always'||(url.filters&&url.filters.year!==cy)||(url.receipt&&!rmap.has(url.receipt));
  if(needAll){const was=filters.year;await requestArchive({quiet:true});if(!url.filters&&prefGet()==='always'){filters.year='All';sync();render();}else if(url.filters){filters={...baseFilters(),...url.filters};sync();picker();render();}}else if(prefGet()!=='cur')banner('prompt');syncYearsToggle();
  if(url.receipt&&rmap.has(url.receipt)){setView('explorer');evidence(url.receipt);}
