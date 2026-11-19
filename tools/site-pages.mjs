@@ -302,8 +302,8 @@ export function buildSite({ snap, catalog, site = 'https://offeratlas.github.io'
     .sort((a, b) => a.university.localeCompare(b.university) || (a.displayName || a.name).localeCompare(b.displayName || b.name) || a.id.localeCompare(b.id));
   for (const p of progs) {
     const rs = byProg.get(p.id);
-    let slug = slugify(`${p.displayName || p.name} ${p.university}`) || 'program', n = 2;
-    while (used.has(slug)) slug = slugify(`${p.displayName || p.name} ${p.university}`) + '-' + n++;
+    let slug = slugify(`${p.slugName || p.displayName || p.name} ${p.university}`) || 'program', n = 2;
+    while (used.has(slug)) slug = slugify(`${p.slugName || p.displayName || p.name} ${p.university}`) + '-' + n++;
     used.add(slug);
     const lastmod = rs.map(r => snap.reportSources?.[r.source]?.reportDate || r.decisionDate || '').filter(Boolean).sort().pop() || snap.checked;
     pages.push({ p, rs, slug, s: stats(rs), lastmod });
