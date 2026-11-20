@@ -12,7 +12,7 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET' || url.origin !== location.origin) return;   // analytics, fonts, sheets: untouched
   e.respondWith((async () => {
     try {
-      const res = await fetch(req);
+      const res = await (req.mode === 'navigate' ? fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }) : fetch(req));   // pages: always check for the newest version
       if (res.ok && res.type === 'basic') (await caches.open(CACHE)).put(req, res.clone());
       return res;
     } catch (err) {
