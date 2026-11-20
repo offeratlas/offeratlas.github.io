@@ -237,9 +237,12 @@ def row_key(ts, school, prog):
 
 
 def load_rows(path=None):
-    text = Path(path).read_text(encoding='utf-8') if path else \
-        urllib.request.urlopen(urllib.request.Request(CSV_URL, headers={'User-Agent': 'offeratlas-updater'}), timeout=60).read().decode('utf-8')
-    rows = list(csv.reader(io.StringIO(text)))
+    if path:
+        rows = list(csv.reader(io.StringIO(Path(path).read_text(encoding='utf-8'))))
+    else:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from sheet_fetch import fetch_rows   # CSV export, or a checked fallback when downloads are off
+        rows = fetch_rows(SID, GID)
     if not rows or not rows[0] or rows[0][0].strip() != 'Timestamp' or 'University' not in rows[0][1]:
         raise SystemExit('Spreadsheet layout changed (unexpected header); not updating.')
     return rows

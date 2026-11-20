@@ -111,9 +111,8 @@ def fp(sid, ts, school, program):
 
 
 def load(sheet):
-    url = f"https://docs.google.com/spreadsheets/d/{sheet['sid']}/export?format=csv&gid={sheet['gid']}"
-    text = urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'offeratlas-updater'}), timeout=60).read().decode('utf-8')
-    rows = list(csv.reader(io.StringIO(text)))
+    from sheet_fetch import fetch_rows   # CSV export, or a checked fallback when downloads are off
+    rows = fetch_rows(sheet['sid'], sheet['gid'])
     head = ' '.join(rows[0]).lower() if rows else ''
     if not rows or rows[0][0].strip() != 'Timestamp' or 'school' not in head or 'average' not in head:
         raise SystemExit(f"{sheet['id']}: spreadsheet layout changed (unexpected header); not updating.")
