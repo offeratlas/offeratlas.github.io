@@ -752,7 +752,8 @@ html[data-theme=dark] .plot-remove:hover,html[data-theme=dark] .plot-remove:focu
 
 /* "Last updated" badge under the Latest reports header (purple) */
 .fresh-meta{flex-wrap:wrap}
-.fresh-meta .last-run{flex-basis:100%;display:flex;margin-top:6px}
+.fresh-meta .lr-break{flex-basis:100%;height:0}
+.fresh-meta .last-run{display:flex;margin-top:2px}
 .fresh-meta .last-run[hidden]{display:none}
 .last-run{--lr-bg:#f1eaff;--lr-fg:#6d28d9;--lr-bd:#dccbff}
 .last-run>*{flex:none}
