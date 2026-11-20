@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa41';
-import {initEntering} from './entering.js?v=oa41';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa41';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa41';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa41';
+import {layoutDots} from './plot.js?v=oa42';
+import {initEntering} from './entering.js?v=oa42';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa42';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa42';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa42';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -180,6 +180,7 @@ const prefSet=v=>{try{v?localStorage.setItem(PREF_KEY,v):localStorage.removeItem
 function baseFilters(){return {...defaultFilters(),year:ALLY()?'All':String(archiveInfo.currentYear||2027)};}
 function readUrl(){const q=new URLSearchParams(location.search),f={};let any=false;for(const [k,key] of Object.entries(URLKEYS))if(q.has(key)){any=true;const v=q.get(key);f[k]=(k==='minimum'||k==='maximum')?Number(v):v;}if(q.has('p')){any=true;f.programs=q.get('p').split(',').filter(Boolean);}if(q.get('nq')==='1'){any=true;f.includeUnquantified=false;}if(any&&!('year' in f))f.year='All';return {filters:any?f:null,receipt:q.get('r')};}
 function urlFor(f,receipt){const d=defaultFilters(),q=new URLSearchParams();for(const [k,key] of Object.entries(URLKEYS))if(f[k]!==undefined&&String(f[k])!==String(d[k])&&!(k==='query'&&!f[k]))q.set(key,f[k]);if(f.year&&(f.year!==d.year||ALLY()))q.set('y',f.year);if(f.programs?.length)q.set('p',f.programs.join(','));if(f.includeUnquantified===false)q.set('nq','1');if(receipt)q.set('r',receipt);let s=q.toString();if(s==='y='+(archiveInfo.currentYear||2027)&&!ALLY())s='';return location.origin+location.pathname+(s?'?'+s:'')+(location.hash||'');}
+let lastRunAt=null,lastRunAsked=false;const lastRunText=()=>{if(!lastRunAt)return '';const d=new Date(lastRunAt);if(isNaN(d))return '';const f=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Toronto',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true}).format(d).replace(/\.\s?/g,'').replace(/\b(am|pm)\b/i,m=>m.toUpperCase());return `Last updated ${f} ET`;};function loadLastRun(){if(lastRunAsked)return;lastRunAsked=true;fetch('data/last-run.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.checkedAt)return;lastRunAt=j.checkedAt;const el=document.getElementById('last-run');if(el){el.textContent=lastRunText();el.hidden=!el.textContent;}}).catch(()=>{});}
 const PICKS_KEY='offeratlas.explorerPicks';let picksReady=false;const savePicks=()=>{if(!picksReady)return;try{filters.programs?.length?localStorage.setItem(PICKS_KEY,JSON.stringify(filters.programs)):localStorage.removeItem(PICKS_KEY);}catch{}};const rawPicks=()=>{try{const v=JSON.parse(localStorage.getItem(PICKS_KEY)||'[]');return Array.isArray(v)?v.filter(x=>typeof x==='string'):[];}catch{return [];}};const savedPicks=()=>{const ok=new Set(catalogPrograms.map(p=>p.id));return rawPicks().filter(id=>ok.has(id));};
 let urlTimer;function writeUrl(){clearTimeout(urlTimer);urlTimer=setTimeout(()=>{savePicks();const open=$('#evidence-dialog').open?receiptId:null;const u=urlFor(filters,open);if(u!==location.href)history.replaceState(null,'',u);},150);}
 async function copyText(text,msg){try{await navigator.clipboard.writeText(text);}catch{const t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.append(t);t.select();try{document.execCommand('copy');}catch{}t.remove();}notify(msg||'Link copied');}
@@ -200,7 +201,7 @@ const torDay=ms=>{const p=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Tor
 const ago=t=>{const d=Math.round((torDay(Date.now())-torDay(t))/864e5);return d<=0?'today':d===1?'yesterday':d+' days ago';};
 function fresh(){const el=$('#fresh-list');if(!el)return;const cur=reports.filter(r=>r.year===(archiveInfo.currentYear||2027)).map(r=>[r,subTime(r)]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);const week=cur.filter(x=>Date.now()-x[1]<7*864e5);
  const upd=runtimeStatus.lastUpdated?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',timeZone:'America/Toronto'}).format(new Date(runtimeStatus.lastUpdated)):null;
- $('#fresh-meta').innerHTML=`<span class="live-dot" aria-hidden="true"></span> Updated daily at 8 AM ET${upd?` · last new entries ${esc(upd)}`:''} · <strong>${fmt(week.length)}</strong> new report${week.length===1?'':'s'} in the past 7 days`;
+ $('#fresh-meta').innerHTML=`<span class="live-dot" aria-hidden="true"></span> Updated daily at 8 AM ET${upd?` · last new entries ${esc(upd)}`:''} · <strong>${fmt(week.length)}</strong> new report${week.length===1?'':'s'} in the past 7 days`+`<span class="last-run" id="last-run"${lastRunText()?'':' hidden'}>${esc(lastRunText())}</span>`;loadLastRun();
  const items=cur.slice(0,20);if(!items.length){el.innerHTML='<p class="fine">No new reports yet this cycle.</p>';return;}
  const sym=o=>o==='Offer'?'▲':o==='Rejected'?'▼':'◆';
  const avgTxt=r=>r.average!==null&&r.average!==undefined?esc(r.averageLabel)+(String(r.averageLabel).includes('%')?'':'%'):esc(String(r.averageLabel||'—').slice(0,16));
@@ -516,7 +517,7 @@ function seasonCard(){const el=$('#hc-season');if(!el)return;const rows=trackerR
   ${ALLY()?'':'<p class="fine">Load all years to see which big programs haven’t started yet. <button class="db-link" data-archive="load">Load all years</button></p>'}
   <button type="button" class="hc-link" data-view="tracker">Open the offer tracker →</button>`;}
 // ---- Deadlines (deadlines.json, copied from official university pages) ----
-let DL=null;fetch('deadlines.json?v=oa41',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
+let DL=null;fetch('deadlines.json?v=oa42',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
 const kdVersion=()=>{try{return new URLSearchParams(location.search).get('kd')||localStorage.getItem('offeratlas.kd')||'a';}catch{return 'a';}};
 const dlDays=d=>Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(todayISO()+'T12:00:00Z'))/864e5);
 const dlDate=(d,y)=>new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',...(y?{year:'numeric'}:{}),timeZone:'UTC'}).format(new Date(d+'T12:00:00Z'));
