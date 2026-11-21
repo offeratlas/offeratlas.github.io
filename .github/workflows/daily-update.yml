@@ -55,6 +55,10 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Remember which reports were already on the site (for the hourly phone message)
+        if: steps.gate.outputs.run == 'true'
+        run: python -c "import json;s=json.load(open('snapshot.json',encoding='utf-8'));json.dump([r['id'] for r in s['reports']],open('/tmp/before_ids.json','w'))"
+
       - name: Pull new spreadsheet entries
         if: steps.gate.outputs.run == 'true'
         run: python tools/update_data.py && python tools/update_bc.py
@@ -99,11 +103,13 @@ jobs:
           [ -n "$ok" ]   # fail the step (and alert your phone) if the push never went through
 
       - name: Send phone notification (ntfy)
-        # One summary each morning (first update at or after 7 AM), plus an alert whenever an update fails.
-        if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (failure() || steps.publish.outputs.first == 'true')
+        # After every hourly update: what's new this hour. The first update at or after 7 AM also
+        # summarises yesterday. Failures always send an alert.
+        if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (failure() || steps.gate.outputs.run == 'true')
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           JOB_STATUS: ${{ job.status }}
+          MORNING: ${{ steps.publish.outputs.first }}
         run: |
           if [ -z "$NTFY_TOPIC" ]; then echo "No NTFY_TOPIC secret set; skipping the phone notification."; exit 0; fi
           python tools/notify_summary.py --send

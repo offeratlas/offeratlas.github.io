@@ -1,4 +1,4 @@
-"""Builds the short phone message sent each morning (first update at or after 7 AM; see the workflow's ntfy step).
+"""Builds the phone message sent after every hourly update (the first one after 7 AM also summarises yesterday).
 Prints: line 1 = title, rest = body. Reads only files the job already wrote."""
 import datetime as dt, json, os, sys
 from pathlib import Path
@@ -42,12 +42,41 @@ total = (t or y or (hist[-1] if hist else {})).get('total', 0)
 names = load('data/name-quality.json', {})
 dl = load('data/deadline-quality.json', {})
 
-title = f"✅ Offer Atlas: {new} new result{'s' if new != 1 else ''} yesterday" if new else '✅ Offer Atlas: no new results yesterday'
+# What arrived in this update: reports that were not on the site before it ran.
+snap = load('snapshot.json', {})
+try:
+    before = set(json.loads(open(os.environ.get('BEFORE_IDS', '/tmp/before_ids.json'), encoding='utf-8').read()))
+except Exception:
+    before = None
+fresh = [r for r in snap.get('reports', []) if before is not None and r.get('id') not in before]
+progs = {p.get('id'): p.get('displayName') or p.get('name') for p in snap.get('programs', []) if isinstance(p, dict)}
+srcs = snap.get('reportSources', {})
+srcs = srcs if isinstance(srcs, dict) else {x.get('id'): x for x in srcs}
+def prog_name(r):
+    return progs.get(r.get('program')) or ((srcs.get(r.get('source')) or {}).get('rawProgram') or 'Program').strip()
+def avg(r):
+    a = str(r.get('averageLabel') or '').strip()
+    return (a + ('' if '%' in a or not a[:1].isdigit() else '%')) if a else 'no average'
+try:
+    from zoneinfo import ZoneInfo
+    hour = dt.datetime.now(ZoneInfo('America/Toronto')).strftime('%-I %p') if hasattr(dt, 'datetime') else ''
+except Exception:
+    hour = ''
+n = len(fresh)
 lines = []
-lines.append(f"Yesterday {new} new · overnight {overnight} new · {edited} edited · {total:,} results in total")
-tops = [p.split('|') for p in (y.get('programs') or [])[:3]]
-if tops and new:
-    lines.append('Most new offers: ' + '; '.join(f"{t[1]} ({t[0]})" if len(t) == 2 else t[0] for t in tops))
+if os.environ.get('MORNING') == 'true':
+    title = f"☀️ Offer Atlas morning: {new} new yesterday" + (f", {n} this hour" if n else '')
+    lines.append(f"Yesterday {new} new · overnight {overnight} new · {edited} edited · {total:,} results in total")
+    tops = [p.split('|') for p in (y.get('programs') or [])[:3]]
+    if tops and new:
+        lines.append('Most new offers yesterday: ' + '; '.join(f"{t[1]} ({t[0]})" if len(t) == 2 else t[0] for t in tops))
+else:
+    title = (f"✅ Offer Atlas: {n} new result{'s' if n != 1 else ''}" if n else '✅ Offer Atlas: no new results') + (f" ({hour})" if hour else '')
+    lines.append(f"{overnight} new today · {total:,} results in total")
+for r in fresh[:5]:
+    lines.append(f"• {prog_name(r)} — {r.get('university', '')}: {r.get('outcome', '')}, {avg(r)}")
+if n > 5:
+    lines.append(f"…and {n - 5} more")
 checks = []
 if names.get('newThisWeekNeedingAttention'):
     checks.append(f"{names['newThisWeekNeedingAttention']} new program names need a rule")
