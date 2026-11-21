@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa43';
-import {initEntering} from './entering.js?v=oa43';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa43';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa43';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa43';
+import {layoutDots} from './plot.js?v=oa44';
+import {initEntering} from './entering.js?v=oa44';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa44';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa44';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa44';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -201,14 +201,35 @@ const torDay=ms=>{const p=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Tor
 const ago=t=>{const d=Math.round((torDay(Date.now())-torDay(t))/864e5);return d<=0?'today':d===1?'yesterday':d+' days ago';};
 function fresh(){const el=$('#fresh-list');if(!el)return;const cur=reports.filter(r=>r.year===(archiveInfo.currentYear||2027)).map(r=>[r,subTime(r)]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);const week=cur.filter(x=>Date.now()-x[1]<7*864e5);
  const upd=runtimeStatus.lastUpdated?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',timeZone:'America/Toronto'}).format(new Date(runtimeStatus.lastUpdated)):null;
- $('#fresh-meta').innerHTML=`<span class="live-dot" aria-hidden="true"></span> <span>Updated daily at 8 AM ET ·</span><span class="fm-count"><strong>${fmt(week.length)}</strong> new report${week.length===1?'':'s'} in the past 7 days</span>`+`<span class="lr-break" aria-hidden="true"></span><span class="last-run" id="last-run"${lastRunHtml()?'':' hidden'}>${lastRunHtml()}</span>`;loadLastRun();
+ lrWeek=week;$('#fresh-meta').innerHTML=`<span class="live-dot" aria-hidden="true"></span> <span>Updated daily at 8 AM ET ·</span><span class="fm-count"><strong>${fmt(week.length)}</strong> new report${week.length===1?'':'s'} in the past 7 days</span>`+`<span class="lr-break" aria-hidden="true"></span><span class="last-run" id="last-run"${lastRunHtml()?'':' hidden'}>${lastRunHtml()}</span>`;loadLastRun();
  const items=cur.slice(0,20);if(!items.length){el.innerHTML='<p class="fine">No new reports yet this cycle.</p>';return;}
  const sym=o=>o==='Offer'?'▲':o==='Rejected'?'▼':'◆';
  const avgTxt=r=>r.average!==null&&r.average!==undefined?esc(r.averageLabel)+(String(r.averageLabel).includes('%')?'':'%'):esc(String(r.averageLabel||'—').slice(0,16));
  const item=([r,t],dup)=>`<button class="tk-item ${esc(r.outcome)}" data-record="${esc(r.id)}"${dup?' tabindex="-1" aria-hidden="true"':''}><span class="tk-sym" aria-hidden="true">${sym(r.outcome)}</span><span class="tk-prog">${esc(r.isSourceCollection?(r.submittedProgram||r.programName):r.programName)}</span><span class="tk-uni">${esc(r.university)}</span><span class="tk-avg">${avgTxt(r)}</span><span class="tk-out">${r.outcome==='Alternate'?'ALT OFFER':esc(r.outcome.toUpperCase())}</span><span class="tk-when">${ago(t)}</span></button>`;
  const run=items.map(x=>item(x,false)).join(''),dup=items.map(x=>item(x,true)).join('');
- el.innerHTML=`<div class="ticker" role="region" aria-label="Latest reports ticker"><div class="tk-track" style="--tk-dur:${Math.max(60,items.length*9)}s"><div class="tk-run">${run}</div><div class="tk-run" aria-hidden="true">${dup}</div></div></div><button class="tk-toggle" id="tk-toggle" aria-pressed="false">Pause ❚❚</button>`;
+ el.innerHTML=`<div class="ticker" role="region" aria-label="Latest reports ticker"><div class="tk-track" style="--tk-dur:${Math.max(60,items.length*9)}s"><div class="tk-run">${run}</div><div class="tk-run" aria-hidden="true">${dup}</div></div></div><div class="tk-bar">${lrAllBtn(week.length)}<button class="tk-toggle" id="tk-toggle" aria-pressed="false">Pause ❚❚</button></div><div class="lr-inline" id="lr-inline" hidden></div>`;
  const box=el.querySelector('.ticker'),tg=$('#tk-toggle');tg.onclick=()=>{const p=box.classList.toggle('paused');tg.setAttribute('aria-pressed',String(p));tg.textContent=p?'Play ▶':'Pause ❚❚';};}
+// ---- "See all" for the Latest reports ticker: every report from the past 7 days at once ----
+function lrAllBtn(n){const c=fmt(n);return `<button type="button" class="lr-all" data-lr-all aria-expanded="false" aria-controls="lr-inline" aria-label="Browse all ${c} reports from the past 7 days"><span aria-hidden="true">☰</span> Browse all ${c}</button>`;}
+let lrState={q:'',out:'all',shown:40},lrWeek=[];
+const lrOutTag=o=>o==='Offer'?'offer':o==='Rejected'?'rejected':o==='Deferred'?'deferred':o==='Waitlisted'?'waitlisted':'other';
+function lrRows(){const q=lrState.q;return lrWeek.filter(([r])=>(lrState.out==='all'||lrOutTag(r.outcome)===lrState.out)&&(!q||[wkName(r),r.university].join(' ').toLowerCase().includes(q)));}
+function lrCard([r,t]){const avg=r.average!==null&&r.average!==undefined?esc(r.averageLabel)+(String(r.averageLabel).includes('%')?'':'%'):esc(String(r.averageLabel||'—').slice(0,16));
+ return `<button type="button" class="lr-card o-${lrOutTag(r.outcome)}" data-record="${esc(r.id)}"><span class="lr-out">${r.outcome==='Alternate'?'Alt offer':esc(r.outcome)}</span><span class="lr-prog">${esc(wkName(r))}</span><span class="lr-uni">${esc(r.university)}</span><span class="lr-foot"><b>${avg}</b><span>${ago(t)}</span></span></button>`;}
+function lrList(){const all=lrRows(),cnt=k=>lrWeek.filter(([r])=>k==='all'||lrOutTag(r.outcome)===k).length;
+ const chips=[['all','All'],['offer','Offers'],['rejected','Rejections'],['deferred','Deferrals'],['waitlisted','Waitlists']].filter(([k])=>k==='all'||cnt(k)).map(([k,l])=>`<button type="button" class="lr-chip${lrState.out===k?' on':''}" data-lr-out="${k}">${l} <small>${fmt(cnt(k))}</small></button>`).join('');
+ const more=all.length>lrState.shown?`<button type="button" class="lr-more" data-lr-more>Show ${fmt(Math.min(60,all.length-lrState.shown))} more · ${fmt(all.length-lrState.shown)} left</button>`:'';
+ return `<div class="lr-tools"><input type="search" id="lr-q" class="lr-q" placeholder="Search program or school…" value="${esc(lrState.q)}" aria-label="Search the latest reports"><div class="lr-chips">${chips}</div></div>`+
+  (all.length?`<div class="lr-grid">${all.slice(0,lrState.shown).map(lrCard).join('')}</div>${more}`:'<p class="fine">No reports match.</p>');}
+function lrHead(){return `<div class="lr-head"><div><h3>All latest reports</h3><p class="hc-sub">${wkRange()}</p></div><button type="button" class="dialog-close" data-lr-close aria-label="Close">×</button></div>`;}
+function lrOpen(){lrState={q:'',out:'all',shown:40};const el=$('#lr-inline');if(!el)return;el.hidden=false;el.innerHTML=lrHead()+lrList();$('[data-lr-all]')?.setAttribute('aria-expanded','true');}
+function lrRefresh(){const host=$('#lr-inline');if(!host||host.hidden)return;const keep=document.activeElement?.id==='lr-q';host.innerHTML=lrHead()+lrList();if(keep){const q=$('#lr-q');q.focus();q.setSelectionRange(q.value.length,q.value.length);}}
+document.addEventListener('click',e=>{const t=e.target;if(!t.closest)return;
+ if(t.closest('[data-lr-all]')){const el=$('#lr-inline');if(el&&!el.hidden){el.hidden=true;t.closest('[data-lr-all]').setAttribute('aria-expanded','false');return;}lrOpen();return;}
+ const o=t.closest('[data-lr-out]');if(o){lrState.out=o.dataset.lrOut;lrState.shown=40;lrRefresh();return;}
+ if(t.closest('[data-lr-more]')){lrState.shown+=60;lrRefresh();return;}
+ if(t.closest('[data-lr-close]')){const el=$('#lr-inline');if(el&&!el.hidden){el.hidden=true;$('[data-lr-all]')?.setAttribute('aria-expanded','false');$('#fresh-title')?.scrollIntoView({block:'start'});}}});
+document.addEventListener('input',e=>{if(e.target.id==='lr-q'){lrState.q=e.target.value.trim().toLowerCase();lrState.shown=40;lrRefresh();}});
 // Filter panel extras: average slider, presets, "More filters" count
 const PRESETS=[['All',0,100],['95+',95,100],['90–95',90,95],['85–90',85,90],['80–85',80,85],['<80',0,80]];
 function setRange(a,b){$('#minimum').value=a;$('#maximum').value=b;$('#minimum').dispatchEvent(new Event('input',{bubbles:true}));}
@@ -517,7 +538,7 @@ function seasonCard(){const el=$('#hc-season');if(!el)return;const rows=trackerR
   ${ALLY()?'':'<p class="fine">Load all years to see which big programs haven’t started yet. <button class="db-link" data-archive="load">Load all years</button></p>'}
   <button type="button" class="hc-link" data-view="tracker">Open the offer tracker →</button>`;}
 // ---- Deadlines (deadlines.json, copied from official university pages) ----
-let DL=null;fetch('deadlines.json?v=oa43',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
+let DL=null;fetch('deadlines.json?v=oa44',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
 const kdVersion=()=>{try{return new URLSearchParams(location.search).get('kd')||localStorage.getItem('offeratlas.kd')||'a';}catch{return 'a';}};
 const dlDays=d=>Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(todayISO()+'T12:00:00Z'))/864e5);
 const dlDate=(d,y)=>new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',...(y?{year:'numeric'}:{}),timeZone:'UTC'}).format(new Date(d+'T12:00:00Z'));
