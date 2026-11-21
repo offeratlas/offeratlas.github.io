@@ -45,20 +45,23 @@
 },
 {
 "date": "2026-11-21",
-"new": 40,
+"new": 42,
 "edited": 0,
-"total": 13614,
+"total": 13616,
 "programs": [
 "University of Guelph|Computer Science",
 "University of Guelph|Software Engineering",
 "University of Guelph|Biomedical Engineering",
-"University of Guelph|Environmental Engineering"
+"University of Guelph|Environmental Engineering",
+"Toronto Metropolitan University|Industrial Engineering"
 ],
 "offerCounts": {
 "University of Guelph|Computer Science": 1,
 "University of Guelph|Software Engineering": 1,
 "University of Guelph|Biomedical Engineering": 1,
-"University of Guelph|Environmental Engineering": 1
+"University of Guelph|Environmental Engineering": 1,
+"Toronto Metropolitan University|Industrial Engineering": 1,
+"University of Windsor|Mechanical Engineering with Materials Option": 1
 }
 }
 ]
