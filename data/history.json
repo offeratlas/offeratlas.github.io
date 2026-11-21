@@ -42,5 +42,18 @@
 "Toronto Metropolitan University|Mechanical Engineering",
 "Toronto Metropolitan University|Undeclared Engineering"
 ]
+},
+{
+"date": "2026-11-21",
+"new": 19,
+"edited": 0,
+"total": 13593,
+"programs": [
+"Carleton University|Computer Science, Co-op",
+"Brock University|Integrated Engineering",
+"University of Guelph|Arts and Sciences",
+"University of Guelph|ScienceMajor Biological & Pharmaceutical Chemistry",
+"University of Guelph|Science, Wildlife Biology & Conservation"
+]
 }
 ]
