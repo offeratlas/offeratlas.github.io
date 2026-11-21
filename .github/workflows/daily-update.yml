@@ -2,10 +2,10 @@ name: Daily data update
 
 on:
   schedule:
-    # 8 AM Toronto time. GitHub often starts timed jobs late (sometimes hours) or
-    # drops them, so this wakes up every 30 minutes from early morning to about noon Toronto
-    # time (EDT or EST); the gate step runs the real update once per day, on the
-    # first wake-up at or after 8 AM, and skips the rest in a few seconds.
+    # The hourly updates (7 AM to midnight Toronto time) are started by cron-job.org through
+    # workflow_dispatch. This GitHub schedule is only a backup in case that ever stops: GitHub
+    # often starts timed jobs late or drops them, so it wakes every 30 minutes in the morning
+    # and runs the update once per day, on the first wake-up at or after 7 AM, if nothing has yet.
     - cron: "7,37 11-17 * * *"
   workflow_dispatch: {}      # lets you run it by hand from the Actions tab
   push:                      # rebuild pages when the build tools change
@@ -31,14 +31,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Only run once a day, at or after 8 AM Toronto time
+      - name: Backup schedule runs at most once a day, at or after 7 AM Toronto time
         id: gate
         env:
           EVENT: ${{ github.event_name }}
         run: |
           today=$(TZ=America/Toronto date +%F); hour=$(TZ=America/Toronto date +%-H)
           last=$(cat data/last-morning-run.txt 2>/dev/null || true)
-          if [ "$EVENT" = "schedule" ] && { [ "$hour" -lt 8 ] || [ "$last" = "$today" ]; }; then
+          if [ "$EVENT" = "schedule" ] && { [ "$hour" -lt 7 ] || [ "$last" = "$today" ]; }; then
             echo "Not time yet, or today's morning update already ran ($last); skipping."
             echo "run=false" >> "$GITHUB_OUTPUT"
           else
@@ -76,9 +76,16 @@ jobs:
         run: node tools/deadline-check.mjs
 
       - name: Publish if anything changed
+        id: publish
         if: steps.gate.outputs.run == 'true'
         run: |
-          if [ "${{ github.event_name }}" != "push" ]; then TZ=America/Toronto date +%F > data/last-morning-run.txt; fi
+          # The first update at or after 7 AM each day sends the morning summary to your phone.
+          today=$(TZ=America/Toronto date +%F); hour=$(TZ=America/Toronto date +%-H)
+          last=$(cat data/last-morning-run.txt 2>/dev/null || true)
+          if [ "${{ github.event_name }}" != "push" ] && [ "$hour" -ge 7 ] && [ "$last" != "$today" ]; then
+            echo "$today" > data/last-morning-run.txt
+            echo "first=true" >> "$GITHUB_OUTPUT"
+          fi
           printf '{"checkedAt":"%s"}\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > data/last-run.json   # shown as "Last updated" on the site
           git add -A snapshot.json data programs schools feeds guides changelog sitemap.xml
           if git diff --cached --quiet; then
@@ -87,12 +94,13 @@ jobs:
           fi
           git config user.name "Offer Atlas"
           git config user.email "site@offeratlas.invalid"
-          git commit -m "Daily data update $(TZ=America/Toronto date +%Y-%m-%d)"
-          git push
+          git commit -m "Data update $(TZ=America/Toronto date '+%Y-%m-%d %H:%M')"
+          ok=""; for i in 1 2 3; do if git pull --rebase -q origin main && git push; then ok=1; break; fi; sleep 10; done
+          [ -n "$ok" ]   # fail the step (and alert your phone) if the push never went through
 
       - name: Send phone notification (ntfy)
-        # Morning runs and manual runs only, and also when anything above failed.
-        if: always() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (steps.gate.outputs.run == 'true' || failure())
+        # One summary each morning (first update at or after 7 AM), plus an alert whenever an update fails.
+        if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (failure() || steps.publish.outputs.first == 'true')
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           JOB_STATUS: ${{ job.status }}

@@ -1,4 +1,4 @@
-"""Builds the short phone message sent after the daily update (see the workflow's ntfy step).
+"""Builds the short phone message sent each morning (first update at or after 7 AM; see the workflow's ntfy step).
 Prints: line 1 = title, rest = body. Reads only files the job already wrote."""
 import datetime as dt, json, os, sys
 from pathlib import Path
@@ -28,25 +28,26 @@ except Exception:
     today = dt.date.today().isoformat()
 
 if status != 'success':
-    send('⚠️ Offer Atlas update failed', 'The 8 AM update did not finish. The site still shows yesterday’s data. Open GitHub Actions to see what went wrong.',
+    send('⚠️ Offer Atlas update failed', 'The latest hourly update did not finish. The site still shows the previous data. Open GitHub Actions to see what went wrong.',
          'https://github.com/offeratlas/offeratlas.github.io/actions')
     sys.exit(0)
 
 hist = load('data/history.json', [])
-entry = next((h for h in hist if h.get('date') == today), None)
-new = entry.get('new', 0) if entry else 0
-edited = entry.get('edited', 0) if entry else 0
-total = (entry or (hist[-1] if hist else {})).get('total', 0)
+yday = (dt.date.fromisoformat(today) - dt.timedelta(days=1)).isoformat()
+y = next((h for h in hist if h.get('date') == yday), {}) or {}
+t = next((h for h in hist if h.get('date') == today), {}) or {}
+new, overnight = y.get('new', 0), t.get('new', 0)
+edited = y.get('edited', 0) + t.get('edited', 0)
+total = (t or y or (hist[-1] if hist else {})).get('total', 0)
 names = load('data/name-quality.json', {})
 dl = load('data/deadline-quality.json', {})
 
-title = f"✅ Offer Atlas: {new} new result{'s' if new != 1 else ''}" if new else '✅ Offer Atlas: no new results today'
+title = f"✅ Offer Atlas: {new} new result{'s' if new != 1 else ''} yesterday" if new else '✅ Offer Atlas: no new results yesterday'
 lines = []
-if new or edited:
-    lines.append(f"{new} new, {edited} edited · {total:,} results in total")
-tops = [p.split('|')[::-1] for p in (entry or {}).get('programs', [])[:3]]
+lines.append(f"Yesterday {new} new · overnight {overnight} new · {edited} edited · {total:,} results in total")
+tops = [p.split('|') for p in (y.get('programs') or [])[:3]]
 if tops and new:
-    lines.append('Most new offers: ' + '; '.join(f"{prog} ({uni})" for uni, prog in [(t[1], t[0]) if len(t) == 2 else ('', t[0]) for t in tops]))
+    lines.append('Most new offers: ' + '; '.join(f"{t[1]} ({t[0]})" if len(t) == 2 else t[0] for t in tops))
 checks = []
 if names.get('newThisWeekNeedingAttention'):
     checks.append(f"{names['newThisWeekNeedingAttention']} new program names need a rule")

@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa48';
-import {initEntering} from './entering.js?v=oa48';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa48';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa48';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa48';
+import {layoutDots} from './plot.js?v=oa49';
+import {initEntering} from './entering.js?v=oa49';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa49';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa49';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa49';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -201,7 +201,7 @@ const torDay=ms=>{const p=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Tor
 const ago=t=>{const d=Math.round((torDay(Date.now())-torDay(t))/864e5);return d<=0?'today':d===1?'yesterday':d+' days ago';};
 function fresh(){const el=$('#fresh-list');if(!el)return;const cur=reports.filter(r=>r.year===(archiveInfo.currentYear||2027)).map(r=>[r,subTime(r)]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);const week=cur.filter(x=>Date.now()-x[1]<7*864e5);
  const upd=runtimeStatus.lastUpdated?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',timeZone:'America/Toronto'}).format(new Date(runtimeStatus.lastUpdated)):null;
- lrWeek=week;$('#fresh-meta').innerHTML=`<span class="live-dot" aria-hidden="true"></span> <span>Updated daily at 8 AM ET ·</span><span class="fm-count"><strong>${fmt(week.length)}</strong> new report${week.length===1?'':'s'} in the past 7 days</span>`+`<span class="lr-break" aria-hidden="true"></span><span class="last-run" id="last-run"${lastRunHtml()?'':' hidden'}>${lastRunHtml()}</span>`;loadLastRun();
+ lrWeek=week;$('#fresh-meta').innerHTML=`<span class="live-dot" aria-hidden="true"></span> <span>Updated hourly, 7 AM – midnight ET ·</span><span class="fm-count"><strong>${fmt(week.length)}</strong> new report${week.length===1?'':'s'} in the past 7 days</span>`+`<span class="lr-break" aria-hidden="true"></span><span class="last-run" id="last-run"${lastRunHtml()?'':' hidden'}>${lastRunHtml()}</span>`;loadLastRun();
  const items=cur.slice(0,20);if(!items.length){el.innerHTML='<p class="fine">No new reports yet this cycle.</p>';return;}
  const sym=o=>o==='Offer'?'▲':o==='Rejected'?'▼':'◆';
  const avgTxt=r=>r.average!==null&&r.average!==undefined?esc(r.averageLabel)+(String(r.averageLabel).includes('%')?'':'%'):esc(String(r.averageLabel||'—').slice(0,16));
@@ -544,7 +544,7 @@ function seasonCard(){const el=$('#hc-season');if(!el)return;const rows=trackerR
   ${ALLY()?'':'<p class="fine">Load all years to see which big programs haven’t started yet. <button class="db-link" data-archive="load">Load all years</button></p>'}
   <button type="button" class="hc-link" data-view="tracker">Open the offer tracker →</button>`;}
 // ---- Deadlines (deadlines.json, copied from official university pages) ----
-let DL=null;fetch('deadlines.json?v=oa48',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
+let DL=null;fetch('deadlines.json?v=oa49',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
 const kdVersion=()=>{try{return new URLSearchParams(location.search).get('kd')||localStorage.getItem('offeratlas.kd')||'a';}catch{return 'a';}};
 const dlDays=d=>Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(todayISO()+'T12:00:00Z'))/864e5);
 const dlDate=(d,y)=>new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',...(y?{year:'numeric'}:{}),timeZone:'UTC'}).format(new Date(d+'T12:00:00Z'));

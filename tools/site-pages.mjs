@@ -158,7 +158,7 @@ function schoolsIndex({ schools, site }) {
   const title = 'Canadian universities — admission averages by school | Offer Atlas';
   const desc = `Self-reported admission averages and offer dates for ${schools.length} Canadian universities and colleges.`;
   return head({ title, desc, url: `${site}/schools/`, site }) + topbar + `<main class="pg">
-<h1>Schools</h1><p class="pg-sub">${schools.length} Canadian universities and colleges with program pages. Updated daily.</p>${disclaimer}
+<h1>Schools</h1><p class="pg-sub">${schools.length} Canadian universities and colleges with program pages. Updated hourly.</p>${disclaimer}
 <input id="pg-search" class="pg-search" type="search" placeholder="Search a school…" aria-label="Search schools">
 <ul class="pg-grid">${schools.map(s => `<li><a href="/schools/${s.slug}/">${esc(s.uni)}</a><span>${s.pages.length} programs · ${s.pages.reduce((a, x) => a + x.rs.length, 0).toLocaleString('en-CA')} reports</span></li>`).join('')}</ul>
 <script>document.getElementById('pg-search').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();for(const li of document.querySelectorAll('.pg-grid li'))li.hidden=!!q&&!li.textContent.toLowerCase().includes(q);});</script>
@@ -172,7 +172,7 @@ function indexPage({ pages, site, total, schoolSlug }) {
   const title = 'All programs — Canadian university admission averages | Offer Atlas';
   const desc = `Self-reported admission averages and offer dates for ${pages.length} Canadian university programs, from ${total.toLocaleString('en-CA')} public applicant reports.`;
   return head({ title, desc, url: `${site}/programs/`, site }) + topbar + `<main class="pg">
-<h1>Every program, its reported outcomes</h1>${disclaimer}<p class="pg-sub">${pages.length} programs with at least ${MIN_REPORTS} self-reported results. Updated daily.</p>
+<h1>Every program, its reported outcomes</h1>${disclaimer}<p class="pg-sub">${pages.length} programs with at least ${MIN_REPORTS} self-reported results. Updated hourly.</p>
 <input id="pg-search" class="pg-search" type="search" placeholder="Search a program or school…" aria-label="Search programs">
 ${unis.map(u => `<section class="pg-uni" id="${esc(slugify(u))}"><h2><a href="/schools/${schoolSlug.get(u)}/">${esc(u)}</a></h2><ul class="pg-grid">${byUni.get(u).sort((a, b) => (a.p.displayName || a.p.name).localeCompare(b.p.displayName || b.p.name)).map(pg =>
     `<li><a href="/programs/${pg.slug}/">${esc(pg.p.displayName || pg.p.name)}</a><span>${pg.rs.length} reports${pg.s.latestYear ? ` · median offer ${pct(pg.s.latestYear.median)} (Fall ${pg.s.latestYear.year})` : ''}</span></li>`).join('')}</ul></section>`).join('')}
@@ -273,8 +273,8 @@ function changelogPage({ site, changes, history }) {
   for (const c of changes) { if (!days.has(c.date)) days.set(c.date, { notes: [], data: null }); days.get(c.date).notes.push(c.text); }
   for (const h of history) { if (!(h.new || h.edited)) continue; if (!days.has(h.date)) days.set(h.date, { notes: [], data: null }); days.get(h.date).data = h; }
   const dates = [...days.keys()].sort().reverse();
-  return head({ title: 'Changelog | Offer Atlas', desc: 'What changed on Offer Atlas: new features, fixes and daily data updates.', url: `${site}/changelog/`, site }) + topbar + `<main class="pg">
-<h1>Changelog</h1><p class="pg-sub">New features, fixes and daily data updates. Data is refreshed every morning at 8 AM Toronto time.</p>
+  return head({ title: 'Changelog | Offer Atlas', desc: 'What changed on Offer Atlas: new features, fixes and data updates.', url: `${site}/changelog/`, site }) + topbar + `<main class="pg">
+<h1>Changelog</h1><p class="pg-sub">New features, fixes and data updates. Data is refreshed every hour from 7 AM to midnight Toronto time.</p>
 ${dates.map(d => { const x = days.get(d); return `<section class="pg-card log"><h2>${fmtDate(d)}</h2>${x.data ? `<p class="log-data">📈 Data update: <strong>+${x.data.new}</strong> new report${x.data.new === 1 ? '' : 's'}${x.data.edited ? ` · ${x.data.edited} edited` : ''} · ${Number(x.data.total).toLocaleString('en-CA')} total${x.data.programs?.length ? ` · new offers for ${x.data.programs.slice(0, 3).map(k => esc(k.split('|').reverse().join(', '))).join('; ')}` : ''}</p>` : ''}${x.notes.length ? `<ul>${x.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}</section>`; }).join('')}
 </main>` + footer;
 }

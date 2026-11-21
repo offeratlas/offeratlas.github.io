@@ -363,7 +363,9 @@ def main():
     entry['new'] += len(added)
     entry['edited'] += changed
     entry['total'] = len(snap['reports'])
-    tops = Counter(f"{r['university']}|{model.programs.get(r['program'], {}).get('name', '')}" for r in added if r['outcome'] == 'Offer')
+    tops = Counter(entry.get('offerCounts') or {})   # adds up across the day's hourly runs
+    tops.update(f"{r['university']}|{model.programs.get(r['program'], {}).get('name', '')}" for r in added if r['outcome'] == 'Offer')
+    entry['offerCounts'] = dict(tops.most_common(40))
     entry['programs'] = [k for k, _ in tops.most_common(5)] or entry.get('programs', [])
     hist_path.parent.mkdir(exist_ok=True)
     hist_path.write_text(json.dumps(sorted(hist, key=lambda h: h['date'])[-400:], ensure_ascii=False, indent=0), encoding='utf-8')
