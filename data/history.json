@@ -45,12 +45,16 @@
 },
 {
 "date": "2026-11-21",
-"new": 36,
+"new": 38,
 "edited": 0,
-"total": 13610,
+"total": 13612,
 "programs": [
-"University of Guelph|Bachelor of One Health"
+"University of Guelph|Computer Science",
+"University of Guelph|Software Engineering"
 ],
-"offerCounts": {}
+"offerCounts": {
+"University of Guelph|Computer Science": 1,
+"University of Guelph|Software Engineering": 1
+}
 }
 ]
