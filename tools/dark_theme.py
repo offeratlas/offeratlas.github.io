@@ -35,7 +35,7 @@ BG = {'white': '#15233a', '#fff': '#15233a', '#ffffff': '#15233a', '#fafbf8': '#
       '#f6f6f2': '#1b2c47', '#f1f1ec': '#1b2c47', '#e3f4ea': '#163a2c', '#fde8ec': '#3d1820', '#eceffc': '#1c2b4d', '#fff4d6': '#33270f'}
 TEXT = {'#21654a': '#6fdcaa', '#8d5b19': '#f2c879', '#925d15': '#f2c879', '#99601d': '#f2c879', '#5c4210': '#f2d49a',
         '#4a340a': '#f7dfae', '#7a5a17': '#f2d49a', '#9d3447': '#ff8fa1', '#2846a2': '#a9bcff', '#657182': '#9fb0c6', '#c19a2b': '#f0c34a',
-        '#1d6b4b': '#6fdcaa', '#a12a40': '#ff8fa1', '#3a4ca8': '#a9bcff', '#7a5408': '#f2d49a', '#1f8a5b': '#6fdcaa', '#3b5bdb': '#a9bcff', '#b7791f': '#f2c879',
+        '#1d6b4b': '#6fdcaa', '#a12a40': '#ff8fa1', '#3a4ca8': '#a9bcff', '#7a5408': '#f2d49a', '#1f8a5b': '#6fdcaa', '#1a7a50': '#6fdcaa', '#3b5bdb': '#a9bcff', '#b7791f': '#f2c879',
         '#16233a': '#e7edf5', '#5b6670': '#9fb0c6'}
 BORDER = {c: '#2f4566' for c in ['#d5dccb', '#cbd3d6', '#c6ced3', '#edf0f0', '#e9eded', '#e6eaea', '#d0d9e5', '#a7b8cc', '#b9c4e4',
                                    '#cfd9fb', '#bdcadb', '#c3ccd8', '#aabbdd55', 'white', '#fff']}
