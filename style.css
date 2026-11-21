@@ -844,7 +844,7 @@ html[data-theme=dark] .hist-bar .hb-other,html[data-theme=dark] .cmp-bar .hb-oth
 html[data-theme=dark] .rx-dot{opacity:.85}
 html[data-theme=dark] .year-chips input:checked+span,html[data-theme=dark] .count-chip{background:#3b5bdb;color:#fff}
 html[data-theme=dark] .skip{color:#162840}
-html[data-theme=dark] .kd-tabs button[aria-selected="true"]{background:#24406b;color:#fff}
+html[data-theme=dark] .kd-tabs button[aria-selected="true"]:not(.x){background:#24406b;color:#fff}
 html[data-theme=dark] .wk-top button:hover,html[data-theme=dark] .wk-top button.on{background:#1b2c47}
 html[data-theme=dark] .brand-icon{background:#24406b}
 html[data-theme=dark] .nav.active{background:#24406b}

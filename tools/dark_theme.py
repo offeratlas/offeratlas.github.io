@@ -24,7 +24,7 @@ ROOT = f"""{D}{{--ink:#e7edf5;--muted:#9fb0c6;--paper:#0d1726;--line:#2a3d5a;--b
 {D} .rx-dot{{opacity:.85}}
 {D} .year-chips input:checked+span,{D} .count-chip{{background:#3b5bdb;color:#fff}}
 {D} .skip{{color:#162840}}
-{D} .kd-tabs button[aria-selected="true"]{{background:#24406b;color:#fff}}
+{D} .kd-tabs button[aria-selected="true"]:not(.x){{background:#24406b;color:#fff}}
 {D} .wk-top button:hover,{D} .wk-top button.on{{background:#1b2c47}}
 """
 BG = {'white': '#15233a', '#fff': '#15233a', '#ffffff': '#15233a', '#fafbf8': '#15233a', '#f6f7f3': '#15233a',
