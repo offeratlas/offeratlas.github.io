@@ -45,16 +45,20 @@
 },
 {
 "date": "2026-11-21",
-"new": 38,
+"new": 40,
 "edited": 0,
-"total": 13612,
+"total": 13614,
 "programs": [
 "University of Guelph|Computer Science",
-"University of Guelph|Software Engineering"
+"University of Guelph|Software Engineering",
+"University of Guelph|Biomedical Engineering",
+"University of Guelph|Environmental Engineering"
 ],
 "offerCounts": {
 "University of Guelph|Computer Science": 1,
-"University of Guelph|Software Engineering": 1
+"University of Guelph|Software Engineering": 1,
+"University of Guelph|Biomedical Engineering": 1,
+"University of Guelph|Environmental Engineering": 1
 }
 }
 ]
