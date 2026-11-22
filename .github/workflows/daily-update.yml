@@ -91,6 +91,7 @@ jobs:
             echo "first=true" >> "$GITHUB_OUTPUT"
           fi
           printf '{"checkedAt":"%s"}\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > data/last-run.json   # shown as "Last updated" on the site
+          python tools/log_added.py   # how many results this update added (for the phone messages)
           git add -A snapshot.json data programs schools feeds guides changelog sitemap.xml
           if git diff --cached --quiet; then
             echo "No changes today."

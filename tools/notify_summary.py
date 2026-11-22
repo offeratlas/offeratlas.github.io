@@ -35,12 +35,25 @@ if status != 'success':
 hist = load('data/history.json', [])
 yday = (dt.date.fromisoformat(today) - dt.timedelta(days=1)).isoformat()
 y = next((h for h in hist if h.get('date') == yday), {}) or {}
-t = next((h for h in hist if h.get('date') == today), {}) or {}
-new, overnight = y.get('new', 0), t.get('new', 0)
-edited = y.get('edited', 0) + t.get('edited', 0)
-total = (t or y or (hist[-1] if hist else {})).get('total', 0)
 names = load('data/name-quality.json', {})
 dl = load('data/deadline-quality.json', {})
+# Every update logs how many results it added (Ontario and BC) in data/added-log.json.
+log = load('data/added-log.json', [])
+now = dt.datetime.now(dt.timezone.utc)
+def at(e):
+    try:
+        return dt.datetime.strptime(e['at'], '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=dt.timezone.utc)
+    except Exception:
+        return None
+def tor_date(t):
+    try:
+        from zoneinfo import ZoneInfo
+        return t.astimezone(ZoneInfo('America/Toronto')).date().isoformat()
+    except Exception:
+        return (t - dt.timedelta(hours=5)).date().isoformat()
+last24 = sum(e.get('new', 0) for e in log if at(e) and now - at(e) <= dt.timedelta(hours=24))
+new = sum(e.get('new', 0) for e in log if at(e) and tor_date(at(e)) == yday)            # all of yesterday
+overnight = sum(e.get('new', 0) for e in log if at(e) and tor_date(at(e)) == today)      # since midnight
 
 # What arrived in this update: reports that were not on the site before it ran.
 snap = load('snapshot.json', {})
@@ -63,16 +76,17 @@ try:
 except Exception:
     hour = ''
 n = len(fresh)
+total = len(snap.get('reports', []))
 lines = []
 if os.environ.get('MORNING') == 'true':
     title = f"☀️ Offer Atlas morning: {new} new yesterday" + (f", {n} this hour" if n else '')
-    lines.append(f"Yesterday {new} new · overnight {overnight} new · {edited} edited · {total:,} results in total")
+    lines.append(f"Yesterday {new} new · since midnight {overnight} new · {total:,} results in total")
     tops = [p.split('|') for p in (y.get('programs') or [])[:3]]
     if tops and new:
         lines.append('Most new offers yesterday: ' + '; '.join(f"{t[1]} ({t[0]})" if len(t) == 2 else t[0] for t in tops))
 else:
     title = (f"✅ Offer Atlas: {n} new result{'s' if n != 1 else ''}" if n else '✅ Offer Atlas: no new results') + (f" ({hour})" if hour else '')
-    lines.append(f"{overnight} new today · {total:,} results in total")
+    lines.append(f"{last24} new in the last 24 hours · {total:,} results in total")
 for r in fresh[:5]:
     lines.append(f"• {prog_name(r)} — {r.get('university', '')}: {r.get('outcome', '')}, {avg(r)}")
 if n > 5:
