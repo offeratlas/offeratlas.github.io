@@ -45,25 +45,26 @@
 },
 {
 "date": "2026-11-21",
-"new": 44,
+"new": 46,
 "edited": 0,
-"total": 13618,
+"total": 13620,
 "programs": [
+"Wilfrid Laurier University|Business Administration",
 "University of Guelph|Computer Science",
 "University of Guelph|Software Engineering",
 "University of Guelph|Biomedical Engineering",
-"University of Guelph|Environmental Engineering",
-"Toronto Metropolitan University|Industrial Engineering"
+"University of Guelph|Environmental Engineering"
 ],
 "offerCounts": {
+"Wilfrid Laurier University|Business Administration": 2,
 "University of Guelph|Computer Science": 1,
 "University of Guelph|Software Engineering": 1,
 "University of Guelph|Biomedical Engineering": 1,
 "University of Guelph|Environmental Engineering": 1,
 "Toronto Metropolitan University|Industrial Engineering": 1,
 "University of Windsor|Mechanical Engineering with Materials Option": 1,
-"Wilfrid Laurier University|Business Administration": 1,
-"Ontario Tech University|Nuclear Engineering (coop)": 1
+"Ontario Tech University|Nuclear Engineering (coop)": 1,
+"McMaster University|Business 1 (Marketing)": 1
 }
 }
 ]
