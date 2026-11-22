@@ -71,16 +71,18 @@
 },
 {
 "date": "2026-11-22",
-"new": 2,
+"new": 3,
 "edited": 0,
-"total": 13626,
+"total": 13627,
 "programs": [
 "Toronto Metropolitan University|Bachelor of Mechanical Engineering",
-"University of Ottawa|Mechanical Engineering"
+"University of Ottawa|Mechanical Engineering",
+"Wilfrid Laurier University|Business Administration and Computer Science Double Degree, Waterloo Campus"
 ],
 "offerCounts": {
 "Toronto Metropolitan University|Bachelor of Mechanical Engineering": 1,
-"University of Ottawa|Mechanical Engineering": 1
+"University of Ottawa|Mechanical Engineering": 1,
+"Wilfrid Laurier University|Business Administration and Computer Science Double Degree, Waterloo Campus": 1
 }
 }
 ]
