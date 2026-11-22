@@ -68,5 +68,19 @@
 "Ontario Tech University|Nursing(BScN)": 1,
 "Wilfrid Laurier University|Health Sciences": 1
 }
+},
+{
+"date": "2026-11-22",
+"new": 2,
+"edited": 0,
+"total": 13626,
+"programs": [
+"Toronto Metropolitan University|Bachelor of Mechanical Engineering",
+"University of Ottawa|Mechanical Engineering"
+],
+"offerCounts": {
+"Toronto Metropolitan University|Bachelor of Mechanical Engineering": 1,
+"University of Ottawa|Mechanical Engineering": 1
+}
 }
 ]
