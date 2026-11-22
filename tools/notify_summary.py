@@ -78,15 +78,30 @@ except Exception:
 n = len(fresh)
 total = len(snap.get('reports', []))
 lines = []
+# The update before this one (this run's own entry is the last one in the log).
+def clock(t):
+    try:
+        from zoneinfo import ZoneInfo
+        t = t.astimezone(ZoneInfo('America/Toronto'))
+    except Exception:
+        t = t - dt.timedelta(hours=5)
+    if t.hour == 0 and t.minute < 5:
+        return 'midnight'
+    h = t.hour % 12 or 12
+    return f"{h} {'AM' if t.hour < 12 else 'PM'}" if t.minute < 5 else f"{h}:{t.minute:02d} {'AM' if t.hour < 12 else 'PM'}"
+prev = [at(e) for e in log[:-1] if at(e)]
+since = f"since the {clock(prev[-1])} update" if prev else 'since the last update'
+since_line = (f"+{n} {since}" if n else f"No new results {since}") + f" · {total:,} results in total"
 if os.environ.get('MORNING') == 'true':
     title = f"☀️ Offer Atlas morning: {new} new yesterday" + (f", {n} this hour" if n else '')
-    lines.append(f"Yesterday {new} new · since midnight {overnight} new · {total:,} results in total")
+    lines.append(f"Yesterday {new} new · since midnight {overnight} new")
+    lines.append(since_line)
     tops = [p.split('|') for p in (y.get('programs') or [])[:3]]
     if tops and new:
         lines.append('Most new offers yesterday: ' + '; '.join(f"{t[1]} ({t[0]})" if len(t) == 2 else t[0] for t in tops))
 else:
-    title = (f"✅ Offer Atlas: {n} new result{'s' if n != 1 else ''}" if n else '✅ Offer Atlas: no new results') + (f" ({hour})" if hour else '')
-    lines.append(f"{last24} new in the last 24 hours · {total:,} results in total")
+    title = (f"✅ Offer Atlas: {n} new" if n else '✅ Offer Atlas: no new results') + (f" ({hour})" if hour else '')
+    lines.append(since_line)
 for r in fresh[:5]:
     lines.append(f"• {prog_name(r)} — {r.get('university', '')}: {r.get('outcome', '')}, {avg(r)}")
 if n > 5:
