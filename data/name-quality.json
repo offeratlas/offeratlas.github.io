@@ -1,11 +1,21 @@
 {
  "checked": "2026-11-22",
- "reports": 13631,
- "namesTidied": 2455,
- "distinctNames": 3588,
- "needsAttention": 155,
- "newThisWeekNeedingAttention": 0,
+ "reports": 13635,
+ "namesTidied": 2456,
+ "distinctNames": 3590,
+ "needsAttention": 156,
+ "newThisWeekNeedingAttention": 1,
  "examples": [
+  {
+   "university": "University of Ottawa",
+   "raw": "University of Ottawa - UO: Joint Honours BSocSc in History and Political Science",
+   "shown": "UO: Joint Honours BSocSc in History and Political Science",
+   "reports": 1,
+   "recent": true,
+   "problems": [
+    "unknown short form \"UO\""
+   ]
+  },
   {
    "university": "Wilfrid Laurier University",
    "raw": "Business Administration (BBA) and Computer Science (BCS) at University of Waterloo Double Degree, Waterloo Campus",
@@ -796,16 +806,6 @@
    "recent": false,
    "problems": [
     "very long"
-   ]
-  },
-  {
-   "university": "Western University",
-   "raw": "MN: Medical Sciences (BMSc and BSc)",
-   "shown": "MN: Medical Sciences (BMSc and BSc)",
-   "reports": 1,
-   "recent": false,
-   "problems": [
-    "unknown short form \"MN\""
    ]
   }
  ]
