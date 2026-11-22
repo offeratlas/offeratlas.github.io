@@ -45,9 +45,9 @@
 },
 {
 "date": "2026-11-21",
-"new": 49,
+"new": 50,
 "edited": 0,
-"total": 13623,
+"total": 13624,
 "programs": [
 "Wilfrid Laurier University|Business Administration",
 "University of Guelph|Computer Science",
@@ -65,7 +65,8 @@
 "University of Windsor|Mechanical Engineering with Materials Option": 1,
 "Ontario Tech University|Nuclear Engineering (coop)": 1,
 "McMaster University|Business 1 (Marketing)": 1,
-"Ontario Tech University|Nursing(BScN)": 1
+"Ontario Tech University|Nursing(BScN)": 1,
+"Wilfrid Laurier University|Health Sciences": 1
 }
 }
 ]
