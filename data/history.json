@@ -104,9 +104,9 @@
 },
 {
 "date": "2026-11-23",
-"new": 39,
+"new": 40,
 "edited": 4,
-"total": 13681,
+"total": 13682,
 "programs": [
 "Wilfrid Laurier University|Business Administration",
 "Ontario Tech University|Nursing",
@@ -140,7 +140,8 @@
 "Western University|Social Science": 1,
 "Wilfrid Laurier University|Economics and Accounting": 1,
 "Ontario Tech University|Biomedical Science (BSc/BScM)": 1,
-"Seneca Polytechnic|Direct Entry Nursing - Fast Track": 1
+"Seneca Polytechnic|Direct Entry Nursing - Fast Track": 1,
+"Trent University|Forensic Biology (B.Sc.)": 1
 }
 }
 ]
