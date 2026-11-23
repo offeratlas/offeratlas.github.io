@@ -104,16 +104,41 @@
 },
 {
 "date": "2026-11-23",
-"new": 2,
-"edited": 0,
-"total": 13644,
+"new": 36,
+"edited": 4,
+"total": 13678,
 "programs": [
-"Ontario Tech University|Medical Laboratory Technician",
-"Wilfrid Laurier University|Laurier Business Administration"
+"Wilfrid Laurier University|Business Administration",
+"Ontario Tech University|Nursing",
+"University of Guelph|Computer Science (Co-op option)",
+"University of Guelph|Bio-Medical Science",
+"Wilfrid Laurier University|Business Administration and Computer Science"
 ],
 "offerCounts": {
+"Wilfrid Laurier University|Business Administration": 6,
+"Ontario Tech University|Nursing": 5,
+"University of Guelph|Computer Science (Co-op option)": 2,
+"University of Guelph|Bio-Medical Science": 2,
+"Wilfrid Laurier University|Business Administration and Computer Science": 2,
 "Ontario Tech University|Medical Laboratory Technician": 1,
-"Wilfrid Laurier University|Laurier Business Administration": 1
+"Wilfrid Laurier University|Laurier Business Administration": 1,
+"Carleton University|Arts Honours, History": 1,
+"Carleton University|Health Sciences": 1,
+"Carleton University|Computer Science, Co-op": 1,
+"Carleton University|Public Affairs and Policy Management": 1,
+"University of Guelph|Software Engineering": 1,
+"University of Guelph|Arts, Psychology Coop": 1,
+"Wilfrid Laurier University|Health Sciences": 1,
+"Wilfrid Laurier University|Psychology BA": 1,
+"McMaster University|Business I (Marketing)": 1,
+"Toronto Metropolitan University|Mechanical Engineering": 1,
+"Toronto Metropolitan University|Engineering": 1,
+"University of Ottawa|Commerce (Finance)": 1,
+"University of Ottawa|Biology": 1,
+"University of Ottawa|BA Psychology": 1,
+"University of Ottawa|History and Political Science": 1,
+"Western University|Social Science": 1,
+"Wilfrid Laurier University|Economics and Accounting": 1
 }
 }
 ]
