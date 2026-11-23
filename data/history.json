@@ -104,10 +104,16 @@
 },
 {
 "date": "2026-11-23",
-"new": 0,
+"new": 2,
 "edited": 0,
-"total": 13642,
-"programs": [],
-"offerCounts": {}
+"total": 13644,
+"programs": [
+"Ontario Tech University|Medical Laboratory Technician",
+"Wilfrid Laurier University|Laurier Business Administration"
+],
+"offerCounts": {
+"Ontario Tech University|Medical Laboratory Technician": 1,
+"Wilfrid Laurier University|Laurier Business Administration": 1
+}
 }
 ]
