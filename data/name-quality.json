@@ -1,10 +1,10 @@
 {
  "checked": "2026-11-23",
- "reports": 13640,
- "namesTidied": 2457,
- "distinctNames": 3590,
- "needsAttention": 156,
- "newThisWeekNeedingAttention": 1,
+ "reports": 13642,
+ "namesTidied": 2458,
+ "distinctNames": 3591,
+ "needsAttention": 157,
+ "newThisWeekNeedingAttention": 2,
  "examples": [
   {
    "university": "University of Ottawa",
@@ -14,6 +14,16 @@
    "recent": true,
    "problems": [
     "unknown short form \"UO\""
+   ]
+  },
+  {
+   "university": "Carleton University",
+   "raw": "Public Affairs and Policy Management(PAPM)",
+   "shown": "Public Affairs and Policy Management (PAPM)",
+   "reports": 1,
+   "recent": true,
+   "problems": [
+    "unknown short form \"PAPM\""
    ]
   },
   {
@@ -796,16 +806,6 @@
    "recent": false,
    "problems": [
     "unknown short form \"QUIP\""
-   ]
-  },
-  {
-   "university": "Queen’s University",
-   "raw": "Queen's University - Computer Engineering or Electrical Engineering - Innovation - including optional internship (BASc)",
-   "shown": "Queen's University – Computer Engineering or Electrical Engineering – Innovation – Including Optional Internship (BASc)",
-   "reports": 1,
-   "recent": false,
-   "problems": [
-    "very long"
    ]
   }
  ]

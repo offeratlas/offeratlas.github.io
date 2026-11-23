@@ -71,9 +71,9 @@
 },
 {
 "date": "2026-11-22",
-"new": 16,
+"new": 18,
 "edited": 0,
-"total": 13640,
+"total": 13642,
 "programs": [
 "Toronto Metropolitan University|Bachelor of Mechanical Engineering",
 "University of Ottawa|Mechanical Engineering",
@@ -97,7 +97,9 @@
 "Wilfrid Laurier University|Psychology BA": 1,
 "Toronto Metropolitan University|Undeclared Engineering": 1,
 "Western University|Computer Science": 1,
-"University of Ottawa|Computer Engineering": 1
+"University of Ottawa|Computer Engineering": 1,
+"Carleton University|Public Affairs and Policy Management (PAPM) Honours + Co-Op": 1,
+"Ontario Tech University|Nursing(BScN)": 1
 }
 }
 ]
