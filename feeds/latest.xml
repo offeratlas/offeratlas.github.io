@@ -3,7 +3,11 @@
 <title>Offer Atlas: latest Fall 2027 reports</title>
 <subtitle>Self-reported, unverified admission results. Data: r/OntarioGrade12s spreadsheets by u/Regular-Database9310.</subtitle>
 <link rel="self" href="https://offeratlas.github.io/feeds/latest.xml"/><link rel="alternate" href="https://offeratlas.github.io/"/>
-<id>https://offeratlas.github.io/feeds/latest.xml</id><updated>2026-11-23T12:00:00Z</updated>
+<id>https://offeratlas.github.io/feeds/latest.xml</id><updated>2026-11-24T12:00:00Z</updated>
+<entry><title>Offer · 88% · Accounting Co-op (Trent University) · Fall 2027</title>
+<id>tag:offeratlas.github.io,2026:report:R_56807467aff2d6e7dcec7dd09ef65557</id><updated>2026-11-24T12:00:00Z</updated>
+<link href="https://offeratlas.github.io/?p=SOURCE_Trent&amp;r=R_56807467aff2d6e7dcec7dd09ef65557"/>
+<summary>Offer for Accounting Co-op at Trent University, Fall 2027. Reported average 88%. Decision Nov 23, 2026. Self-reported and unverified.</summary></entry>
 <entry><title>Offer · 71.23% · Medical Laboratory Technician (Ontario Tech University) · Fall 2027</title>
 <id>tag:offeratlas.github.io,2026:report:R_4abf4dc1c849f3bff60dbf7cba022c99</id><updated>2026-11-23T12:00:00Z</updated>
 <link href="https://offeratlas.github.io/?p=SOURCE_OntarioTech&amp;r=R_4abf4dc1c849f3bff60dbf7cba022c99"/>
@@ -240,8 +244,4 @@
 <id>tag:offeratlas.github.io,2026:report:R_be3ffe00f17ac534b3dd20200519fc93</id><updated>2026-11-21T12:00:00Z</updated>
 <link href="https://offeratlas.github.io/?p=OFFICIAL_TMU__industrial_engineering&amp;r=R_be3ffe00f17ac534b3dd20200519fc93"/>
 <summary>Offer for Industrial Engineering at Toronto Metropolitan University, Fall 2027. Reported average 97.83%. Decision Nov 11, 2026. Self-reported and unverified.</summary></entry>
-<entry><title>Offer · 97.83% · Mechanical Engineering with Materials Option (University of Windsor) · Fall 2027</title>
-<id>tag:offeratlas.github.io,2026:report:R_80309a3c1736827db202c78cf1dc8cb6</id><updated>2026-11-21T12:00:00Z</updated>
-<link href="https://offeratlas.github.io/?p=SOURCE_Windsor&amp;r=R_80309a3c1736827db202c78cf1dc8cb6"/>
-<summary>Offer for Mechanical Engineering with Materials Option at University of Windsor, Fall 2027. Reported average 97.83%. Decision Nov 13, 2026. Self-reported and unverified.</summary></entry>
 </feed>
