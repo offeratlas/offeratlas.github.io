@@ -1,10 +1,10 @@
 {
  "checked": "2026-11-24",
- "reports": 13688,
- "namesTidied": 2463,
- "distinctNames": 3603,
- "needsAttention": 157,
- "newThisWeekNeedingAttention": 2,
+ "reports": 13692,
+ "namesTidied": 2466,
+ "distinctNames": 3604,
+ "needsAttention": 158,
+ "newThisWeekNeedingAttention": 3,
  "examples": [
   {
    "university": "University of Ottawa",
@@ -24,6 +24,16 @@
    "recent": true,
    "problems": [
     "unknown short form \"PAPM\""
+   ]
+  },
+  {
+   "university": "Seneca Polytechnic",
+   "raw": "Honours Bachelor of Science - Nursing (BSN)",
+   "shown": "Honours Bachelor of Science – Nursing (BSN)",
+   "reports": 1,
+   "recent": true,
+   "problems": [
+    "unknown short form \"BSN\""
    ]
   },
   {
@@ -796,16 +806,6 @@
    "recent": false,
    "problems": [
     "unknown short form \"MN\""
-   ]
-  },
-  {
-   "university": "Queen’s University",
-   "raw": "Queens engineering (common first year) + optional QUIP",
-   "shown": "Queens Engineering (Common First Year) + Optional QUIP",
-   "reports": 1,
-   "recent": false,
-   "problems": [
-    "unknown short form \"QUIP\""
    ]
   }
  ]

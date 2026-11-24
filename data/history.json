@@ -148,14 +148,22 @@
 },
 {
 "date": "2026-11-24",
-"new": 1,
+"new": 5,
 "edited": 0,
-"total": 13688,
+"total": 13692,
 "programs": [
-"Trent University|Accounting"
+"Trent University|Accounting",
+"Brock University|Concurrent BA (Honours)/BEd – Intermediate/Senior - French",
+"Brock University|Concurrent BA/BEd-Intermediate/Senior",
+"University of Alberta|Computing Science - Artificial Intelligence",
+"Seneca Polytechnic|Honours Bachelor of Science - Nursing (BSN)"
 ],
 "offerCounts": {
-"Trent University|Accounting": 1
+"Trent University|Accounting": 1,
+"Brock University|Concurrent BA (Honours)/BEd – Intermediate/Senior - French": 1,
+"Brock University|Concurrent BA/BEd-Intermediate/Senior": 1,
+"University of Alberta|Computing Science - Artificial Intelligence": 1,
+"Seneca Polytechnic|Honours Bachelor of Science - Nursing (BSN)": 1
 }
 }
 ]
