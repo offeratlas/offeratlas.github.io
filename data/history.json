@@ -104,23 +104,24 @@
 },
 {
 "date": "2026-11-23",
-"new": 40,
-"edited": 4,
-"total": 13682,
+"new": 44,
+"edited": 9,
+"total": 13686,
 "programs": [
 "Wilfrid Laurier University|Business Administration",
 "Ontario Tech University|Nursing",
-"University of Guelph|Computer Science (Co-op option)",
-"University of Guelph|Bio-Medical Science",
-"Wilfrid Laurier University|Business Administration and Computer Science"
+"University of Ottawa|BA Psychology",
+"Wilfrid Laurier University|Economics and Accounting",
+"University of Guelph|Computer Science (Co-op option)"
 ],
 "offerCounts": {
 "Wilfrid Laurier University|Business Administration": 6,
 "Ontario Tech University|Nursing": 5,
+"University of Ottawa|BA Psychology": 3,
+"Wilfrid Laurier University|Economics and Accounting": 3,
 "University of Guelph|Computer Science (Co-op option)": 2,
 "University of Guelph|Bio-Medical Science": 2,
 "Wilfrid Laurier University|Business Administration and Computer Science": 2,
-"University of Ottawa|BA Psychology": 2,
 "Ontario Tech University|Medical Laboratory Technician": 1,
 "Wilfrid Laurier University|Laurier Business Administration": 1,
 "Carleton University|Arts Honours, History": 1,
@@ -138,10 +139,10 @@
 "University of Ottawa|Biology": 1,
 "University of Ottawa|History and Political Science": 1,
 "Western University|Social Science": 1,
-"Wilfrid Laurier University|Economics and Accounting": 1,
 "Ontario Tech University|Biomedical Science (BSc/BScM)": 1,
 "Seneca Polytechnic|Direct Entry Nursing - Fast Track": 1,
-"Trent University|Forensic Biology (B.Sc.)": 1
+"Trent University|Forensic Biology (B.Sc.)": 1,
+"Trent University|Forensic Biology": 1
 }
 }
 ]
