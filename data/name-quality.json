@@ -1,10 +1,10 @@
 {
  "checked": "2026-11-24",
- "reports": 13692,
+ "reports": 13693,
  "namesTidied": 2466,
- "distinctNames": 3604,
- "needsAttention": 158,
- "newThisWeekNeedingAttention": 3,
+ "distinctNames": 3605,
+ "needsAttention": 159,
+ "newThisWeekNeedingAttention": 4,
  "examples": [
   {
    "university": "University of Ottawa",
@@ -30,6 +30,16 @@
    "university": "Seneca Polytechnic",
    "raw": "Honours Bachelor of Science - Nursing (BSN)",
    "shown": "Honours Bachelor of Science – Nursing (BSN)",
+   "reports": 1,
+   "recent": true,
+   "problems": [
+    "unknown short form \"BSN\""
+   ]
+  },
+  {
+   "university": "Seneca Polytechnic",
+   "raw": "Nursing (BSN)",
+   "shown": "Nursing (BSN)",
    "reports": 1,
    "recent": true,
    "problems": [
@@ -796,16 +806,6 @@
    "recent": false,
    "problems": [
     "unknown short form \"UO\""
-   ]
-  },
-  {
-   "university": "Western University",
-   "raw": "MN: Engineering (Co-op and Regular)",
-   "shown": "MN: Engineering (Co-op and Regular)",
-   "reports": 1,
-   "recent": false,
-   "problems": [
-    "unknown short form \"MN\""
    ]
   }
  ]
