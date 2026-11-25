@@ -7,7 +7,7 @@
 <url><loc>https://offeratlas.github.io/changelog/</loc><lastmod>2026-11-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/brock-university/</loc><lastmod>2026-11-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/carleton-university/</loc><lastmod>2026-11-24</lastmod></url>
-<url><loc>https://offeratlas.github.io/schools/dalhousie-university/</loc><lastmod>2026-11-17</lastmod></url>
+<url><loc>https://offeratlas.github.io/schools/dalhousie-university/</loc><lastmod>2026-11-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/huron-university-western/</loc><lastmod>2026-05-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/king-s-university-college-western/</loc><lastmod>2026-03-16</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/laurentian-university/</loc><lastmod>2026-11-22</lastmod></url>
@@ -34,7 +34,7 @@
 <url><loc>https://offeratlas.github.io/schools/university-of-windsor/</loc><lastmod>2026-06-07</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/waterloo-laurier-home-unstated/</loc><lastmod>2022-05-16</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/western-university/</loc><lastmod>2026-11-24</lastmod></url>
-<url><loc>https://offeratlas.github.io/schools/wilfrid-laurier-university/</loc><lastmod>2026-11-24</lastmod></url>
+<url><loc>https://offeratlas.github.io/schools/wilfrid-laurier-university/</loc><lastmod>2026-11-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/york-university/</loc><lastmod>2026-11-16</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/accounting-brock-university/</loc><lastmod>2026-11-18</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/biomedical-sciences-brock-university/</loc><lastmod>2025-11-17</lastmod></url>
@@ -62,6 +62,7 @@
 <url><loc>https://offeratlas.github.io/programs/public-affairs-and-policy-management-carleton-university/</loc><lastmod>2026-11-22</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/software-engineering-carleton-university/</loc><lastmod>2026-01-06</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/commerce-dalhousie-university/</loc><lastmod>2026-11-17</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/medical-sciences-dalhousie-university/</loc><lastmod>2026-11-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/science-dalhousie-university/</loc><lastmod>2026-10-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/management-and-organizational-studies-huron-university-western/</loc><lastmod>2026-04-06</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/social-science-huron-university-western/</loc><lastmod>2026-05-25</lastmod></url>
@@ -365,8 +366,8 @@
 <url><loc>https://offeratlas.github.io/programs/business-administration-wilfrid-laurier-university/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/business-administration-laurier-and-computer-science-waterloo-double-degree-wilfrid-laurier-university/</loc><lastmod>2026-05-18</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/business-administration-laurier-and-mathematics-waterloo-double-degree-wilfrid-laurier-university/</loc><lastmod>2026-05-11</lastmod></url>
-<url><loc>https://offeratlas.github.io/programs/business-administration-computer-science-wilfrid-laurier-university/</loc><lastmod>2026-11-22</lastmod></url>
-<url><loc>https://offeratlas.github.io/programs/business-administration-financial-mathematics-double-degree-wilfrid-laurier-university/</loc><lastmod>2026-05-09</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/business-administration-computer-science-wilfrid-laurier-university/</loc><lastmod>2026-11-25</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/business-administration-financial-mathematics-double-degree-wilfrid-laurier-university/</loc><lastmod>2026-11-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/computer-science-wilfrid-laurier-university/</loc><lastmod>2026-11-13</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/data-science-wilfrid-laurier-university/</loc><lastmod>2026-11-03</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/economics-and-accounting-wilfrid-laurier-university/</loc><lastmod>2026-11-23</lastmod></url>

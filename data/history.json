@@ -152,18 +152,26 @@
 },
 {
 "date": "2026-11-25",
-"new": 3,
-"edited": 0,
-"total": 13566,
+"new": 9,
+"edited": 1,
+"total": 13572,
 "programs": [
 "Brock University|Nursing",
 "University of Toronto · St. George|Computer Science",
-"Queen’s University|Honours Biology and Cognitive Sciences"
+"Queen’s University|Honours Biology and Cognitive Sciences",
+"Dalhousie University|Medical Sciences",
+"Wilfrid Laurier University|Business Administration (BBA) and Financial Mathematics & Analytics (BA)"
 ],
 "offerCounts": {
 "Brock University|Nursing": 1,
 "University of Toronto · St. George|Computer Science": 1,
-"Queen’s University|Honours Biology and Cognitive Sciences": 1
+"Queen’s University|Honours Biology and Cognitive Sciences": 1,
+"Dalhousie University|Medical Sciences": 1,
+"Wilfrid Laurier University|Business Administration (BBA) and Financial Mathematics & Analytics (BA)": 1,
+"Brock University|Sports Management": 1,
+"Ontario Tech University|Psychology (BA) - Affective Science & Mental Health": 1,
+"Wilfrid Laurier University|Business Administration and Computer Science": 1,
+"Wilfrid Laurier University|Business Administration and Financial Mathematics and Analytics Double Degree": 1
 }
 }
 ]
