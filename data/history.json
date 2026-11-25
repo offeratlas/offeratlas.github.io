@@ -148,9 +148,9 @@
 },
 {
 "date": "2026-11-24",
-"new": 13,
+"new": 14,
 "edited": 0,
-"total": 13700,
+"total": 13701,
 "programs": [
 "Trent University|Accounting",
 "Brock University|Concurrent BA (Honours)/BEd – Intermediate/Senior - French",
@@ -171,7 +171,8 @@
 "Seneca Polytechnic|Nursing": 1,
 "Brock University|Mathematics & Statistics": 1,
 "University of Ottawa|Biomed": 1,
-"University of Guelph|Software Engineering": 1
+"University of Guelph|Software Engineering": 1,
+"University of Ottawa|Biomedical Science": 1
 }
 }
 ]
