@@ -1,0 +1,40 @@
+{
+ "checked": "2026-11-25",
+ "results": 814,
+ "sheetRows": 816,
+ "duplicates": 0,
+ "notInSheet": 5,
+ "possibleRepeatSubmissions": 3,
+ "repeats": [
+  {
+   "university": "University of Ottawa",
+   "program": "Sociology",
+   "average": "92",
+   "decisionDate": "2026-11-05",
+   "submitted": [
+    "11/7/2026 13:13:06",
+    "11/10/2026 21:45:57"
+   ]
+  },
+  {
+   "university": "University of Guelph",
+   "program": "Bio-Medical Science",
+   "average": "99",
+   "decisionDate": "2026-11-16",
+   "submitted": [
+    "11/16/2026 17:51:41",
+    "11/16/2026 17:54:02"
+   ]
+  },
+  {
+   "university": "University of Guelph",
+   "program": "Biological Science",
+   "average": "95.1",
+   "decisionDate": "2026-11-19",
+   "submitted": [
+    "11/19/2026 15:43:01",
+    "11/19/2026 15:44:36"
+   ]
+  }
+ ]
+}
