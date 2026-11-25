@@ -152,9 +152,9 @@
 },
 {
 "date": "2026-11-25",
-"new": 9,
+"new": 10,
 "edited": 1,
-"total": 13572,
+"total": 13573,
 "programs": [
 "Brock University|Nursing",
 "University of Toronto · St. George|Computer Science",
@@ -171,7 +171,8 @@
 "Brock University|Sports Management": 1,
 "Ontario Tech University|Psychology (BA) - Affective Science & Mental Health": 1,
 "Wilfrid Laurier University|Business Administration and Computer Science": 1,
-"Wilfrid Laurier University|Business Administration and Financial Mathematics and Analytics Double Degree": 1
+"Wilfrid Laurier University|Business Administration and Financial Mathematics and Analytics Double Degree": 1,
+"Wilfrid Laurier University|Business Administration and Computer Science Double Degree": 1
 }
 }
 ]
