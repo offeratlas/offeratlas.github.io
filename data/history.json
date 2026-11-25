@@ -152,9 +152,9 @@
 },
 {
 "date": "2026-11-25",
-"new": 13,
+"new": 14,
 "edited": 1,
-"total": 13576,
+"total": 13577,
 "programs": [
 "Brock University|Nursing",
 "University of Toronto · St. George|Computer Science",
@@ -175,7 +175,8 @@
 "Wilfrid Laurier University|Business Administration and Computer Science Double Degree": 1,
 "Carleton University|Engineering: Aerospace": 1,
 "Ontario Tech University|Business - Commerce (BCom)": 1,
-"Carleton University|Engineering: Mechanical": 1
+"Carleton University|Engineering: Mechanical": 1,
+"Brock University|Concurrent BA/BEd-Intermediate/Senior": 1
 }
 }
 ]
