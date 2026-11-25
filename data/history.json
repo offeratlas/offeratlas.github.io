@@ -148,9 +148,9 @@
 },
 {
 "date": "2026-11-24",
-"new": 15,
+"new": 16,
 "edited": 0,
-"total": 13702,
+"total": 13703,
 "programs": [
 "Trent University|Accounting",
 "Brock University|Concurrent BA (Honours)/BEd – Intermediate/Senior - French",
@@ -173,7 +173,8 @@
 "University of Ottawa|Biomed": 1,
 "University of Guelph|Software Engineering": 1,
 "University of Ottawa|Biomedical Science": 1,
-"Western University|Medical Sciences": 1
+"Western University|Medical Sciences": 1,
+"Wilfrid Laurier University|Biology BSc": 1
 }
 }
 ]
