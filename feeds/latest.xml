@@ -3,7 +3,11 @@
 <title>Offer Atlas: latest Fall 2027 reports</title>
 <subtitle>Self-reported, unverified admission results. Data: r/OntarioGrade12s spreadsheets by u/Regular-Database9310.</subtitle>
 <link rel="self" href="https://offeratlas.github.io/feeds/latest.xml"/><link rel="alternate" href="https://offeratlas.github.io/"/>
-<id>https://offeratlas.github.io/feeds/latest.xml</id><updated>2026-11-24T12:00:00Z</updated>
+<id>https://offeratlas.github.io/feeds/latest.xml</id><updated>2026-11-25T12:00:00Z</updated>
+<entry><title>Offer · 92.6% · Nursing (Brock University) · Fall 2027</title>
+<id>tag:offeratlas.github.io,2026:report:R_bc32d508a5bd950f824b952cc1945e54</id><updated>2026-11-25T12:00:00Z</updated>
+<link href="https://offeratlas.github.io/?p=OFFICIAL_Brock__nursing&amp;r=R_bc32d508a5bd950f824b952cc1945e54"/>
+<summary>Offer for Nursing at Brock University, Fall 2027. Reported average 92.6%. Decision Nov 25, 2026. Self-reported and unverified.</summary></entry>
 <entry><title>Offer · 88% · Accounting Co-op (Trent University) · Fall 2027</title>
 <id>tag:offeratlas.github.io,2026:report:R_56807467aff2d6e7dcec7dd09ef65557</id><updated>2026-11-24T12:00:00Z</updated>
 <link href="https://offeratlas.github.io/?p=SOURCE_Trent&amp;r=R_56807467aff2d6e7dcec7dd09ef65557"/>
@@ -240,8 +244,4 @@
 <id>tag:offeratlas.github.io,2026:report:R_f7a3ae61758e3e51cb3d946b7fe7bab1</id><updated>2026-11-21T12:00:00Z</updated>
 <link href="https://offeratlas.github.io/?p=OFFICIAL_Carleton__aerospace_engineering&amp;r=R_f7a3ae61758e3e51cb3d946b7fe7bab1"/>
 <summary>Offer for Aerospace Engineering at Carleton University, Fall 2027. Reported average 96.17%. Decision Nov 13, 2026. Self-reported and unverified.</summary></entry>
-<entry><title>Offer · 95.17% · Business Administration (Wilfrid Laurier University) · Fall 2027</title>
-<id>tag:offeratlas.github.io,2026:report:R_ee862fac67554d923e4fd800d7b5d1d4</id><updated>2026-11-21T12:00:00Z</updated>
-<link href="https://offeratlas.github.io/?p=OFFICIAL_Laurier__business_administration&amp;r=R_ee862fac67554d923e4fd800d7b5d1d4"/>
-<summary>Offer for Business Administration at Wilfrid Laurier University, Fall 2027. Reported average 95.17%. Decision Nov 21, 2026. Self-reported and unverified.</summary></entry>
 </feed>
