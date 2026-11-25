@@ -3,14 +3,17 @@
 Reads the public 2026-2027 applications spreadsheet, adds new rows to
 snapshot.json in the same format the site already uses, refreshes row links
 for existing rows (the sheet is re-sorted by school), and updates the audit
-counters. Rows already on the site are never removed.
+counters. A row that was renamed in the sheet (same submission time) updates the
+result already on the site. A result is only removed when it is a second copy of a
+row that is still in the sheet; rows deleted from the sheet stay on the site.
 
 Usage:
   python tools/update_data.py              # update snapshot.json in place
   python tools/update_data.py --dry-run    # report what would change
   python tools/update_data.py --selftest   # rebuild existing rows and compare
+  --allow-cleanup   # let one run remove more than MAX_CLEANUP second copies
 """
-import csv, datetime as dt, hashlib, io, json, re, sys, urllib.request
+import csv, datetime as dt, difflib, hashlib, io, json, re, sys, urllib.request
 from collections import Counter
 from pathlib import Path
 
@@ -21,6 +24,7 @@ GID = 1105020004
 SHEET = "Form Responses 1"
 DATASET = "S2027"
 YEAR = 2027
+MAX_CLEANUP = 15   # more second copies than this in one run looks wrong: stop instead of removing
 CSV_URL = f"https://docs.google.com/spreadsheets/d/{SID}/export?format=csv&gid={GID}"
 
 ACCESS = "Live Google Sheets connector; full bounded source scan"
@@ -236,6 +240,86 @@ def row_key(ts, school, prog):
     return (ts.strip(), norm(school), norm(prog))
 
 
+def row_keys(r):
+    """The ways a sheet row may be recorded on the site (program in either column)."""
+    keys = [row_key(r[0], r[1], r[3] if r[3].strip() else r[2]), row_key(r[0], r[1], r[3])]
+    return keys
+
+
+def same_entry(src, r):
+    """Same submission second; also ask for the same school, or the same average and decision date."""
+    return norm(src['rawSchool']) == norm(r[1]) or \
+        (norm(src['rawAverage']), norm(src['rawDecisionDate'])) == (norm(r[5]), norm(r[7]))
+
+
+def find(existing, r):
+    return next((existing[k] for k in row_keys(r) + [fingerprint(r[0], r[1], r[3])] if k in existing), None)
+
+
+def match_renamed(model, rows, existing):
+    """{row number: result} for rows whose school or program text was changed in the sheet.
+
+    The submission time is the identity, but one person can submit twice in a second, so rows and
+    results that still match exactly are set aside first, and the rest are paired by likeness.
+    """
+    claimed, left = set(), {}
+    for n, r in enumerate(rows[1:], start=2):
+        ts = r[0].strip()
+        if not ts:
+            continue
+        rep = find(existing, r)
+        if rep:
+            claimed.add(rep['id'])
+        else:
+            left.setdefault(ts, []).append((n, r))
+    free = {}
+    for rep in {id(x): x for x in existing.values()}.values():
+        ts = model.sources[rep['source']]['submissionTimestamp'].strip()
+        if rep['id'] not in claimed and ts in left:
+            free.setdefault(ts, []).append(rep)
+    out = {}
+    for ts, reps in free.items():
+        pairs = []
+        for n, r in left[ts]:
+            for rep in reps:
+                src = model.sources[rep['source']]
+                if same_entry(src, r):
+                    like = difflib.SequenceMatcher(None, norm(src['rawProgram']), norm(r[3] or r[2])).ratio()
+                    pairs.append((norm(src['rawSchool']) == norm(r[1]), like, n, rep))
+        used = set()
+        for _, _, n, rep in sorted(pairs, key=lambda x: x[:3], reverse=True):
+            if n not in out and rep['id'] not in used:
+                out[n] = rep
+                used.add(rep['id'])
+    return out
+
+
+def second_copies(model, rows):
+    """Results left over from before a rename: every sheet row with that time is already on the site."""
+    by_ts, reps_by_ts = {}, {}
+    for r in rows[1:]:
+        if r[0].strip():
+            by_ts.setdefault(r[0].strip(), []).append(r)
+    for rep in model.snap['reports']:
+        src = model.sources.get(rep['source'])
+        if src and src.get('datasetId') == DATASET:
+            reps_by_ts.setdefault(src['submissionTimestamp'].strip(), []).append((rep, src))
+    out = []
+    for ts, reps in reps_by_ts.items():
+        sheet = by_ts.get(ts)
+        if not ts or not sheet or len(reps) < 2:
+            continue
+        live = {k for r in sheet for k in row_keys(r)}
+        current = {row_key(ts, v['rawSchool'], v['rawProgram']): x for x, v in reps
+                   if row_key(ts, v['rawSchool'], v['rawProgram']) in live}
+        if not all(any(k in current for k in row_keys(r)) for r in sheet):
+            continue
+        out += [x for x, v in reps if row_key(ts, v['rawSchool'], v['rawProgram']) not in live
+                and any(same_entry(v, r) or x['averageLabel'] == c['averageLabel'] or x['decisionDate'] == c['decisionDate']
+                        for r in sheet for c in current.values())]
+    return out
+
+
 def load_rows(path=None):
     if path:
         rows = list(csv.reader(io.StringIO(Path(path).read_text(encoding='utf-8'))))
@@ -273,6 +357,8 @@ def main():
         return selftest(model, rows, existing)
 
     added, changed, relinked, excluded, scanned = [], 0, 0, [], 0
+    renamed = match_renamed(model, rows, existing)
+    had_results = {x['program'] for x in snap['reports']}
     for n, r in enumerate(rows[1:], start=2):
         if not any(c.strip() for c in r) or not r[0].strip() and not r[1].strip():
             continue
@@ -281,16 +367,16 @@ def main():
         scanned += 1
         prog_col = r[3] if r[3].strip() else r[2]
         rep = existing.get(row_key(r[0], r[1], prog_col)) or existing.get(row_key(r[0], r[1], r[3])) \
-            or existing.get(fingerprint(r[0], r[1], r[3]))
+            or existing.get(fingerprint(r[0], r[1], r[3])) or renamed.get(n)
         if rep:
             src = model.sources[rep['source']]
             if src['row'] != n:
                 src['row'], src['url'], src['title'] = n, row_url(n), f"{YEAR} entry · {SHEET} · row {n}"
                 relinked += 1
             if (norm(src['rawOutcome']), norm(src['rawAverage']), norm(src['rawDecisionDate'])) != \
-                    (norm(r[4]), norm(r[5]), norm(r[7])):
+                    (norm(r[4]), norm(r[5]), norm(r[7])) or n in renamed:
                 built, _ = build(model, n, r)
-                if built:   # applicant edited their entry: refresh it, keep its identity
+                if built:   # entry edited or renamed in the sheet: refresh it, keep its identity
                     new_rep, new_src = built
                     new_rep.update(id=rep['id'], applicant=rep['applicant'], source=rep['source'])
                     new_src['fingerprint'] = src['fingerprint']
@@ -311,6 +397,19 @@ def main():
         added.append(rep)
 
     snap['programs'].extend(model.new_programs)
+    copies = second_copies(model, rows)
+    if len(copies) > MAX_CLEANUP and '--allow-cleanup' not in args:
+        raise SystemExit(f'{len(copies)} results look like second copies, more than {MAX_CLEANUP}; not updating.')
+    if copies:
+        for rep in copies:
+            src = model.sources.pop(rep['source'])
+            print(f"  - second copy: {rep['university']} | {src['rawProgram'].strip()} | {rep['averageLabel']}")
+        gone = {rep['id'] for rep in copies}
+        snap['reports'] = [x for x in snap['reports'] if x['id'] not in gone]
+    # unofficial program names that no result uses any more (their last result was renamed)
+    used = {x['program'] for x in snap['reports']} | {p.get('canonicalProgram') for p in snap['programs'] if p.get('canonicalProgram') != p['id']}
+    empty = {pid for pid in had_results if pid not in used and model.programs.get(pid, {}).get('verification') == 'Needs program review'}
+    snap['programs'] = [p for p in snap['programs'] if p['id'] not in empty]
     included = sum(1 for x in snap['reports'] if model.sources.get(x['source'], {}).get('datasetId') == DATASET)
     flagged = sum(1 for x in snap['reports'] if x['year'] == YEAR and x['needsReview']
                   and model.sources.get(x['source'], {}).get('datasetId') == DATASET)
@@ -339,14 +438,14 @@ def main():
             f"{len(added)} new and updated {changed} edited Fall {YEAR} outcomes; {total:,} outcomes in total. "
             f"New program names not yet matched to an official catalog are labelled for review."}
 
-    print(f"rows scanned {scanned}; new {len(added)}; edited {changed}; links refreshed {relinked}; "
+    print(f"rows scanned {scanned}; new {len(added)}; edited {changed}; renamed {len(renamed)}; second copies removed {len(copies)}; links refreshed {relinked}; "
           f"new programs {len(model.new_programs)}; excluded {len(excluded)} {held}")
     for rep in added[:50]:
         src = model.sources[rep['source']]
         print(f"  + row {src['row']}: {rep['university']} | {src['rawProgram'].strip()} | {rep['outcome']} | {rep['averageLabel']}")
     if '--dry-run' in args:
         return
-    if not (added or changed or relinked):
+    if not (added or changed or relinked or copies):
         print('No new or edited entries; snapshot.json left unchanged.')
         return
     SNAPSHOT.write_text(json.dumps(snap, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')

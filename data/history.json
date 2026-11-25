@@ -1,9 +1,9 @@
 [
 {
 "date": "2026-11-17",
-"new": 70,
-"edited": 8,
-"total": 13038,
+"new": 18,
+"edited": 60,
+"total": 12986,
 "programs": [
 "University of Guelph|Bio-Medical Science",
 "Carleton University|Engineering: Electrical",
@@ -16,7 +16,7 @@
 "date": "2026-11-18",
 "new": 31,
 "edited": 0,
-"total": 13499,
+"total": 13447,
 "programs": [
 "Carleton University|Health Sciences"
 ]
@@ -25,16 +25,16 @@
 "date": "2026-11-19",
 "new": 1,
 "edited": 0,
-"total": 13500,
+"total": 13448,
 "programs": [
 "University of Ottawa|Health Sciences"
 ]
 },
 {
 "date": "2026-11-20",
-"new": 74,
-"edited": 1,
-"total": 13574,
+"new": 42,
+"edited": 33,
+"total": 13490,
 "programs": [
 "Carleton University|Engineering: Computer Systems",
 "Ontario Tech University|Electrical Engineering",
@@ -45,9 +45,9 @@
 },
 {
 "date": "2026-11-21",
-"new": 50,
-"edited": 0,
-"total": 13624,
+"new": 38,
+"edited": 12,
+"total": 13528,
 "programs": [
 "Wilfrid Laurier University|Business Administration",
 "University of Guelph|Computer Science",
@@ -73,7 +73,7 @@
 "date": "2026-11-22",
 "new": 18,
 "edited": 0,
-"total": 13642,
+"total": 13546,
 "programs": [
 "Toronto Metropolitan University|Bachelor of Mechanical Engineering",
 "University of Ottawa|Mechanical Engineering",
@@ -104,75 +104,47 @@
 },
 {
 "date": "2026-11-23",
-"new": 45,
-"edited": 9,
-"total": 13687,
+"new": 8,
+"edited": 46,
+"total": 13554,
 "programs": [
-"Wilfrid Laurier University|Business Administration",
-"Ontario Tech University|Nursing",
 "University of Ottawa|BA Psychology",
 "Wilfrid Laurier University|Economics and Accounting",
-"University of Guelph|Computer Science (Co-op option)"
+"Ontario Tech University|Medical Laboratory Technician",
+"Wilfrid Laurier University|Laurier Business Administration",
+"Ontario Tech University|Biomedical Science (BSc/BScM)"
 ],
 "offerCounts": {
-"Wilfrid Laurier University|Business Administration": 6,
-"Ontario Tech University|Nursing": 5,
-"University of Ottawa|BA Psychology": 3,
-"Wilfrid Laurier University|Economics and Accounting": 3,
-"University of Guelph|Computer Science (Co-op option)": 2,
-"University of Guelph|Bio-Medical Science": 2,
-"Wilfrid Laurier University|Business Administration and Computer Science": 2,
+"University of Ottawa|BA Psychology": 1,
+"Wilfrid Laurier University|Economics and Accounting": 1,
 "Ontario Tech University|Medical Laboratory Technician": 1,
 "Wilfrid Laurier University|Laurier Business Administration": 1,
-"Carleton University|Arts Honours, History": 1,
-"Carleton University|Health Sciences": 1,
-"Carleton University|Computer Science, Co-op": 1,
-"Carleton University|Public Affairs and Policy Management": 1,
-"University of Guelph|Software Engineering": 1,
-"University of Guelph|Arts, Psychology Coop": 1,
-"Wilfrid Laurier University|Health Sciences": 1,
-"Wilfrid Laurier University|Psychology BA": 1,
-"McMaster University|Business I (Marketing)": 1,
-"Toronto Metropolitan University|Mechanical Engineering": 1,
-"Toronto Metropolitan University|Engineering": 1,
-"University of Ottawa|Commerce (Finance)": 1,
-"University of Ottawa|Biology": 1,
-"University of Ottawa|History and Political Science": 1,
-"Western University|Social Science": 1,
 "Ontario Tech University|Biomedical Science (BSc/BScM)": 1,
 "Seneca Polytechnic|Direct Entry Nursing - Fast Track": 1,
 "Trent University|Forensic Biology (B.Sc.)": 1,
-"Trent University|Forensic Biology": 1,
 "Brock University|Concurrent Teacher Education BSc (Honours)/BEd Intermediate/Senior (Grades 7–12)": 1
 }
 },
 {
 "date": "2026-11-24",
-"new": 17,
-"edited": 0,
-"total": 13704,
+"new": 10,
+"edited": 7,
+"total": 13564,
 "programs": [
 "Trent University|Accounting",
-"Brock University|Concurrent BA (Honours)/BEd – Intermediate/Senior - French",
-"Brock University|Concurrent BA/BEd-Intermediate/Senior",
-"University of Alberta|Computing Science - Artificial Intelligence",
-"Seneca Polytechnic|Honours Bachelor of Science - Nursing (BSN)"
+"Seneca Polytechnic|Honours Bachelor of Science - Nursing (BSN)",
+"University of Ottawa|Health Sciences",
+"University of Ottawa|Human Kinetics",
+"Brock University|Mathematics & Statistics"
 ],
 "offerCounts": {
 "Trent University|Accounting": 1,
-"Brock University|Concurrent BA (Honours)/BEd – Intermediate/Senior - French": 1,
-"Brock University|Concurrent BA/BEd-Intermediate/Senior": 1,
-"University of Alberta|Computing Science - Artificial Intelligence": 1,
 "Seneca Polytechnic|Honours Bachelor of Science - Nursing (BSN)": 1,
-"Seneca Polytechnic|Nursing (BSN)": 1,
 "University of Ottawa|Health Sciences": 1,
 "University of Ottawa|Human Kinetics": 1,
-"Seneca Polytechnic|Nursing - Fast Track": 1,
-"Seneca Polytechnic|Nursing": 1,
 "Brock University|Mathematics & Statistics": 1,
 "University of Ottawa|Biomed": 1,
 "University of Guelph|Software Engineering": 1,
-"University of Ottawa|Biomedical Science": 1,
 "Western University|Medical Sciences": 1,
 "Wilfrid Laurier University|Biology BSc": 1,
 "Carleton University|Engineering: Electrical": 1
@@ -180,14 +152,16 @@
 },
 {
 "date": "2026-11-25",
-"new": 1,
+"new": 2,
 "edited": 0,
-"total": 13705,
+"total": 13566,
 "programs": [
-"Brock University|Nursing"
+"Brock University|Nursing",
+"University of Toronto · St. George|Computer Science"
 ],
 "offerCounts": {
-"Brock University|Nursing": 1
+"Brock University|Nursing": 1,
+"University of Toronto · St. George|Computer Science": 1
 }
 }
 ]
