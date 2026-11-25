@@ -28,6 +28,13 @@ except Exception:
     today = dt.date.today().isoformat()
 
 if status != 'success':
+    try:   # written by tools/duplicate-check.py or update_data.py when they stop an update
+        import tempfile
+        why = (Path(tempfile.gettempdir()) / 'duplicate_problem.txt').read_text(encoding='utf-8')
+        send('⚠️ Offer Atlas: duplicates blocked', why, 'https://github.com/offeratlas/offeratlas.github.io/actions')
+        sys.exit(0)
+    except FileNotFoundError:
+        pass
     send('⚠️ Offer Atlas update failed', 'The latest hourly update did not finish. The site still shows the previous data. Open GitHub Actions to see what went wrong.',
          'https://github.com/offeratlas/offeratlas.github.io/actions')
     sys.exit(0)
@@ -107,9 +114,12 @@ for r in fresh[:5]:
 if n > 5:
     lines.append(f"…and {n - 5} more")
 checks = []
+dup = load('data/duplicate-check.json', {})
+if dup.get('duplicates'):
+    checks.append(f"{dup['duplicates']} duplicates")
 if names.get('newThisWeekNeedingAttention'):
     checks.append(f"{names['newThisWeekNeedingAttention']} new program names need a rule")
 if dl.get('needsAttention'):
     checks.append(f"{dl['needsAttention']} deadlines need a re-check")
-lines.append('Checks: ' + ('; '.join(checks) if checks else 'all clear'))
+lines.append('Checks: ' + ('; '.join(checks) if checks else 'all clear, no duplicates' if dup else 'all clear'))
 send(title, '\n'.join(lines))

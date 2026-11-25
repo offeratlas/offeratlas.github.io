@@ -63,6 +63,10 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         run: python tools/update_data.py && python tools/update_bc.py
 
+      - name: Check for duplicate results (stops the update if it finds any)
+        if: steps.gate.outputs.run == 'true'
+        run: python tools/duplicate-check.py
+
       - name: Split data (Fall 2027 first, older years on request)
         if: steps.gate.outputs.run == 'true'
         run: python tools/split_data.py

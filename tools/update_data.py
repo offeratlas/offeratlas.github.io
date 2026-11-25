@@ -13,7 +13,7 @@ Usage:
   python tools/update_data.py --selftest   # rebuild existing rows and compare
   --allow-cleanup   # let one run remove more than MAX_CLEANUP second copies
 """
-import csv, datetime as dt, difflib, hashlib, io, json, re, sys, urllib.request
+import csv, datetime as dt, difflib, hashlib, io, json, re, sys, tempfile, urllib.request
 from collections import Counter
 from pathlib import Path
 
@@ -24,6 +24,8 @@ GID = 1105020004
 SHEET = "Form Responses 1"
 DATASET = "S2027"
 YEAR = 2027
+# Entries taken off the site on purpose (submission time, school); never imported again.
+REMOVED = {('11/16/2026 8:44:28', 'waterloo')}
 MAX_CLEANUP = 15   # more second copies than this in one run looks wrong: stop instead of removing
 CSV_URL = f"https://docs.google.com/spreadsheets/d/{SID}/export?format=csv&gid={GID}"
 
@@ -272,6 +274,14 @@ def match_renamed(model, rows, existing):
             claimed.add(rep['id'])
         else:
             left.setdefault(ts, []).append((n, r))
+    in_sheet = {r[0].strip() for r in rows[1:]}
+    retimed = {}   # results whose own time left the sheet, by everything else the applicant entered
+    for rep in {id(x): x for x in existing.values()}.values():
+        src = model.sources[rep['source']]
+        if rep['id'] not in claimed and src['submissionTimestamp'].strip() not in in_sheet:
+            d = src.get('applicationDetails', {})
+            retimed.setdefault((norm(src['rawSchool']), program_key(src['rawProgram']), norm(src['rawOutcome']), norm(src['rawAverage']),
+                                norm(src['rawDecisionDate']), norm(d.get('applicationDate')), norm(d.get('province'))), []).append(rep)
     free = {}
     for rep in {id(x): x for x in existing.values()}.values():
         ts = model.sources[rep['source']]['submissionTimestamp'].strip()
@@ -291,6 +301,13 @@ def match_renamed(model, rows, existing):
             if n not in out and rep['id'] not in used:
                 out[n] = rep
                 used.add(rep['id'])
+    for ts, items in left.items():   # same entry put back under a new submission time
+        for n, r in items:
+            r = r + [''] * 14
+            same = retimed.get((norm(r[1]), program_key(r[3] if r[3].strip() else r[2]), norm(r[4]), norm(r[5]),
+                                norm(r[7]), norm(r[6]), norm(r[10])))
+            if n not in out and same:
+                out[n] = same.pop(0)
     return out
 
 
@@ -346,6 +363,18 @@ def main():
     rows = load_rows(csv_path)
     snap = json.loads(SNAPSHOT.read_text(encoding='utf-8'))
     model = Model(snap)
+    # what the sheet held, for tools/duplicate-check.py
+    (Path(tempfile.gettempdir()) / 'sheet_rows_2027.json').write_text(
+        json.dumps({'times': [r[0].strip() for r in rows[1:] if r[0].strip()]}), encoding='utf-8')
+    def taken_off(ts, school):
+        return (ts.strip(), norm(school)) in REMOVED
+    off = [rep for rep in snap['reports'] if (src := model.sources.get(rep['source'])) and src.get('datasetId') == DATASET
+           and taken_off(src['submissionTimestamp'], src['rawSchool'])]
+    off_ids = {rep['id'] for rep in off}
+    had_results = {x['program'] for x in snap['reports']}
+    snap['reports'] = [rep for rep in snap['reports'] if rep['id'] not in off_ids]
+    for rep in off:
+        model.sources.pop(rep['source'])
     existing = {}
     for rep in snap['reports']:
         src = model.sources.get(rep['source'])
@@ -358,13 +387,15 @@ def main():
 
     added, changed, relinked, excluded, scanned = [], 0, 0, [], 0
     renamed = match_renamed(model, rows, existing)
-    had_results = {x['program'] for x in snap['reports']}
     for n, r in enumerate(rows[1:], start=2):
         if not any(c.strip() for c in r) or not r[0].strip() and not r[1].strip():
             continue
         if not r[0].strip() and 'DO NOT REQUEST' in ''.join(r).upper():
             continue
         scanned += 1
+        if taken_off(r[0], r[1]):
+            excluded.append({"dataset": DATASET, "row": n, "reason": 'Removed from the site', "rawSchool": ''})
+            continue
         prog_col = r[3] if r[3].strip() else r[2]
         rep = existing.get(row_key(r[0], r[1], prog_col)) or existing.get(row_key(r[0], r[1], r[3])) \
             or existing.get(fingerprint(r[0], r[1], r[3])) or renamed.get(n)
@@ -399,7 +430,9 @@ def main():
     snap['programs'].extend(model.new_programs)
     copies = second_copies(model, rows)
     if len(copies) > MAX_CLEANUP and '--allow-cleanup' not in args:
-        raise SystemExit(f'{len(copies)} results look like second copies, more than {MAX_CLEANUP}; not updating.')
+        why = f'{len(copies)} results look like second copies, more than {MAX_CLEANUP}; not updating. The site was not changed.'
+        (Path(tempfile.gettempdir()) / 'duplicate_problem.txt').write_text(why, encoding='utf-8')
+        raise SystemExit(why)
     if copies:
         for rep in copies:
             src = model.sources.pop(rep['source'])
@@ -445,7 +478,7 @@ def main():
         print(f"  + row {src['row']}: {rep['university']} | {src['rawProgram'].strip()} | {rep['outcome']} | {rep['averageLabel']}")
     if '--dry-run' in args:
         return
-    if not (added or changed or relinked or copies):
+    if not (added or changed or relinked or copies or off):
         print('No new or edited entries; snapshot.json left unchanged.')
         return
     SNAPSHOT.write_text(json.dumps(snap, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
