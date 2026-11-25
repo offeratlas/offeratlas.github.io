@@ -1,51 +1,11 @@
 {
  "checked": "2026-11-25",
- "reports": 13705,
- "namesTidied": 2467,
- "distinctNames": 3608,
- "needsAttention": 159,
- "newThisWeekNeedingAttention": 4,
+ "reports": 13566,
+ "namesTidied": 2432,
+ "distinctNames": 3524,
+ "needsAttention": 155,
+ "newThisWeekNeedingAttention": 0,
  "examples": [
-  {
-   "university": "University of Ottawa",
-   "raw": "University of Ottawa - UO: Joint Honours BSocSc in History and Political Science",
-   "shown": "UO: Joint Honours BSocSc in History and Political Science",
-   "reports": 1,
-   "recent": true,
-   "problems": [
-    "unknown short form \"UO\""
-   ]
-  },
-  {
-   "university": "Carleton University",
-   "raw": "Public Affairs and Policy Management(PAPM)",
-   "shown": "Public Affairs and Policy Management (PAPM)",
-   "reports": 1,
-   "recent": true,
-   "problems": [
-    "unknown short form \"PAPM\""
-   ]
-  },
-  {
-   "university": "Seneca Polytechnic",
-   "raw": "Honours Bachelor of Science - Nursing (BSN)",
-   "shown": "Honours Bachelor of Science – Nursing (BSN)",
-   "reports": 1,
-   "recent": true,
-   "problems": [
-    "unknown short form \"BSN\""
-   ]
-  },
-  {
-   "university": "Seneca Polytechnic",
-   "raw": "Nursing (BSN)",
-   "shown": "Nursing (BSN)",
-   "reports": 1,
-   "recent": true,
-   "problems": [
-    "unknown short form \"BSN\""
-   ]
-  },
   {
    "university": "Wilfrid Laurier University",
    "raw": "Business Administration (BBA) and Computer Science (BCS) at University of Waterloo Double Degree, Waterloo Campus",
@@ -806,6 +766,46 @@
    "recent": false,
    "problems": [
     "unknown short form \"UO\""
+   ]
+  },
+  {
+   "university": "Western University",
+   "raw": "MN: Engineering (Co-op and Regular)",
+   "shown": "MN: Engineering (Co-op and Regular)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"MN\""
+   ]
+  },
+  {
+   "university": "Queen’s University",
+   "raw": "Queens engineering (common first year) + optional QUIP",
+   "shown": "Queens Engineering (Common First Year) + Optional QUIP",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"QUIP\""
+   ]
+  },
+  {
+   "university": "Queen’s University",
+   "raw": "Queen's University - Computer Engineering or Electrical Engineering - Innovation - including optional internship (BASc)",
+   "shown": "Queen's University – Computer Engineering or Electrical Engineering – Innovation – Including Optional Internship (BASc)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "very long"
+   ]
+  },
+  {
+   "university": "Western University",
+   "raw": "MN: Medical Sciences (BMSc and BSc)",
+   "shown": "MN: Medical Sciences (BMSc and BSc)",
+   "reports": 1,
+   "recent": false,
+   "problems": [
+    "unknown short form \"MN\""
    ]
   }
  ]
