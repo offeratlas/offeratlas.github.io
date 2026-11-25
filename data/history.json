@@ -152,16 +152,18 @@
 },
 {
 "date": "2026-11-25",
-"new": 2,
+"new": 3,
 "edited": 0,
-"total": 13565,
+"total": 13566,
 "programs": [
 "Brock University|Nursing",
-"University of Toronto · St. George|Computer Science"
+"University of Toronto · St. George|Computer Science",
+"Queen’s University|Honours Biology and Cognitive Sciences"
 ],
 "offerCounts": {
 "Brock University|Nursing": 1,
-"University of Toronto · St. George|Computer Science": 1
+"University of Toronto · St. George|Computer Science": 1,
+"Queen’s University|Honours Biology and Cognitive Sciences": 1
 }
 }
 ]
