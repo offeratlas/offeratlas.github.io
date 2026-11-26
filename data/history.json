@@ -185,5 +185,17 @@
 "Brock University|Bachelor of Science in Nursing (BScN)": 1,
 "Brock University|Kinesiology": 1
 }
+},
+{
+"date": "2026-11-26",
+"new": 1,
+"edited": 24,
+"total": 13586,
+"programs": [
+"Toronto Metropolitan University|Public Health"
+],
+"offerCounts": {
+"Toronto Metropolitan University|Public Health": 1
+}
 }
 ]

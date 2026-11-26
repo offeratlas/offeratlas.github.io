@@ -3,7 +3,11 @@
 <title>Offer Atlas: latest Fall 2027 reports</title>
 <subtitle>Self-reported, unverified admission results. Data: r/OntarioGrade12s spreadsheets by u/Regular-Database9310.</subtitle>
 <link rel="self" href="https://offeratlas.github.io/feeds/latest.xml"/><link rel="alternate" href="https://offeratlas.github.io/"/>
-<id>https://offeratlas.github.io/feeds/latest.xml</id><updated>2026-11-25T12:00:00Z</updated>
+<id>https://offeratlas.github.io/feeds/latest.xml</id><updated>2026-11-26T12:00:00Z</updated>
+<entry><title>Offer · 90.2% · Public Health (Toronto Metropolitan University) · Fall 2027</title>
+<id>tag:offeratlas.github.io,2026:report:R_9db4281786246fc0768fe205aeecd2b8</id><updated>2026-11-26T12:00:00Z</updated>
+<link href="https://offeratlas.github.io/?p=OFFICIAL_TMU__public_health&amp;r=R_9db4281786246fc0768fe205aeecd2b8"/>
+<summary>Offer for Public Health at Toronto Metropolitan University, Fall 2027. Reported average 90.2%. Decision Nov 24, 2026. Self-reported and unverified.</summary></entry>
 <entry><title>Offer · 92.6% · Nursing (Brock University) · Fall 2027</title>
 <id>tag:offeratlas.github.io,2026:report:R_bc32d508a5bd950f824b952cc1945e54</id><updated>2026-11-25T12:00:00Z</updated>
 <link href="https://offeratlas.github.io/?p=OFFICIAL_Brock__nursing&amp;r=R_bc32d508a5bd950f824b952cc1945e54"/>
@@ -76,14 +80,14 @@
 <id>tag:offeratlas.github.io,2026:report:R_9951b1c4d8b5a032cc06fde2dd620a04</id><updated>2026-11-25T12:00:00Z</updated>
 <link href="https://offeratlas.github.io/?p=REPORTED_Trent__medical_professional_stream&amp;r=R_9951b1c4d8b5a032cc06fde2dd620a04"/>
 <summary>Offer for Medical Professional Stream at Trent University, Fall 2027. Reported average 90.2%. Decision Nov 25, 2026. Self-reported and unverified.</summary></entry>
-<entry><title>Offer · 96.66% · Business Administration (Laurier) and Mathematics (Waterloo) Double Degree (Wilfrid Laurier University) · Fall 2027</title>
+<entry><title>Offer · 96.66% · Business Administration (BBA) and Financial Mathematics and Analytics (BA) Double Degree (Wilfrid Laurier University) · Fall 2027</title>
 <id>tag:offeratlas.github.io,2026:report:R_5a7771a43bbc2c90b0cecb2520e9a0d4</id><updated>2026-11-25T12:00:00Z</updated>
-<link href="https://offeratlas.github.io/?p=OFFICIAL_Laurier__business_administration_laurier_and_mathematics_waterloo_double_degree&amp;r=R_5a7771a43bbc2c90b0cecb2520e9a0d4"/>
-<summary>Offer for Business Administration (Laurier) and Mathematics (Waterloo) Double Degree at Wilfrid Laurier University, Fall 2027. Reported average 96.66%. Decision Nov 25, 2026. Self-reported and unverified.</summary></entry>
-<entry><title>Offer · 92.38% · Bachelor of Science in Nursing (BScN) (Brock University) · Fall 2027</title>
+<link href="https://offeratlas.github.io/?p=SOURCE_Laurier&amp;r=R_5a7771a43bbc2c90b0cecb2520e9a0d4"/>
+<summary>Offer for Business Administration (BBA) and Financial Mathematics and Analytics (BA) Double Degree at Wilfrid Laurier University, Fall 2027. Reported average 96.66%. Decision Nov 25, 2026. Self-reported and unverified.</summary></entry>
+<entry><title>Offer · 92.38% · Nursing (Brock University) · Fall 2027</title>
 <id>tag:offeratlas.github.io,2026:report:R_6d19caaa7b7e73289290cdfdd745071d</id><updated>2026-11-25T12:00:00Z</updated>
-<link href="https://offeratlas.github.io/?p=SOURCE_Brock&amp;r=R_6d19caaa7b7e73289290cdfdd745071d"/>
-<summary>Offer for Bachelor of Science in Nursing (BScN) at Brock University, Fall 2027. Reported average 92.38%. Decision Nov 25, 2026. Self-reported and unverified.</summary></entry>
+<link href="https://offeratlas.github.io/?p=OFFICIAL_Brock__nursing&amp;r=R_6d19caaa7b7e73289290cdfdd745071d"/>
+<summary>Offer for Nursing at Brock University, Fall 2027. Reported average 92.38%. Decision Nov 25, 2026. Self-reported and unverified.</summary></entry>
 <entry><title>Offer · 84.83% · Kinesiology (Brock University) · Fall 2027</title>
 <id>tag:offeratlas.github.io,2026:report:R_1c0ed2d9a7708630830707ed779f7beb</id><updated>2026-11-25T12:00:00Z</updated>
 <link href="https://offeratlas.github.io/?p=OFFICIAL_Brock__kinesiology&amp;r=R_1c0ed2d9a7708630830707ed779f7beb"/>
@@ -240,8 +244,4 @@
 <id>tag:offeratlas.github.io,2026:report:R_f7a3ae61758e3e51cb3d946b7fe7bab1</id><updated>2026-11-21T12:00:00Z</updated>
 <link href="https://offeratlas.github.io/?p=OFFICIAL_Carleton__aerospace_engineering&amp;r=R_f7a3ae61758e3e51cb3d946b7fe7bab1"/>
 <summary>Offer for Aerospace Engineering at Carleton University, Fall 2027. Reported average 96.17%. Decision Nov 13, 2026. Self-reported and unverified.</summary></entry>
-<entry><title>Offer · 95.17% · Business Administration (Wilfrid Laurier University) · Fall 2027</title>
-<id>tag:offeratlas.github.io,2026:report:R_ee862fac67554d923e4fd800d7b5d1d4</id><updated>2026-11-21T12:00:00Z</updated>
-<link href="https://offeratlas.github.io/?p=OFFICIAL_Laurier__business_administration&amp;r=R_ee862fac67554d923e4fd800d7b5d1d4"/>
-<summary>Offer for Business Administration at Wilfrid Laurier University, Fall 2027. Reported average 95.17%. Decision Nov 21, 2026. Self-reported and unverified.</summary></entry>
 </feed>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://offeratlas.github.io/</loc><lastmod>2026-11-25</lastmod></url>
-<url><loc>https://offeratlas.github.io/programs/</loc><lastmod>2026-11-25</lastmod></url>
-<url><loc>https://offeratlas.github.io/schools/</loc><lastmod>2026-11-25</lastmod></url>
+<url><loc>https://offeratlas.github.io/</loc><lastmod>2026-11-26</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/</loc><lastmod>2026-11-26</lastmod></url>
+<url><loc>https://offeratlas.github.io/schools/</loc><lastmod>2026-11-26</lastmod></url>
 <url><loc>https://offeratlas.github.io/guides/</loc><lastmod>2026-11-17</lastmod></url>
-<url><loc>https://offeratlas.github.io/changelog/</loc><lastmod>2026-11-25</lastmod></url>
+<url><loc>https://offeratlas.github.io/changelog/</loc><lastmod>2026-11-26</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/brock-university/</loc><lastmod>2026-11-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/carleton-university/</loc><lastmod>2026-11-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/dalhousie-university/</loc><lastmod>2026-11-25</lastmod></url>
@@ -17,7 +17,7 @@
 <url><loc>https://offeratlas.github.io/schools/ontario-tech-university/</loc><lastmod>2026-11-22</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/queen-s-university/</loc><lastmod>2026-11-15</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/simon-fraser-university/</loc><lastmod>2026-03-24</lastmod></url>
-<url><loc>https://offeratlas.github.io/schools/toronto-metropolitan-university/</loc><lastmod>2026-11-22</lastmod></url>
+<url><loc>https://offeratlas.github.io/schools/toronto-metropolitan-university/</loc><lastmod>2026-11-26</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/trent-university/</loc><lastmod>2026-11-23</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/university-of-alberta/</loc><lastmod>2026-11-13</lastmod></url>
 <url><loc>https://offeratlas.github.io/schools/university-of-british-columbia-okanagan/</loc><lastmod>2026-04-23</lastmod></url>
@@ -166,7 +166,7 @@
 <url><loc>https://offeratlas.github.io/programs/politics-and-governance-toronto-metropolitan-university/</loc><lastmod>2026-11-16</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/professional-communication-toronto-metropolitan-university/</loc><lastmod>2026-11-20</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/psychology-toronto-metropolitan-university/</loc><lastmod>2026-11-19</lastmod></url>
-<url><loc>https://offeratlas.github.io/programs/public-health-toronto-metropolitan-university/</loc><lastmod>2026-11-18</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/public-health-toronto-metropolitan-university/</loc><lastmod>2026-11-26</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/sport-media-toronto-metropolitan-university/</loc><lastmod>2026-03-20</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/undeclared-engineering-toronto-metropolitan-university/</loc><lastmod>2026-11-22</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/urban-and-regional-planning-toronto-metropolitan-university/</loc><lastmod>2026-11-15</lastmod></url>
@@ -366,7 +366,7 @@
 <url><loc>https://offeratlas.github.io/programs/biology-wilfrid-laurier-university/</loc><lastmod>2026-11-24</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/business-administration-wilfrid-laurier-university/</loc><lastmod>2026-11-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/business-administration-laurier-and-computer-science-waterloo-double-degree-wilfrid-laurier-university/</loc><lastmod>2026-05-18</lastmod></url>
-<url><loc>https://offeratlas.github.io/programs/business-administration-laurier-and-mathematics-waterloo-double-degree-wilfrid-laurier-university/</loc><lastmod>2026-11-25</lastmod></url>
+<url><loc>https://offeratlas.github.io/programs/business-administration-laurier-and-mathematics-waterloo-double-degree-wilfrid-laurier-university/</loc><lastmod>2026-05-11</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/business-administration-computer-science-wilfrid-laurier-university/</loc><lastmod>2026-11-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/business-administration-financial-mathematics-double-degree-wilfrid-laurier-university/</loc><lastmod>2026-11-25</lastmod></url>
 <url><loc>https://offeratlas.github.io/programs/computer-science-wilfrid-laurier-university/</loc><lastmod>2026-11-13</lastmod></url>
