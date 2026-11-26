@@ -152,9 +152,9 @@
 },
 {
 "date": "2026-11-25",
-"new": 21,
+"new": 22,
 "edited": 61,
-"total": 13584,
+"total": 13585,
 "programs": [
 "Wilfrid Laurier University|Business Administration and Financial Mathematics and Analytics Double Degree",
 "Brock University|Nursing",
@@ -182,7 +182,8 @@
 "Trent University|Medical Professional Stream": 1,
 "Wilfrid Laurier University|Law Degree (LLB) at University of Sussex and Honours BA at Laurier": 1,
 "Wilfrid Laurier University|Mathematics + Business Administration": 1,
-"Brock University|Bachelor of Science in Nursing (BScN)": 1
+"Brock University|Bachelor of Science in Nursing (BScN)": 1,
+"Brock University|Kinesiology": 1
 }
 }
 ]
