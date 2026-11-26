@@ -152,17 +152,18 @@
 },
 {
 "date": "2026-11-25",
-"new": 15,
+"new": 17,
 "edited": 1,
-"total": 13578,
+"total": 13580,
 "programs": [
+"Wilfrid Laurier University|Business Administration and Financial Mathematics and Analytics Double Degree",
 "Brock University|Nursing",
 "University of Toronto · St. George|Computer Science",
 "Queen’s University|Honours Biology and Cognitive Sciences",
-"Dalhousie University|Medical Sciences",
-"Wilfrid Laurier University|Business Administration (BBA) and Financial Mathematics & Analytics (BA)"
+"Dalhousie University|Medical Sciences"
 ],
 "offerCounts": {
+"Wilfrid Laurier University|Business Administration and Financial Mathematics and Analytics Double Degree": 2,
 "Brock University|Nursing": 1,
 "University of Toronto · St. George|Computer Science": 1,
 "Queen’s University|Honours Biology and Cognitive Sciences": 1,
@@ -171,13 +172,13 @@
 "Brock University|Sports Management": 1,
 "Ontario Tech University|Psychology (BA) - Affective Science & Mental Health": 1,
 "Wilfrid Laurier University|Business Administration and Computer Science": 1,
-"Wilfrid Laurier University|Business Administration and Financial Mathematics and Analytics Double Degree": 1,
 "Wilfrid Laurier University|Business Administration and Computer Science Double Degree": 1,
 "Carleton University|Engineering: Aerospace": 1,
 "Ontario Tech University|Business - Commerce (BCom)": 1,
 "Carleton University|Engineering: Mechanical": 1,
 "Brock University|Concurrent BA/BEd-Intermediate/Senior": 1,
-"Brock University|Medical Sciences": 1
+"Brock University|Medical Sciences": 1,
+"Wilfrid Laurier University|Business Administration": 1
 }
 }
 ]
