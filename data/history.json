@@ -188,14 +188,16 @@
 },
 {
 "date": "2026-11-26",
-"new": 1,
+"new": 2,
 "edited": 24,
-"total": 13586,
+"total": 13587,
 "programs": [
-"Toronto Metropolitan University|Public Health"
+"Toronto Metropolitan University|Public Health",
+"Dalhousie University|Management"
 ],
 "offerCounts": {
-"Toronto Metropolitan University|Public Health": 1
+"Toronto Metropolitan University|Public Health": 1,
+"Dalhousie University|Management": 1
 }
 }
 ]
