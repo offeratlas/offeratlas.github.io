@@ -188,9 +188,9 @@
 },
 {
 "date": "2026-11-26",
-"new": 6,
+"new": 7,
 "edited": 26,
-"total": 13591,
+"total": 13592,
 "programs": [
 "Toronto Metropolitan University|Public Health",
 "Dalhousie University|Management",
@@ -199,7 +199,7 @@
 "University of Ottawa|Health Sciences"
 ],
 "offerCounts": {
-"Toronto Metropolitan University|Public Health": 1,
+"Toronto Metropolitan University|Public Health": 2,
 "Dalhousie University|Management": 1,
 "University of Guelph|Human Kinetics": 1,
 "University of Ottawa|Mechanical Engineering": 1,
