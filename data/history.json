@@ -188,9 +188,9 @@
 },
 {
 "date": "2026-11-26",
-"new": 15,
+"new": 17,
 "edited": 39,
-"total": 13600,
+"total": 13602,
 "programs": [
 "Toronto Metropolitan University|Public Health",
 "University of Ottawa|Health Sciences",
@@ -211,7 +211,9 @@
 "University of Guelph|Bio-Medical Science": 1,
 "University of Ottawa|Chemical Engineering": 1,
 "University of Ottawa|Honours BSc Human Kinetics": 1,
-"University of Ottawa|Electrical Engineering": 1
+"University of Ottawa|Electrical Engineering": 1,
+"University of Ottawa|Biomedical Mechanical Engineering": 1,
+"University of Ottawa|Honours BCom - International Dual Degree": 1
 }
 }
 ]
