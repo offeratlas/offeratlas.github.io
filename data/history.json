@@ -218,18 +218,20 @@
 },
 {
 "date": "2026-11-27",
-"new": 3,
+"new": 4,
 "edited": 2,
-"total": 13605,
+"total": 13606,
 "programs": [
 "Brock University|BBA: Business Administration Co-op International Double Degree",
 "Wilfrid Laurier University|Business Technology Management (BBTM)",
-"Wilfrid Laurier University|Economics and Financial Management (BA) with Management Minor"
+"Wilfrid Laurier University|Economics and Financial Management (BA) with Management Minor",
+"University of Guelph|Arts - Studio Art"
 ],
 "offerCounts": {
 "Brock University|BBA: Business Administration Co-op International Double Degree": 1,
 "Wilfrid Laurier University|Business Technology Management (BBTM)": 1,
-"Wilfrid Laurier University|Economics and Financial Management (BA) with Management Minor": 1
+"Wilfrid Laurier University|Economics and Financial Management (BA) with Management Minor": 1,
+"University of Guelph|Arts - Studio Art": 1
 }
 }
 ]
