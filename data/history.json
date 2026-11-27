@@ -218,16 +218,18 @@
 },
 {
 "date": "2026-11-27",
-"new": 2,
+"new": 3,
 "edited": 2,
-"total": 13604,
+"total": 13605,
 "programs": [
 "Brock University|BBA: Business Administration Co-op International Double Degree",
-"Wilfrid Laurier University|Business Technology Management (BBTM)"
+"Wilfrid Laurier University|Business Technology Management (BBTM)",
+"Wilfrid Laurier University|Economics and Financial Management (BA) with Management Minor"
 ],
 "offerCounts": {
 "Brock University|BBA: Business Administration Co-op International Double Degree": 1,
-"Wilfrid Laurier University|Business Technology Management (BBTM)": 1
+"Wilfrid Laurier University|Business Technology Management (BBTM)": 1,
+"Wilfrid Laurier University|Economics and Financial Management (BA) with Management Minor": 1
 }
 }
 ]
