@@ -218,9 +218,9 @@
 },
 {
 "date": "2026-11-27",
-"new": 11,
-"edited": 2,
-"total": 13613,
+"new": 13,
+"edited": 7,
+"total": 13615,
 "programs": [
 "Brock University|BBA: Business Administration Co-op International Double Degree",
 "Wilfrid Laurier University|Business Technology Management (BBTM)",
@@ -239,7 +239,9 @@
 "Ontario Tech University|Kinesiology": 1,
 "Toronto Metropolitan University|Chemical Engineering": 1,
 "Wilfrid Laurier University|Health Sciences w Management Minor": 1,
-"Wilfrid Laurier University|Health Science (BSc) with Management Minor": 1
+"Wilfrid Laurier University|Health Science (BSc) with Management Minor": 1,
+"Wilfrid Laurier University|Computer Science": 1,
+"Wilfrid Laurier University|Financial Mathematics and Analytics (BSc)": 1
 }
 }
 ]
