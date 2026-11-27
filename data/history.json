@@ -188,28 +188,30 @@
 },
 {
 "date": "2026-11-26",
-"new": 12,
+"new": 15,
 "edited": 31,
-"total": 13597,
+"total": 13600,
 "programs": [
 "Toronto Metropolitan University|Public Health",
+"University of Ottawa|Health Sciences",
 "Dalhousie University|Management",
 "University of Guelph|Human Kinetics",
-"University of Ottawa|Mechanical Engineering",
-"University of Ottawa|Health Sciences"
+"University of Ottawa|Mechanical Engineering"
 ],
 "offerCounts": {
 "Toronto Metropolitan University|Public Health": 2,
+"University of Ottawa|Health Sciences": 2,
 "Dalhousie University|Management": 1,
 "University of Guelph|Human Kinetics": 1,
 "University of Ottawa|Mechanical Engineering": 1,
-"University of Ottawa|Health Sciences": 1,
 "Brock University|Sport Management International Double Degree": 1,
 "Brock University|Concurrent BA/BEd-Intermediate/Senior - History Major": 1,
 "University of Ottawa|Honours Bachelor of Social Sciences in Criminology": 1,
 "University of Ottawa|Honours BCom in Accounting": 1,
 "University of Guelph|Bio-Medical Science": 1,
-"University of Ottawa|Chemical Engineering": 1
+"University of Ottawa|Chemical Engineering": 1,
+"University of Ottawa|Honours BSc Human Kinetics": 1,
+"University of Ottawa|Electrical Engineering": 1
 }
 }
 ]
