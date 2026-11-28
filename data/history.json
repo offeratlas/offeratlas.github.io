@@ -249,16 +249,18 @@
 },
 {
 "date": "2026-11-28",
-"new": 2,
+"new": 3,
 "edited": 0,
-"total": 13620,
+"total": 13621,
 "programs": [
 "Concordia University|Electrical Engineering",
-"University of Ottawa|honours bachelor of science in biomedical science"
+"University of Ottawa|honours bachelor of science in biomedical science",
+"Wilfrid Laurier University|Computer Science"
 ],
 "offerCounts": {
 "Concordia University|Electrical Engineering": 1,
-"University of Ottawa|honours bachelor of science in biomedical science": 1
+"University of Ottawa|honours bachelor of science in biomedical science": 1,
+"Wilfrid Laurier University|Computer Science": 1
 }
 }
 ]
