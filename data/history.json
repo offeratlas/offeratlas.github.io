@@ -246,5 +246,17 @@
 "Carleton University|Commerce": 1,
 "University of Ottawa|Bachelor of Applied Science in Mechanical Engineering / Bachelor of Science in Computing Technology": 1
 }
+},
+{
+"date": "2026-11-28",
+"new": 1,
+"edited": 0,
+"total": 13619,
+"programs": [
+"Concordia University|Electrical Engineering"
+],
+"offerCounts": {
+"Concordia University|Electrical Engineering": 1
+}
 }
 ]
