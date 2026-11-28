@@ -249,14 +249,16 @@
 },
 {
 "date": "2026-11-28",
-"new": 1,
+"new": 2,
 "edited": 0,
-"total": 13619,
+"total": 13620,
 "programs": [
-"Concordia University|Electrical Engineering"
+"Concordia University|Electrical Engineering",
+"University of Ottawa|honours bachelor of science in biomedical science"
 ],
 "offerCounts": {
-"Concordia University|Electrical Engineering": 1
+"Concordia University|Electrical Engineering": 1,
+"University of Ottawa|honours bachelor of science in biomedical science": 1
 }
 }
 ]
