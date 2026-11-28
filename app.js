@@ -1,8 +1,8 @@
-import {layoutDots} from './plot.js?v=oa50';
-import {initEntering} from './entering.js?v=oa50';
-import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa50';
-import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa50';
-import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa50';
+import {layoutDots} from './plot.js?v=oa51';
+import {initEntering} from './entering.js?v=oa51';
+import {programs,reports,reportSources,officialSources,checked,loadSnapshot,runtimeStatus,guidance,datasets,importAudit,refreshAudit,archiveInfo,loadState,loadArchive,resetReports} from './data.js?v=oa51';
+import {months,outcomes,defaultFilters,filterReports,summarize,median,timingCounts,sortedRows,toCsv} from './model.js?v=oa51';
+import {buildProgramCatalog,matchesStudyMode} from './catalog.js?v=oa51';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n).toLocaleString('en-CA');
 const date=d=>d?new Intl.DateTimeFormat('en-CA',{month:'short',day:'numeric',year:'numeric',timeZone:'America/Toronto'}).format(new Date(d+'T12:00:00Z')):'Unstated';
@@ -10,7 +10,10 @@ const link=(url,label,cls='')=>`<a class="${cls}" href="${esc(url)}" target="_bl
 const badge=r=>`<span class="outcome-badge ${esc(r.outcome)}">${r.outcome==='Alternate'?'Alternate offer':esc(r.outcome)}</span>`;
 let filters={...defaultFilters(),year:'2027'},page=0,catalogLimit=30,pmap=new Map(),rmap=new Map(),trigger,lastRows=[],toastTimer;
 let catalogPrograms=[],cardModes=new Map();
-function indexData(){resetReports();const view=buildProgramCatalog(programs,reports,reportSources);catalogPrograms=view.programs;reports.length=0;for(const r of view.reports){const d=reportSources[r.source]?.applicationDetails||{};reports.push({...r,...Object.fromEntries(['applicantGroup','province','citizenship','residenceCountry','applicationDate'].map(k=>[k,d[k]||'Unstated']))});}pmap=new Map(catalogPrograms.map(p=>[p.id,p]));rmap=new Map(reports.map(r=>[r.id,r]));}
+function homeOf(r,d){const p=String(d.province||'').trim().toLowerCase();if(/^(on|ontario)$/.test(p))return 'ON';if(/^(bc|b\.c\.|british columbia)$/.test(p))return 'BC';if(p)return 'Other';if(String(r.source||'').startsWith('BC_'))return 'BC';if(r.curriculum==='Ontario')return 'ON';return 'Unknown';}
+function fromToggle(){const w=$('#from-toggle');if(!w)return;const base={...filters,from:'All'},n=k=>k==='All'?filterReports(base).length:filterReports({...base,from:k}).length;for(const b of w.querySelectorAll('[data-from]')){const k=b.dataset.from;b.setAttribute('aria-pressed',String((filters.from||'All')===k));b.querySelector('small').textContent=fmt(n(k));}const note=$('#from-note'),c=n('BC');if(note){const thin=filters.from==='BC'&&filters.year!=='All'&&c<40;note.hidden=!thin;if(thin)note.innerHTML=`Only ${fmt(c)} results from BC applicants for Fall ${esc(filters.year)} so far. <button type="button" data-from-years>Include every year</button>`;}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-from]');if(b){filters.from=b.dataset.from;render();return;}if(e.target.closest('[data-from-years]')){filters.year='All';sync();requestArchive({setAllYears:true});render();}});
+function indexData(){resetReports();const view=buildProgramCatalog(programs,reports,reportSources);catalogPrograms=view.programs;reports.length=0;for(const r of view.reports){const d=reportSources[r.source]?.applicationDetails||{};reports.push({...r,from:homeOf(r,d),...Object.fromEntries(['applicantGroup','province','citizenship','residenceCountry','applicationDate'].map(k=>[k,d[k]||'Unstated']))});}pmap=new Map(catalogPrograms.map(p=>[p.id,p]));rmap=new Map(reports.map(r=>[r.id,r]));}
 
 // ---- Anonymous, cookie-free visit counting (GoatCounter). Counts tab views and button uses only: never averages, filters or anything typed. ----
 function gc(path,title,event){let n=0;const go=()=>{const g=window.goatcounter;if(g&&g.count){try{g.count({path,title,event:!!event});}catch{}}else if(++n<20)setTimeout(go,500);};go();}
@@ -172,7 +175,7 @@ $('#plot-expand').onclick=()=>{plotExpanded=!plotExpanded;$('#average-panel').cl
 // ---- Shared helpers for links, archive loading, freshness, filters, credits ----
 const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSduOQcWoG-Hk8s-pn-TyM8CyDvxe8otqYOklNhDJChptaRRxg/viewform';
 const ISSUES_URL='https://github.com/offeratlas/offeratlas.github.io/issues/new';
-const URLKEYS={university:'u',year:'y',sourceType:'src',studyMode:'mode',month:'m',outcome:'o',curriculum:'cur',minimum:'min',maximum:'max',query:'q',sort:'sort',applicantGroup:'grp',province:'prov',citizenship:'cit',residenceCountry:'res'};
+const URLKEYS={university:'u',year:'y',sourceType:'src',studyMode:'mode',month:'m',outcome:'o',curriculum:'cur',minimum:'min',maximum:'max',query:'q',sort:'sort',applicantGroup:'grp',province:'prov',citizenship:'cit',residenceCountry:'res',from:'from'};
 const PREF_KEY='offeratlas.loadAllYears';
 const ALLY=()=>loadState.archiveLoaded&&loadState.includeArchive;
 const prefGet=()=>{try{return localStorage.getItem(PREF_KEY);}catch{return null;}};
@@ -235,8 +238,8 @@ const PRESETS=[['All',0,100],['95+',95,100],['90–95',90,95],['85–90',85,90],
 function setRange(a,b){$('#minimum').value=a;$('#maximum').value=b;$('#minimum').dispatchEvent(new Event('input',{bubbles:true}));}
 function syncExtras(){const lo=$('#avg-lo'),hi=$('#avg-hi');if(!lo)return;lo.value=filters.minimum;hi.value=filters.maximum;const a=(filters.minimum/100*100),b=(filters.maximum/100*100);$('#avg-track-fill').style.cssText=`left:${a}%;right:${100-b}%`;$('#avg-readout').textContent=filters.minimum===0&&filters.maximum===100?'Any average':`${filters.minimum}% – ${filters.maximum}%`;for(const btn of document.querySelectorAll('[data-avg]')){const [x,y]=btn.dataset.avg.split('-').map(Number);btn.setAttribute('aria-pressed',String(x===filters.minimum&&y===filters.maximum));}
  const d=defaultFilters(),n=['sourceType','studyMode','month','outcome','curriculum','applicantGroup','province','citizenship','residenceCountry','includeUnquantified'].filter(k=>String(filters[k])!==String(d[k])).length;const c=$('#more-count');c.textContent=n;c.hidden=!n;}
-function filterSummary(){const el=$('#filter-summary');if(!el)return;const d=defaultFilters(),parts=[filters.year==='All'?'All years':'Fall '+filters.year,filters.university==='All'?'All schools':filters.university];if(filters.programs.length)parts.push(filters.programs.length+' program'+(filters.programs.length>1?'s':''));if(filters.minimum!==0||filters.maximum!==100)parts.push(filters.minimum+'–'+filters.maximum+'%');const more=['sourceType','studyMode','month','outcome','curriculum','applicantGroup','province','citizenship','residenceCountry','includeUnquantified'].filter(k=>String(filters[k])!==String(d[k])).length;if(more)parts.push('+'+more+' more');el.textContent=parts.join(' · ')+' · '+fmt(lastRows.length)+' reports';}
-function afterRender(){syncExtras();writeUrl();filterSummary();const y=filters.year,cy=String(archiveInfo.currentYear||2027);if(loadState.coreLoaded&&!ALLY()&&y!==cy)requestArchive({quiet:false});}
+function filterSummary(){const el=$('#filter-summary');if(!el)return;const d=defaultFilters(),parts=[filters.year==='All'?'All years':'Fall '+filters.year,filters.university==='All'?'All schools':filters.university];if(filters.from&&filters.from!=='All')parts.push(filters.from==='BC'?'BC applicants':'Ontario applicants');if(filters.programs.length)parts.push(filters.programs.length+' program'+(filters.programs.length>1?'s':''));if(filters.minimum!==0||filters.maximum!==100)parts.push(filters.minimum+'–'+filters.maximum+'%');const more=['sourceType','studyMode','month','outcome','curriculum','applicantGroup','province','citizenship','residenceCountry','includeUnquantified'].filter(k=>String(filters[k])!==String(d[k])).length;if(more)parts.push('+'+more+' more');el.textContent=parts.join(' · ')+' · '+fmt(lastRows.length)+' reports';}
+function afterRender(){fromToggle();syncExtras();writeUrl();filterSummary();const y=filters.year,cy=String(archiveInfo.currentYear||2027);if(loadState.coreLoaded&&!ALLY()&&y!==cy)requestArchive({quiet:false});}
 // Credits
 function credits(){const el=$('#credits-list');if(!el)return;const seen=new Map();for(const d of datasets){if(!seen.has(d.spreadsheetId))seen.set(d.spreadsheetId,{title:d.title,url:d.url.split('#')[0],years:[]});seen.get(d.spreadsheetId).years.push(d.year);}
  const reddit=(refreshAudit.reddit?.sources||['https://www.reddit.com/r/OntarioGrade12s/','https://www.reddit.com/r/uwaterloo/']);
@@ -544,7 +547,7 @@ function seasonCard(){const el=$('#hc-season');if(!el)return;const rows=trackerR
   ${ALLY()?'':'<p class="fine">Load all years to see which big programs haven’t started yet. <button class="db-link" data-archive="load">Load all years</button></p>'}
   <button type="button" class="hc-link" data-view="tracker">Open the offer tracker →</button>`;}
 // ---- Deadlines (deadlines.json, copied from official university pages) ----
-let DL=null;fetch('deadlines.json?v=oa50',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
+let DL=null;fetch('deadlines.json?v=oa51',{cache:'no-cache'}).then(r=>r.json()).then(j=>{DL=j;datesCard();}).catch(()=>{});
 const kdVersion=()=>{try{return new URLSearchParams(location.search).get('kd')||localStorage.getItem('offeratlas.kd')||'a';}catch{return 'a';}};
 const dlDays=d=>Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(todayISO()+'T12:00:00Z'))/864e5);
 const dlDate=(d,y)=>new Intl.DateTimeFormat('en-CA',{weekday:'short',month:'short',day:'numeric',...(y?{year:'numeric'}:{}),timeZone:'UTC'}).format(new Date(d+'T12:00:00Z'));
